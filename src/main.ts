@@ -49,6 +49,7 @@ async function bootstrap() {
   logger.log(`Health Check: http://localhost:${port}/health`);
   logger.log(`Swagger: http://localhost:${port}/api/docs`);
 }
+
 bootstrap().catch((err) => {
   new Logger('Bootstrap').error('Error starting the application', err.stack);
   process.exit(1);
