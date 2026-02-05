@@ -71,7 +71,7 @@ jobs:
         run: |
           sleep 5
           pm2 list
-          pm2 logs paytrack-integration --lines 20 --nostream
+          pm2 logs edi-integration --lines 20 --nostream
 
       - name: Notify deployment status
         if: always()
