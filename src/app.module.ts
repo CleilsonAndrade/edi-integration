@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommonModule } from './common/common.module';
 import { DatabaseConfigService } from './config/database.config';
 
 @Module({
@@ -18,6 +19,7 @@ import { DatabaseConfigService } from './config/database.config';
       useClass: DatabaseConfigService,
     }),
 
+    CommonModule,
     ScheduleModule.forRoot(),
 
   ],
