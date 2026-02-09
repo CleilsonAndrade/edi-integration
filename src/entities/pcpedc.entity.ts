@@ -8,691 +8,691 @@ export class PcpedcEntity {
   orderId: number;
 
   @Column({ name: 'ALIQICMSFRETENF', type: 'number', nullable: true })
-  aliqicmsfretenf: number;
+  invoiceFreightIcmsRate: number;
 
   @Column({ name: 'AGRUPAMENTO', type: 'varchar2', nullable: true })
-  agrupamento: string;
+  grouping: string;
 
   @Column({ name: 'ALTAPOSMAPASEP', type: 'varchar2', nullable: true })
-  altaposmapasep: string;
+  sepMapPosChange: string;
 
   @Column({ name: 'AMBIENTENFCE', type: 'varchar2', nullable: true })
-  ambientenfce: string;
+  nfceEnvironment: string;
 
   @Column({ name: 'ASSINATURA', type: 'varchar2', nullable: true })
-  assinatura: string;
+  signature: string;
 
   @Column({ name: 'BAIXAESTCLI', type: 'varchar2', nullable: true })
-  baixaestcli: string;
+  customerStockWriteOff: string;
 
   @Column({ name: 'BASEICMSFRETENF', type: 'varchar2', nullable: true })
-  baseicmsfretenf: string;
+  invoiceFreightIcmsBase: string;
 
   @Column({ name: 'BLOQCOMERCIAL', type: 'varchar2', nullable: true })
-  bloqcomercial: string;
+  commercialBlock: string;
 
   @Column({ name: 'BLOQFINANCEIRO', type: 'varchar2', nullable: true })
-  bloqfinanceiro: string;
+  financialBlock: string;
 
   @Column({ name: 'BLOQUEIOEDICAO', type: 'varchar2', nullable: true })
-  bloqueioedicao: string;
+  editingBlock: string;
 
   @Column({ name: 'BLOQUEIOFATURAMENTO', type: 'varchar2', nullable: true })
-  bloqueiofaturamento: string;
+  billingBlock: string;
 
   @Column({ name: 'BLOQUEIOSALDOCCDESCFIN', type: 'varchar2', nullable: true })
-  bloqueiosaldoccdescfin: string;
+  finDescBalanceBlock: string;
 
   @Column({ name: 'BLOQUEIOSUPPLIER', type: 'varchar2', nullable: true })
-  bloqueiosupplier: string;
+  supplierBlock: string;
 
   @Column({ name: 'BONIFICALTDEBCREDRCA', type: 'varchar2', nullable: true })
-  bonificaltdebcredrca: string;
+  bonusRcaCreditDebitChange: string;
 
   @Column({ name: 'BRINDE', type: 'varchar2', nullable: true })
-  brinde: string;
+  gift: string;
 
   @Column({ name: 'BROKER', type: 'varchar2', nullable: true })
   broker: string;
 
   @Column({ name: 'BROKERALTDEBCREDRCA', type: 'varchar2', nullable: true })
-  brokeraltdebcredrca: string;
+  brokerRcaCreditDebitChange: string;
 
   @Column({ name: 'C', type: 'number', nullable: true })
   c: number;
 
   @Column({ name: 'CAMPANHA', type: 'varchar2', nullable: true })
-  campanha: string;
+  campaign: string;
 
   @Column({ name: 'CARTAODOTZ', type: 'varchar2', nullable: true })
-  cartaodotz: string;
+  dotzCard: string;
 
   @Column({ name: 'CFOPBNFDEGUSTA', type: 'varchar2', nullable: true })
-  cfopbnfdegusta: string;
+  tastingBnfCfop: string;
 
   @Column({ name: 'CGCFRETE', type: 'varchar2', nullable: true })
-  cgcfrete: string;
+  freightCnpj: string;
 
   @Column({ name: 'CHAVENFCE', type: 'varchar2', nullable: true })
-  chavenfce: string;
+  nfceKey: string;
 
   @Column({ name: 'CHAVENFE', type: 'varchar2', nullable: true })
-  chavenfe: string;
+  nfeKey: string;
 
   @Column({ name: 'CHAVESAT', type: 'varchar2', nullable: true })
-  chavesat: string;
+  satKey: string;
 
   @Column({ name: 'CNPJINTERMEDIADOR', type: 'varchar2', nullable: true })
-  cnpjintermediador: string;
+  intermediaryCnpj: string;
 
   @Column({ name: 'CODADMCARTAO', type: 'number', nullable: true })
-  codadmcartao: number;
+  cardAdminId: number;
 
   @Column({ name: 'CODATENDIMENTO', type: 'number', nullable: true })
-  codatendimento: number;
+  serviceId: number;
 
   @Column({ name: 'CODAUTORIZACAO', type: 'number', nullable: true })
-  codautorizacao: number;
+  authCode: number;
 
   @Column({ name: 'CODAUTORIZACAOTEF', type: 'number', nullable: true })
-  codautorizacaotef: number;
+  tefAuthCode: number;
 
   @Column({ name: 'CODAUTORIZACAOTEF1', type: 'number', nullable: true })
-  codautorizacaotef1: number;
+  tefAuthCode1: number;
 
   @Column({ name: 'CODAUTORIZACAOTEFWEB', type: 'number', nullable: true })
-  codautorizacaotefweb: number;
+  webTefAuthCode: number;
 
   @Column({ name: 'CODBANCOCM', type: 'number', nullable: true })
-  codbancocm: number;
+  cmBankId: number;
 
   @Column({ name: 'CODBANDEIRATEF', type: 'number', nullable: true })
-  codbandeiratef: number;
+  tefBrandId: number;
 
   @Column({ name: 'CODBNF', type: 'number', nullable: true })
-  codbnf: number;
+  bnfCode: number;
 
   @Column({ name: 'CODBREX', type: 'number', nullable: true })
-  codbrex: number;
+  brexCode: number;
 
   @Column({ name: 'CODCLI', type: 'number', nullable: true })
-  codcli: number;
+  customerId: number;
 
   @Column({ name: 'CODCLICONSIGNACAO', type: 'number', nullable: true })
-  codcliconsignacao: number;
+  consignmentCustomerId: number;
 
   @Column({ name: 'CODCLINF', type: 'number', nullable: true })
-  codclinf: number;
+  nfeCustomerId: number;
 
   @Column({ name: 'CODCLIRECEBEDOR', type: 'number', nullable: true })
-  codclirecebedor: number;
+  receiverCustomerId: number;
 
   @Column({ name: 'CODCLITV8', type: 'number', nullable: true })
-  codclitv8: number;
+  tv8CustomerId: number;
 
   @Column({ name: 'CODCOB', type: 'number', nullable: true })
-  codcob: number;
+  billingId: number;
 
   @Column({ name: 'CODCONDICAOVENDA', type: 'number', nullable: true })
-  codcondicaovenda: number;
+  saleConditionId: number;
 
   @Column({ name: 'CODCONTATO', type: 'number', nullable: true })
-  codcontato: number;
+  contactId: number;
 
   @Column({ name: 'CODCONTRATO', type: 'number', nullable: true })
-  codcontrato: number;
+  contractId: number;
 
   @Column({ name: 'CODDISP', type: 'number', nullable: true })
-  coddisp: number;
+  dispCode: number;
 
   @Column({ name: 'CODDISTRIB', type: 'number', nullable: true })
-  coddistrib: number;
+  distribCode: number;
 
   @Column({ name: 'CODEDITAL', type: 'number', nullable: true })
-  codedital: number;
+  biddingId: number;
 
   @Column({ name: 'CODEMITENTE', type: 'number', nullable: true })
-  codemitente: number;
+  issuerId: number;
 
   @Column({ name: 'CODENDENT', type: 'number', nullable: true })
-  codendent: number;
+  deliveryAddressId: number;
 
   @Column({ name: 'CODENDENTCLI', type: 'number', nullable: true })
-  codendentcli: number;
+  customerDeliveryAddressId: number;
 
   @Column({ name: 'CODEPTO', type: 'number', nullable: true })
-  codepto: number;
+  departmentId: number;
 
   @Column({ name: 'CODESTABELECIMENTO', type: 'number', nullable: true })
-  codestabelecimento: number;
+  establishmentId: number;
 
   @Column({ name: 'CODFILIAL', type: 'number', nullable: true })
-  codfilial: number;
+  branchId: number;
 
   @Column({ name: 'CODFILIALNF', type: 'number', nullable: true })
-  codfilialnf: number;
+  invoiceBranchId: number;
 
   @Column({ name: 'CODFORNECBONIFIC', type: 'number', nullable: true })
-  codfornecbonific: number;
+  bonusSupplierId: number;
 
   @Column({ name: 'CODFORNECFRETE', type: 'number', nullable: true })
-  codfornecfrete: number;
+  freightSupplierId: number;
 
   @Column({ name: 'CODFORNECREDESPACHO', type: 'number', nullable: true })
-  codfornecredespacho: number;
+  redispatchSupplierId: number;
 
   @Column({ name: 'CODFORNECVDIRETO', type: 'number', nullable: true })
-  codfornecvdireto: number;
+  directSaleSupplierId: number;
 
   @Column({ name: 'CODFRETE', type: 'number', nullable: true })
-  codfrete: number;
+  freightId: number;
 
   @Column({ name: 'CODFUNCCALCFRETE', type: 'number', nullable: true })
-  codfunccalcfrete: number;
+  freightCalcEmployeeId: number;
 
   @Column({ name: 'CODFUNCCANCEL', type: 'number', nullable: true })
-  codfunccancel: number;
+  codfunccancelId: number;
 
   @Column({ name: 'CODFUNCCONF', type: 'number', nullable: true })
-  codfuncconf: number;
+  checkerEmployeeId: number;
 
   @Column({ name: 'CODFUNCCONFGARANTIA', type: 'number', nullable: true })
-  codfuncconfgarantia: number;
+  codfuncconfgarantiaId: number;
 
   @Column({ name: 'CODFUNCCX', type: 'number', nullable: true })
-  codfunccx: number;
+  cashierEmployeeId: number;
 
   @Column({ name: 'CODFUNCEMBALADOR', type: 'number', nullable: true })
-  codfuncembalador: number;
+  packerEmployeeId: number;
 
   @Column({ name: 'CODFUNCEMISSAOMAPA', type: 'number', nullable: true })
-  codfuncemissaomapa: number;
+  mapIssueEmployeeId: number;
 
   @Column({ name: 'CODFUNCEXPARQOL', type: 'number', nullable: true })
-  codfuncexparqol: number;
+  olFileExportEmployeeId: number;
 
   @Column({ name: 'CODFUNCEXPINTWMS', type: 'number', nullable: true })
-  codfuncexpintwms: number;
+  wmsIntExportEmployeeId: number;
 
   @Column({ name: 'CODFUNCIMPINTWMS', type: 'number', nullable: true })
-  codfuncimpintwms: number;
+  wmsIntImportEmployeeId: number;
 
   @Column({ name: 'CODFUNCLIBDESC', type: 'number', nullable: true })
-  codfunclibdesc: number;
+  discountReleaseEmployeeId: number;
 
   @Column({ name: 'CODFUNCLIBERA', type: 'number', nullable: true })
-  codfunclibera: number;
+  releaserEmployeeId: number;
 
   @Column({ name: 'CODFUNCLIBERA2', type: 'number', nullable: true })
-  codfunclibera2: number;
+  release2EmployeeId: number;
 
   @Column({ name: 'CODFUNCLIBERADTENTREGA', type: 'number', nullable: true })
-  codfuncliberadtentrega: number;
+  deliveryDateReleaseEmployeeId: number;
 
   @Column({ name: 'CODFUNCLIBEROURET', type: 'number', nullable: true })
-  codfuncliberouret: number;
+  returnReleaseEmployeeId: number;
 
   @Column({ name: 'CODFUNCPROTOCOLO', type: 'number', nullable: true })
-  codfuncprotocolo: number;
+  protocolEmployeeId: number;
 
   @Column({ name: 'CODFUNCSEP', type: 'number', nullable: true })
-  codfuncsep: number;
+  pickerEmployeeId: number;
 
   @Column({ name: 'CODGERENTE', type: 'number', nullable: true })
-  codgerente: number;
+  managerId: number;
 
   @Column({ name: 'CODIGORASTREIOFRETEVENDA', type: 'number', nullable: true })
-  codigorastreiofretevenda: number;
+  trackingCodeSaleFreight: number;
 
   @Column({ name: 'CODIGOSAZONALIDADE', type: 'number', nullable: true })
-  codigosazonalidade: number;
+  seasonalityCode: number;
 
   @Column({ name: 'CODMOEDAESTRANGEIRA', type: 'number', nullable: true })
-  codmoedaestrangeira: number;
+  foreignCurrencyId: number;
 
   @Column({ name: 'CODMOEDAESTRANGEIRAORIGINAL', type: 'number', nullable: true })
-  codmoedaestrangeiraoriginal: number;
+  originalForeignCurrencyId: number;
 
   @Column({ name: 'CODMOTBLOQUEIO', type: 'number', nullable: true })
-  codmotbloqueio: number;
+  blockReasonId: number;
 
   @Column({ name: 'CODMOTCANCEL', type: 'number', nullable: true })
-  codmotcancel: number;
+  cancelReasonId: number;
 
   @Column({ name: 'CODMOTIVO', type: 'number', nullable: true })
-  codmotivo: number;
+  reasonId: number;
 
   @Column({ name: 'CODMOTIVO2', type: 'number', nullable: true })
-  codmotivo2: number;
+  reason2Id: number;
 
   @Column({ name: 'CODMOTORISTA', type: 'number', nullable: true })
-  codmotorista: number;
+  driverId: number;
 
   @Column({ name: 'CODPLPAG', type: 'number', nullable: true })
-  codplpag: number;
+  paymentPlanId: number;
 
   @Column({ name: 'CODPLPAGANT', type: 'number', nullable: true })
-  codplpagant: number;
+  previousPaymentPlanId: number;
 
   @Column({ name: 'CODPLPAGETICO', type: 'number', nullable: true })
-  codplpagetico: number;
+  ethicalPaymentPlanId: number;
 
   @Column({ name: 'CODPLPAGGENERICO', type: 'number', nullable: true })
-  codplpaggenerico: number;
+  genericPaymentPlanId: number;
 
   @Column({ name: 'CODPOSTAGEM', type: 'number', nullable: true })
-  codpostagem: number;
+  postageId: number;
 
   @Column({ name: 'CODPRACA', type: 'number', nullable: true })
-  codpraca: number;
+  regionId: number;
 
   @Column({ name: 'CODPRACADESTINO', type: 'number', nullable: true })
-  codpracadestino: number;
+  destRegionId: number;
 
   @Column({ name: 'CODPROFISSIONAL', type: 'number', nullable: true })
-  codprofissional: number;
+  professionalId: number;
 
   @Column({ name: 'CODPROMOCAOMED', type: 'number', nullable: true })
-  codpromocaomed: number;
+  medPromotionId: number;
 
   @Column({ name: 'CODRETORNOSAT', type: 'number', nullable: true })
-  codretornosat: number;
+  satReturnCode: number;
 
   @Column({ name: 'CODSEFAZSAT', type: 'number', nullable: true })
-  codsefazsat: number;
+  satSefazCode: number;
 
   @Column({ name: 'CODSTATUSSAT', type: 'number', nullable: true })
-  codstatussat: number;
+  satStatusCode: number;
 
   @Column({ name: 'CODSUPERVISOR', type: 'number', nullable: true })
-  codsupervisor: number;
+  supervisorId: number;
 
   @Column({ name: 'CODSUPERVISOR2', type: 'number', nullable: true })
-  codsupervisor2: number;
+  supervisor2Id: number;
 
   @Column({ name: 'CODSUPERVISOR3', type: 'number', nullable: true })
-  codsupervisor3: number;
+  supervisor3Id: number;
 
   @Column({ name: 'CODTRANSP', type: 'number', nullable: true })
-  codtransp: number;
+  carrierId: number;
 
   @Column({ name: 'CODUNIDADEEXECUTORA', type: 'number', nullable: true })
-  codunidadeexecutora: number;
+  executingUnitId: number;
 
   @Column({ name: 'CODUSUR', type: 'number', nullable: true })
-  codusur: number;
+  representativeId: number;
 
   @Column({ name: 'CODUSUR2', type: 'number', nullable: true })
-  codusur2: number;
+  representative2Id: number;
 
   @Column({ name: 'CODUSUR3', type: 'number', nullable: true })
-  codusur3: number;
+  representative3Id: number;
 
   @Column({ name: 'CODUSUR4', type: 'number', nullable: true })
-  codusur4: number;
+  representative4Id: number;
 
   @Column({ name: 'CODVEICULO', type: 'number', nullable: true })
-  codveiculo: number;
+  vehicleId: number;
 
   @Column({ name: 'CODVISITA', type: 'number', nullable: true })
-  codvisita: number;
+  visitId: number;
 
   @Column({ name: 'COLETAFRETE', type: 'varchar2', nullable: true })
-  coletafrete: string;
+  freightPickup: string;
 
   @Column({ name: 'COLUNAFRETE', type: 'varchar2', nullable: true })
-  colunafrete: string;
+  freightColumn: string;
 
   @Column({ name: 'CONCILIAIMPORTACAO', type: 'varchar2', nullable: true })
-  conciliaimportacao: string;
+  importReconciliation: string;
 
   @Column({ name: 'CONDFINANC', type: 'varchar2', nullable: true })
-  condfinanc: string;
+  financialCondition: string;
 
   @Column({ name: 'CONDVENDA', type: 'varchar2', nullable: true })
-  condvenda: string;
+  saleCondition: string;
 
   @Column({ name: 'CONFERINDOPEDIDO', type: 'varchar2', nullable: true })
-  conferindopedido: string;
+  checkingOrder: string;
 
   @Column({ name: 'CONSUMIUNUMNFE', type: 'varchar2', nullable: true })
-  consumiunumnfe: string;
+  consumedNfeNumber: string;
 
   @Column({ name: 'CONTAORDEM', type: 'varchar2', nullable: true })
-  contaordem: string;
+  orderAccount: string;
 
   @Column({ name: 'CONTINGENCIATV14', type: 'varchar2', nullable: true })
-  contingenciatv14: string;
+  tv14Contingency: string;
 
   @Column({ name: 'COPIAIDENTICAPEDDUP', type: 'varchar2', nullable: true })
-  copiaidenticapeddup: string;
+  duplicateOrderCopy: string;
 
   @Column({ name: 'CRMALTDEBCREDRCA', type: 'varchar2', nullable: true })
-  crmaltdebcredrca: string;
+  crmRcaCreditDebitChange: string;
 
   @Column({ name: 'CUSTOBONIFICACAO', type: 'varchar2', nullable: true })
-  custobonificacao: string;
+  bonusCost: string;
 
   @Column({ name: 'CUSTOENTREGA', type: 'varchar2', nullable: true })
-  custoentrega: string;
+  deliveryCost: string;
 
   @Column({ name: 'DATA', type: 'date', nullable: true })
-  data: Date;
+  date: Date;
 
   @Column({ name: 'DATAEFETIVAENTREGACIASHOP', type: 'date', nullable: true })
-  dataefetivaentregaciashop: Date;
+  ciashopEffectiveDeliveryDate: Date;
 
   @Column({ name: 'DATAEMPENHO', type: 'date', nullable: true })
-  dataempenho: Date;
+  commitmentDate: Date;
 
   @Column({ name: 'DATAEXPARQOL', type: 'date', nullable: true })
-  dataexparqol: Date;
+  olFileExportDate: Date;
 
   @Column({ name: 'DATAEXPEDICAO', type: 'date', nullable: true })
-  dataexpedicao: Date;
+  shippingDate: Date;
 
   @Column({ name: 'DATAHORAEMISSAOSAT', type: 'date', nullable: true })
-  datahoraemissaosat: Date;
+  satIssueDateTime: Date;
 
   @Column({ name: 'DATAHORAPROCESSAMENTO', type: 'date', nullable: true })
-  datahoraprocessamento: Date;
+  processingDateTime: Date;
 
   @Column({ name: 'DATALIBEROURET', type: 'date', nullable: true })
-  dataliberouret: Date;
+  releaseOrReturnDate: Date;
 
   @Column({ name: 'DATAPEDCLI', type: 'date', nullable: true })
-  datapedcli: Date;
+  customerOrderDate: Date;
 
   @Column({ name: 'DATAPROTOCOLO', type: 'date', nullable: true })
-  dataprotocolo: Date;
+  protocolDate: Date;
 
   @Column({ name: 'DATARETORNO', type: 'date', nullable: true })
-  dataretorno: Date;
+  returnDate: Date;
 
   @Column({ name: 'DATASAIDA', type: 'date', nullable: true })
-  datasaida: Date;
+  exitDate: Date;
 
   @Column({ name: 'DATAULTIMASITUACAOCFAT', type: 'date', nullable: true })
-  dataultimasituacaocfat: Date;
+  lastCfatStatusDate: Date;
 
   @Column({ name: 'DERRUBADACARGA', type: 'varchar2', nullable: true })
-  derrubadacarga: string;
+  loadDrop: string;
 
   @Column({ name: 'DESCINTERMEDIADOR', type: 'varchar2', nullable: true })
-  descintermediador: string;
+  intermediaryDescription: string;
 
   @Column({ name: 'DESFEZKITCANC', type: 'varchar2', nullable: true })
-  desfezkitcanc: string;
+  undidCancelKit: string;
 
   @Column({ name: 'DESTACARICMSDEVSIMBOLICA', type: 'varchar2', nullable: true })
-  destacaricmsdevsimbolica: string;
+  highlightSymbolicDevIcms: string;
 
   @Column({ name: 'DEVSIMBOLICA', type: 'varchar2', nullable: true })
-  devsimbolica: string;
+  symbolicDev: string;
 
   @Column({ name: 'DOCEMISSAO', type: 'varchar2', nullable: true })
-  docemissao: string;
+  issueDoc: string;
 
   @Column({ name: 'DTABERTURAPEDPALM', type: 'date', nullable: true })
-  dtaberturapedpalm: Date;
+  palmOrderOpenDate: Date;
 
   @Column({ name: 'DTAGENDAENTREGA', type: 'date', nullable: true })
-  dtagendaentrega: Date;
+  deliveryScheduleDate: Date;
 
   @Column({ name: 'DTAHORAENTRADACONTIGENCIA', type: 'date', nullable: true })
-  dtahoraentradacontigencia: Date;
+  contingencyEntryDateTime: Date;
 
   @Column({ name: 'DTCALCFRETE', type: 'date', nullable: true })
-  dtcalcfrete: Date;
+  freightCalcDate: Date;
 
   @Column({ name: 'DTCANCEL', type: 'date', nullable: true })
-  dtcancel: Date;
+  cancelDate: Date;
 
   @Column({ name: 'DTCHEGADACLIENTE', type: 'date', nullable: true })
-  dtchegadacliente: Date;
+  customerArrivalDate: Date;
 
   @Column({ name: 'DTCONFGARANTIA', type: 'date', nullable: true })
-  dtconfgarantia: Date;
+  guaranteeCheckDate: Date;
 
   @Column({ name: 'DTEMISSAOMAPA', type: 'date', nullable: true })
-  dtemissaomapa: Date;
+  mapIssueDate: Date;
 
   @Column({ name: 'DTENTREGA', type: 'date', nullable: true })
-  dtentrega: Date;
+  deliveryDate: Date;
 
   @Column({ name: 'DTEXPORTACAO', type: 'date', nullable: true })
-  dtexportacao: Date;
+  exportDate: Date;
 
   @Column({ name: 'DTEXPORTACAOSERVINT', type: 'date', nullable: true })
-  dtexportacaoservint: Date;
+  intServiceExportDate: Date;
 
   @Column({ name: 'DTEXPORTACAOWMS', type: 'date', nullable: true })
-  dtexportacaowms: Date;
+  wmsExportDate: Date;
 
   @Column({ name: 'DTEXPORTADO', type: 'date', nullable: true })
-  dtexportado: Date;
+  exportedDate: Date;
 
   @Column({ name: 'DTFAT', type: 'date', nullable: true })
-  dtfat: Date;
+  billingDate: Date;
 
   @Column({ name: 'DTFECHAMENTOPEDPALM', type: 'date', nullable: true })
-  dtfechamentopedpalm: Date;
+  palmOrderCloseDate: Date;
 
   @Column({ name: 'DTFIMDIGITACAOPEDIDO', type: 'date', nullable: true })
-  dtfimdigitacaopedido: Date;
+  orderTypingEndDate: Date;
 
   @Column({ name: 'DTFINALCHECKOUT', type: 'date', nullable: true })
-  dtfinalcheckout: Date;
+  checkoutEndDate: Date;
 
   @Column({ name: 'DTFINALPEND', type: 'date', nullable: true })
-  dtfinalpend: Date;
+  pendingEndDate: Date;
 
   @Column({ name: 'DTFINALSEP', type: 'date', nullable: true })
-  dtfinalsep: Date;
+  sepEndDate: Date;
 
   @Column({ name: 'DTIMPORTACAO', type: 'date', nullable: true })
-  dtimportacao: Date;
+  importDate: Date;
 
   @Column({ name: 'DTIMPORTACAOSERVPRINC', type: 'date', nullable: true })
-  dtimportacaoservprinc: Date;
+  mainServiceImportDate: Date;
 
   @Column({ name: 'DTIMPORTACAOWMS', type: 'date', nullable: true })
-  dtimportacaowms: Date;
+  wmsImportDate: Date;
 
   @Column({ name: 'DTIMPORTADO', type: 'date', nullable: true })
-  dtimportado: Date;
+  importedDate: Date;
 
   @Column({ name: 'DTINICIALCHECKOUT', type: 'date', nullable: true })
-  dtinicialcheckout: Date;
+  checkoutStartDate: Date;
 
   @Column({ name: 'DTINICIALPEND', type: 'date', nullable: true })
-  dtinicialpend: Date;
+  pendingStartDate: Date;
 
   @Column({ name: 'DTINICIALSEP', type: 'date', nullable: true })
-  dtinicialsep: Date;
+  sepStartDate: Date;
 
   @Column({ name: 'DTINICIODIGITACAOPEDIDO', type: 'date', nullable: true })
-  dtiniciodigitacaopedido: Date;
+  orderTypingStartDate: Date;
 
   @Column({ name: 'DTINITRANSACAODIG', type: 'date', nullable: true })
-  dtinitransacaodig: Date;
+  digTransStartDate: Date;
 
   @Column({ name: 'DTITERACAOTRANSACAODIG', type: 'date', nullable: true })
-  dtiteracaotransacaodig: Date;
+  digTransIterationDate: Date;
 
   @Column({ name: 'DTLIBERA', type: 'date', nullable: true })
-  dtlibera: Date;
+  releaseDate: Date;
 
   @Column({ name: 'DTLIBERA2', type: 'date', nullable: true })
-  dtlibera2: Date;
+  release2Date: Date;
 
   @Column({ name: 'DTLIMITEFAT', type: 'date', nullable: true })
-  dtlimitefat: Date;
+  billinglimitDate: Date;
 
   @Column({ name: 'DTMOVIMENTOCX', type: 'date', nullable: true })
-  dtmovimentocx: Date;
+  cashMovDate: Date;
 
   @Column({ name: 'DTMXSALTER', type: 'date', nullable: true })
-  dtmxsalter: Date;
+  mxsChangeDate: Date;
 
   @Column({ name: 'DTNFTRANSF', type: 'date', nullable: true })
-  dtnftransf: Date;
+  transfNfDate: Date;
 
   @Column({ name: 'DTNSU', type: 'date', nullable: true })
-  dtnsu: Date;
+  nsuDate: Date;
 
   @Column({ name: 'DTVALIDADE', type: 'date', nullable: true })
-  dtvalidade: Date;
+  expirationDate: Date;
 
   @Column({ name: 'DTVENC1', type: 'date', nullable: true })
-  dtvenc1: Date;
+  dueDate1: Date;
 
   @Column({ name: 'DTVENC2', type: 'date', nullable: true })
-  dtvenc2: Date;
+  dueDate2: Date;
 
   @Column({ name: 'DTVENC3', type: 'date', nullable: true })
-  dtvenc3: Date;
+  dueDate3: Date;
 
   @Column({ name: 'DTWMS', type: 'date', nullable: true })
-  dtwms: Date;
+  wmsDate: Date;
 
   @Column({ name: 'EANCOBRANCA', type: 'varchar2', nullable: true })
-  eancobranca: string;
+  billingEan: string;
 
   @Column({ name: 'EANCOBRANCAFATURA', type: 'varchar2', nullable: true })
-  eancobrancafatura: string;
+  invoiceBillingEan: string;
 
   @Column({ name: 'EANCOMPRADOR', type: 'varchar2', nullable: true })
-  eancomprador: string;
+  buyerEan: string;
 
   @Column({ name: 'EANENTREGA', type: 'varchar2', nullable: true })
-  eanentrega: string;
+  deliveryEan: string;
 
   @Column({ name: 'EANLOCALENTREGA', type: 'varchar2', nullable: true })
-  eanlocalentrega: string;
+  deliveryPlaceEan: string;
 
   @Column({ name: 'EMITIRCUPOMFISCAL', type: 'varchar2', nullable: true })
-  emitircupomfiscal: string;
+  issueFiscalCoupon: string;
 
   @Column({ name: 'ENVIADOCOMPRA', type: 'varchar2', nullable: true })
-  enviadocompra: string;
+  sentPurchase: string;
 
   @Column({ name: 'ENVIADOVENDA', type: 'varchar2', nullable: true })
-  enviadovenda: string;
+  sentSale: string;
 
   @Column({ name: 'ESC_IDCOTACAOFRETE', type: 'varchar2', nullable: true })
-  escIdcotacaofrete: string;
+  freightQuoteId: string;
 
   @Column({ name: 'ESPECIEMANIF', type: 'varchar2', nullable: true })
-  especiemanif: string;
+  manifestSpecies: string;
 
   @Column({ name: 'ESPECIEVOLUME', type: 'varchar2', nullable: true })
-  especievolume: string;
+  volumeSpecies: string;
 
   @Column({ name: 'EXPORTACRM', type: 'varchar2', nullable: true })
-  exportacrm: string;
+  crmExport: string;
 
   @Column({ name: 'EXPORTADO', type: 'varchar2', nullable: true })
-  exportado: string;
+  exported: string;
 
   @Column({ name: 'EXPORTADOSERVINT', type: 'varchar2', nullable: true })
-  exportadoservint: string;
+  exportedIntService: string;
 
   @Column({ name: 'FORNECENTREGA', type: 'varchar2', nullable: true })
-  fornecentrega: string;
+  deliverySupplier: string;
 
   @Column({ name: 'FRETEDESPACHO', type: 'varchar2', nullable: true })
-  fretedespacho: string;
+  dispatchFreight: string;
 
   @Column({ name: 'FRETEREDESPACHO', type: 'varchar2', nullable: true })
-  freteredespacho: string;
+  redispatchFreight: string;
 
   @Column({ name: 'GERACP', type: 'varchar2', nullable: true })
-  geracp: string;
+  generateCp: string;
 
   @Column({ name: 'GERANDOWMS', type: 'varchar2', nullable: true })
-  gerandowms: string;
+  generatingWms: string;
 
   @Column({ name: 'GERARCONTROLEDEENTREGA', type: 'varchar2', nullable: true })
-  gerarcontroledeentrega: string;
+  generateDeliveryControl: string;
 
   @Column({ name: 'GERARDADOSNFPAULISTA', type: 'varchar2', nullable: true })
-  gerardadosnfpaulista: string;
+  generateNfPaulistaData: string;
 
   @Column({ name: 'HORA', type: 'number', nullable: true })
-  hora: number;
+  hour: number;
 
   @Column({ name: 'HORAEMISSAO', type: 'number', nullable: true })
-  horaemissao: number;
+  issueHour: number;
 
   @Column({ name: 'HORAEMISSAOMAPA', type: 'number', nullable: true })
-  horaemissaomapa: number;
+  mapIssueHour: number;
 
   @Column({ name: 'HORAFAT', type: 'number', nullable: true })
-  horafat: number;
+  billingHour: number;
 
   @Column({ name: 'HORAFINALSEP', type: 'number', nullable: true })
-  horafinalsep: number;
+  sepEndHour: number;
 
   @Column({ name: 'HORAINICIALSEP', type: 'number', nullable: true })
-  horainicialsep: number;
+  sepStartHour: number;
 
   @Column({ name: 'HORALIBERA', type: 'number', nullable: true })
-  horalibera: number;
+  releaseHour: number;
 
   @Column({ name: 'HORAPROTOCOLO', type: 'number', nullable: true })
-  horaprotocolo: number;
+  protocolHour: number;
 
   @Column({ name: 'IDAGRUPAMENTO', type: 'varchar2', nullable: true })
-  idagrupamento: string;
+  groupingId: string;
 
   @Column({ name: 'IDPARCEIRO', type: 'varchar2', nullable: true })
-  idparceiro: string;
+  partnerId: string;
 
   @Column({ name: 'IDREMESSAWEB', type: 'varchar2', nullable: true })
-  idremessaweb: string;
+  webShipmentId: string;
 
   @Column({ name: 'IDTIPOPRESENCA', type: 'varchar2', nullable: true })
-  idtipopresenca: string;
+  presenceTypeId: string;
 
   @Column({ name: 'IEFRETE', type: 'varchar2', nullable: true })
-  iefrete: string;
+  freightIe: string;
 
   @Column({ name: 'IMPORTACUPOM', type: 'varchar2', nullable: true })
-  importacupom: string;
+  importCoupon: string;
 
   @Column({ name: 'IMPORTADO', type: 'varchar2', nullable: true })
-  importado: string;
+  imported: string;
 
   @Column({ name: 'IMPORTADOSERVPRINC', type: 'varchar2', nullable: true })
-  importadoservprinc: string;
+  importedMainService: string;
 
   @Column({ name: 'INDICADORACRESCIMO', type: 'varchar2', nullable: true })
-  indicadoracrescimo: string;
+  additionIndicator: string;
 
   @Column({ name: 'INDICADORDESCONTO', type: 'varchar2', nullable: true })
-  indicadordesconto: string;
+  discountIndicator: string;
 
   @Column({ name: 'INTEGRADORA', type: 'varchar2', nullable: true })
-  integradora: string;
+  integrator: string;
 
   @Column({ name: 'JSONTPD_PAGAMENTO', type: 'varchar2', nullable: true })
-  jsontpdPagamento: string;
+  paymentTpdJson: string;
 
   @Column({ name: 'JUSTIFICATIVACONTIGENCIA', type: 'varchar2', nullable: true })
-  justificativacontigencia: string;
+  contingencyJustification: string;
 
   @Column({ name: 'LATITUDE', type: 'varchar2', nullable: true })
   latitude: string;
 
   @Column({ name: 'LIBERA_RETAGUARDA', type: 'varchar2', nullable: true })
-  liberaRetaguarda: string;
+  backofficeRelease: string;
 
   @Column({ name: 'LOCALDESEMBARACO', type: 'varchar2', nullable: true })
-  localdesembaraco: string;
+  clearancePlace: string;
 
   @Column({ name: 'LOCALIZACAOPEDIDO', type: 'varchar2', nullable: true })
-  localizacaopedido: string;
+  orderLocation: string;
 
   @Column({ name: 'LOG', type: 'varchar2', nullable: true })
   log: string;
@@ -713,430 +713,430 @@ export class PcpedcEntity {
   longitude: string;
 
   @Column({ name: 'MARCAVOLUME', type: 'varchar2', nullable: true })
-  marcavolume: string;
+  volumeBrand: string;
 
   @Column({ name: 'MATERIALDECONSTRUCAO', type: 'varchar2', nullable: true })
-  materialdeconstrucao: string;
+  constructionMaterial: string;
 
   @Column({ name: 'MELDATAEMISSAOPED', type: 'date', nullable: true })
-  meldataemissaoped: Date;
+  bestOrderIssueDate: Date;
 
   @Column({ name: 'MENSAGEM', type: 'varchar2', nullable: true })
-  mensagem: string;
+  message: string;
 
   @Column({ name: 'MINUTO', type: 'number', nullable: true })
-  minuto: number;
+  minute: number;
 
   @Column({ name: 'MINUTOEMISSAOMAPA', type: 'number', nullable: true })
-  minutoemissaomapa: number;
+  mapIssueMinute: number;
 
   @Column({ name: 'MINUTOFAT', type: 'number', nullable: true })
-  minutofat: number;
+  billingMinute: number;
 
   @Column({ name: 'MINUTOFINALSEP', type: 'number', nullable: true })
-  minutofinalsep: number;
+  sepEndMinute: number;
 
   @Column({ name: 'MINUTOINICIALSEP', type: 'number', nullable: true })
-  minutoinicialsep: number;
+  sepStartMinute: number;
 
   @Column({ name: 'MINUTOLIBERA', type: 'number', nullable: true })
-  minutolibera: number;
+  releaseMinute: number;
 
   @Column({ name: 'MINUTOPROTOCOLO', type: 'number', nullable: true })
-  minutoprotocolo: number;
+  protocolMinute: number;
 
   @Column({ name: 'MONTANDO', type: 'varchar2', nullable: true })
-  montando: string;
+  assembling: string;
 
   @Column({ name: 'MOTIVOPOSICAO', type: 'varchar2', nullable: true })
-  motivoposicao: string;
+  positionReason: string;
 
   @Column({ name: 'MOTORISTAVEICULO', type: 'varchar2', nullable: true })
-  motoristaveiculo: string;
+  vehicleDriver: string;
 
   @Column({ name: 'MULTIPLICADORDUPLIC', type: 'varchar2', nullable: true })
-  multiplicadorduplic: string;
+  duplicateMultiplier: string;
 
   @Column({ name: 'NEGOCIADO', type: 'varchar2', nullable: true })
-  negociado: string;
+  negotiated: string;
 
   @Column({ name: 'NOMEARQUIVOFV', type: 'varchar2', nullable: true })
-  nomearquivofv: string;
+  fvFileName: string;
 
   @Column({ name: 'NSU', type: 'varchar2', nullable: true })
   nsu: string;
 
   @Column({ name: 'NSUSOCIOTORCEDOR', type: 'varchar2', nullable: true })
-  nsusociotorcedor: string;
+  supporterPartnerNsu: string;
 
   @Column({ name: 'NSUTEF', type: 'varchar2', nullable: true })
-  nsutef: string;
+  tefNsu: string;
 
   @Column({ name: 'NUMCAIXA', type: 'number', nullable: true })
-  numcaixa: number;
+  boxNumber: number;
 
   @Column({ name: 'NUMCAIXAFISCAL', type: 'number', nullable: true })
-  numcaixafiscal: number;
+  fiscalCashierNumber: number;
 
   @Column({ name: 'NUMCAR', type: 'number', nullable: true })
-  numcar: number;
+  loadNumber: number;
 
   @Column({ name: 'NUMCARANTERIOR', type: 'number', nullable: true })
-  numcaranterior: number;
+  previousLoadNumber: number;
 
   @Column({ name: 'NUMCARAUX', type: 'number', nullable: true })
-  numcaraux: number;
+  auxLoadNumber: number;
 
   @Column({ name: 'NUMCARFAB', type: 'number', nullable: true })
-  numcarfab: number;
+  factoryLoadNumber: number;
 
   @Column({ name: 'NUMCARMANIF', type: 'number', nullable: true })
-  numcarmanif: number;
+  manifestLoadNumber: number;
 
   @Column({ name: 'NUMCCF', type: 'number', nullable: true })
-  numccf: number;
+  ccfNumber: number;
 
   @Column({ name: 'NUMCHAVEEXP', type: 'number', nullable: true })
-  numchaveexp: number;
+  expKeyNumber: number;
 
   @Column({ name: 'NUMCIRURGIA', type: 'number', nullable: true })
-  numcirurgia: number;
+  surgeryNumber: number;
 
   @Column({ name: 'NUMCOLETA', type: 'number', nullable: true })
-  numcoleta: number;
+  pickupNumber: number;
 
   @Column({ name: 'NUMCONTRATOCORREIO', type: 'number', nullable: true })
-  numcontratocorreio: number;
+  mailContractNumber: number;
 
   @Column({ name: 'NUMCUPOM', type: 'number', nullable: true })
-  numcupom: number;
+  couponNumber: number;
 
   @Column({ name: 'NUMDRAWBACK', type: 'number', nullable: true })
-  numdrawback: number;
+  drawbackNumber: number;
 
   @Column({ name: 'NUMECF', type: 'number', nullable: true })
-  numecf: number;
+  ecfNumber: number;
 
   @Column({ name: 'NUMEMPENHO', type: 'number', nullable: true })
-  numempenho: number;
+  commitmentNumber: number;
 
   @Column({ name: 'NUMFECHAMENTOMOVCX', type: 'number', nullable: true })
-  numfechamentomovcx: number;
+  cashMovClosingNumber: number;
 
   @Column({ name: 'NUMFICHA', type: 'number', nullable: true })
-  numficha: number;
+  sheetNumber: number;
 
   @Column({ name: 'NUMFONTERECURSO', type: 'number', nullable: true })
-  numfonterecurso: number;
+  resourceSourceNumber: number;
 
   @Column({ name: 'NUMFORMULARIO', type: 'number', nullable: true })
-  numformulario: number;
+  formNumber: number;
 
   @Column({ name: 'NUMITENS', type: 'number', nullable: true })
-  numitens: number;
+  itemCount: number;
 
   @Column({ name: 'NUMLISTA', type: 'number', nullable: true })
-  numlista: number;
+  listNumber: number;
 
   @Column({ name: 'NUMLOTEINTWMS', type: 'number', nullable: true })
-  numloteintwms: number;
+  wmsIntBatchNumber: number;
 
   @Column({ name: 'NUMNFTRANSF', type: 'number', nullable: true })
-  numnftransf: number;
+  transfNfNumber: number;
 
   @Column({ name: 'NUMNOTA', type: 'number', nullable: true })
-  numnota: number;
+  invoiceNumber: number;
 
   @Column({ name: 'NUMNOTACONSIG', type: 'number', nullable: true })
-  numnotaconsig: number;
+  consigInvoiceNumber: number;
 
   @Column({ name: 'NUMNOTAMANIF', type: 'number', nullable: true })
-  numnotamanif: number;
+  manifestInvoiceNumber: number;
 
   @Column({ name: 'NUMNOTATRANSFDEP', type: 'number', nullable: true })
-  numnotatransfdep: number;
+  depTransfInvoiceNumber: number;
 
   @Column({ name: 'NUMORCA', type: 'number', nullable: true })
-  numorca: number;
+  quoteNumber: number;
 
   @Column({ name: 'NUMORCAFILIAL', type: 'number', nullable: true })
-  numorcafilial: number;
+  branchQuoteNumber: number;
 
   @Column({ name: 'NUMORCAPRINC', type: 'number', nullable: true })
-  numorcaprinc: number;
+  mainQuoteNumber: number;
 
   @Column({ name: 'NUMORDEMCARGA', type: 'number', nullable: true })
-  numordemcarga: number;
+  loadOrderNumber: number;
 
   @Column({ name: 'NUMOS', type: 'number', nullable: true })
-  numos: number;
+  soNumber: number;
 
   @Column({ name: 'NUMPEDAGRUPADO', type: 'number', nullable: true })
-  numpedagrupado: number;
+  groupedOrderId: number;
 
   @Column({ name: 'NUMPEDBNF', type: 'number', nullable: true })
-  numpedbnf: number;
+  bnfOrderId: number;
 
   @Column({ name: 'NUMPEDBNFTV14', type: 'number', nullable: true })
-  numpedbnftv14: number;
+  tv14BnfOrderId: number;
 
   @Column({ name: 'NUMPEDCLI', type: 'number', nullable: true })
-  numpedcli: number;
+  customerOrderNumber: number;
 
   @Column({ name: 'NUMPEDECF', type: 'number', nullable: true })
-  numpedecf: number;
+  ecfOrderId: number;
 
   @Column({ name: 'NUMPEDENTFUT', type: 'number', nullable: true })
-  numpedentfut: number;
+  futureDelOrderId: number;
 
   @Column({ name: 'NUMPEDHUBE', type: 'number', nullable: true })
-  numpedhube: number;
+  hubeOrderId: number;
 
   @Column({ name: 'NUMPEDMKTPLACE', type: 'number', nullable: true })
-  numpedmktplace: number;
+  marketplaceOrderId: number;
 
   @Column({ name: 'NUMPEDORIGEM', type: 'number', nullable: true })
-  numpedorigem: number;
+  originOrderId: number;
 
   @Column({ name: 'NUMPEDORIGEMFRETE', type: 'number', nullable: true })
-  numpedorigemfrete: number;
+  freightOriginOrderId: number;
 
   @Column({ name: 'NUMPEDRCA', type: 'number', nullable: true })
-  numpedrca: number;
+  rcaOrderId: number;
 
   @Column({ name: 'NUMPEDTV1', type: 'number', nullable: true })
-  numpedtv1: number;
+  tv1OrderId: number;
 
   @Column({ name: 'NUMPEDTV14', type: 'number', nullable: true })
-  numpedtv14: number;
+  tv14OrderId: number;
 
   @Column({ name: 'NUMPEDTV3', type: 'number', nullable: true })
-  numpedtv3: number;
+  tv3OrderId: number;
 
   @Column({ name: 'NUMPEDVALE', type: 'number', nullable: true })
-  numpedvale: number;
+  valeOrderId: number;
 
   @Column({ name: 'NUMPEDVANXML', type: 'number', nullable: true })
-  numpedvanxml: number;
+  xmlVanOrderId: number;
 
   @Column({ name: 'NUMPEDWEB', type: 'number', nullable: true })
-  numpedweb: number;
+  webOrderId: number;
 
   @Column({ name: 'NUMPESO', type: 'number', nullable: true })
-  numpeso: number;
+  weightNumber: number;
 
   @Column({ name: 'NUMPRECAR', type: 'number', nullable: true })
-  numprecar: number;
+  preLoadNumber: number;
 
   @Column({ name: 'NUMPREVENDA', type: 'number', nullable: true })
-  numprevenda: number;
+  preSaleNumber: number;
 
   @Column({ name: 'NUMPROCESSO', type: 'number', nullable: true })
-  numprocesso: number;
+  processNumber: number;
 
   @Column({ name: 'NUMREGEXP', type: 'number', nullable: true })
-  numregexp: number;
+  regExpNumber: number;
 
   @Column({ name: 'NUMREGIAO', type: 'number', nullable: true })
-  numregiao: number;
+  regionNumber: number;
 
   @Column({ name: 'NUMSELO', type: 'number', nullable: true })
-  numselo: number;
+  sealNumber: number;
 
   @Column({ name: 'NUMSEQCORREIO', type: 'number', nullable: true })
-  numseqcorreio: number;
+  mailSeqNumber: number;
 
   @Column({ name: 'NUMSEQENTR', type: 'number', nullable: true })
-  numseqentr: number;
+  deliverySeqNumber: number;
 
   @Column({ name: 'NUMSEQENTREGA', type: 'number', nullable: true })
-  numseqentrega: number;
+  deliverySequenceAndr: number;
 
   @Column({ name: 'NUMSEQENVIO', type: 'number', nullable: true })
-  numseqenvio: number;
+  sendingSeqNumber: number;
 
   @Column({ name: 'NUMSEQMONTAGEM', type: 'number', nullable: true })
-  numseqmontagem: number;
+  assemblySeqNumber: number;
 
   @Column({ name: 'NUMSEQRETORNO1', type: 'number', nullable: true })
-  numseqretorno1: number;
+  return1SeqNumber: number;
 
   @Column({ name: 'NUMSEQRETORNO2', type: 'number', nullable: true })
-  numseqretorno2: number;
+  return2SeqNumber: number;
 
   @Column({ name: 'NUMSEQROTA', type: 'number', nullable: true })
-  numseqrota: number;
+  routeSeqNumber: number;
 
   @Column({ name: 'NUMSERIEEQUIP', type: 'number', nullable: true })
-  numserieequip: number;
+  equipSeriesNumber: number;
 
   @Column({ name: 'NUMSERIESAT', type: 'number', nullable: true })
-  numseriesat: number;
+  satSeriesNumber: number;
 
   @Column({ name: 'NUMSESSAOSAT', type: 'number', nullable: true })
-  numsessaosat: number;
+  satSessionNumber: number;
 
   @Column({ name: 'NUMTABELA', type: 'number', nullable: true })
-  numtabela: number;
+  tableNumber: number;
 
   @Column({ name: 'NUMTRANSACAOTRANSF', type: 'number', nullable: true })
-  numtransacaotransf: number;
+  transferTransactionNumber: number;
 
   @Column({ name: 'NUMTRANSENTCROSSDOCK', type: 'number', nullable: true })
-  numtransentcrossdock: number;
+  crossdockEntTransactionNumber: number;
 
   @Column({ name: 'NUMTRANSENTORIGCONSIG', type: 'number', nullable: true })
-  numtransentorigconsig: number;
+  consigEntOrigTransactionNumber: number;
 
   @Column({ name: 'NUMTRANSENTORIGTV10', type: 'number', nullable: true })
-  numtransentorigtv10: number;
+  tv10EntOrigTransactionNumber: number;
 
   @Column({ name: 'NUMTRANSVENDA', type: 'number', nullable: true })
-  numtransvenda: number;
+  saleTransactionNumber: number;
 
   @Column({ name: 'NUMTRANSVENDATV13', type: 'number', nullable: true })
-  numtransvendatv13: number;
+  tv13SaleTransactionNumber: number;
 
   @Column({ name: 'NUMTRANSWMS', type: 'number', nullable: true })
-  numtranswms: number;
+  wmsTransactionNumber: number;
 
   @Column({ name: 'NUMVIASETIQUETA', type: 'number', nullable: true })
-  numviasetiqueta: number;
+  labelCopiesNumber: number;
 
   @Column({ name: 'NUMVIASMAPASEP', type: 'number', nullable: true })
-  numviasmapasep: number;
+  sepMapCopiesNumber: number;
 
   @Column({ name: 'NUMVIASMAPASEPRI', type: 'number', nullable: true })
-  numviasmapasepri: number;
+  sepPriMapCopiesNumber: number;
 
   @Column({ name: 'NUMVIASPEDAGRUPADO', type: 'number', nullable: true })
-  numviaspedagrupado: number;
+  groupedOrderCopiesNumber: number;
 
   @Column({ name: 'NUMVIASPEDIDO', type: 'number', nullable: true })
-  numviaspedido: number;
+  orderCopiesNumber: number;
 
   @Column({ name: 'NUMVOLUME', type: 'number', nullable: true })
-  numvolume: number;
+  volumeNumber: number;
 
   @Column({ name: 'NUMVOLUMEAGRUPADO', type: 'number', nullable: true })
-  numvolumeagrupado: number;
+  groupedVolumeNumber: number;
 
   @Column({ name: 'OBS', type: 'varchar2', nullable: true })
-  obs: string;
+  observation: string;
 
   @Column({ name: 'OBS1', type: 'varchar2', nullable: true })
-  obs1: string;
+  observation1: string;
 
   @Column({ name: 'OBS2', type: 'varchar2', nullable: true })
-  obs2: string;
+  observation2: string;
 
   @Column({ name: 'OBSENTREGA1', type: 'varchar2', nullable: true })
-  obsentrega1: string;
+  deliveryObservation1: string;
 
   @Column({ name: 'OBSENTREGA2', type: 'varchar2', nullable: true })
-  obsentrega2: string;
+  deliveryObservation2: string;
 
   @Column({ name: 'OBSENTREGA3', type: 'varchar2', nullable: true })
-  obsentrega3: string;
+  deliveryObservation3: string;
 
   @Column({ name: 'OBSENTREGA4', type: 'varchar2', nullable: true })
-  obsentrega4: string;
+  deliveryObservation4: string;
 
   @Column({ name: 'OBSFRETENF1', type: 'varchar2', nullable: true })
-  obsfretenf1: string;
+  freightObservation1: string;
 
   @Column({ name: 'OBSFRETENF2', type: 'varchar2', nullable: true })
-  obsfretenf2: string;
+  freightObservation2: string;
 
   @Column({ name: 'OBSFRETENF3', type: 'varchar2', nullable: true })
-  obsfretenf3: string;
+  freightObservation3: string;
 
   @Column({ name: 'OBSNFCE', type: 'varchar2', nullable: true })
-  obsnfce: string;
+  nfceObservation: string;
 
   @Column({ name: 'OPERACAO', type: 'varchar2', nullable: true })
-  operacao: string;
+  operation: string;
 
   @Column({ name: 'OPERVENDAEXPINDIRETA', type: 'varchar2', nullable: true })
-  opervendaexpindireta: string;
+  indirectExpSaleOper: string;
 
   @Column({ name: 'ORDEMCONF', type: 'varchar2', nullable: true })
-  ordemconf: string;
+  checkOrder: string;
 
   @Column({ name: 'ORDEMSEP', type: 'varchar2', nullable: true })
-  ordemsep: string;
+  pickOrder: string;
 
   @Column({ name: 'ORIGEMINTEGRACAO', type: 'varchar2', nullable: true })
-  origemintegracao: string;
+  integrationOrigin: string;
 
   @Column({ name: 'ORIGEMPED', type: 'varchar2', nullable: true })
-  origemped: string;
+  orderOrigin: string;
 
   @Column({ name: 'PAGAMENTOAPROVADOCIASHOP', type: 'varchar2', nullable: true })
-  pagamentoaprovadociashop: string;
+  ciashopPaymentApproved: string;
 
   @Column({ name: 'PAGCHEQUEMORADIA', type: 'varchar2', nullable: true })
-  pagchequemoradia: string;
+  housingCheckPayment: string;
 
   @Column({ name: 'PAGTOANTECIPADO', type: 'varchar2', nullable: true })
-  pagtoantecipado: string;
+  advancedPayment: string;
 
   @Column({ name: 'PEDDUPLICADO', type: 'varchar2', nullable: true })
-  pedduplicado: string;
+  duplicatedOrder: string;
 
   @Column({ name: 'PEDIDOAVARIA', type: 'varchar2', nullable: true })
-  pedidoavaria: string;
+  damagedOrder: string;
 
   @Column({ name: 'PEDIDOEMBALADO', type: 'varchar2', nullable: true })
-  pedidoembalado: string;
+  packedOrder: string;
 
   @Column({ name: 'PEDIDOPAGOECOMMERCE', type: 'varchar2', nullable: true })
-  pedidopagoecommerce: string;
+  ecommercePaidOrder: string;
 
   @Column({ name: 'PERCCOMPROFISSIONAL', type: 'number', nullable: true })
-  perccomprofissional: number;
+  professionalComPercent: number;
 
   @Column({ name: 'PERCDESCABC', type: 'number', nullable: true })
-  percdescabc: number;
+  abcDiscountPercent: number;
 
   @Column({ name: 'PERCDESCCANAL', type: 'number', nullable: true })
-  percdesccanal: number;
+  channelDiscountPercent: number;
 
   @Column({ name: 'PERCDESCCLI', type: 'number', nullable: true })
-  percdesccli: number;
+  customerDiscountPercent: number;
 
   @Column({ name: 'PERCDESCNEG', type: 'number', nullable: true })
-  percdescneg: number;
+  negotiatedDiscountPercent: number;
 
   @Column({ name: 'PERCENTUALSTFRETE', type: 'number', nullable: true })
-  percentualstfrete: number;
+  freightStPercent: number;
 
   @Column({ name: 'PERCFRETE', type: 'number', nullable: true })
-  percfrete: number;
+  freightPercent: number;
 
   @Column({ name: 'PERCFRETERETIDO', type: 'number', nullable: true })
-  percfreteretido: number;
+  retainedFreightPercent: number;
 
   @Column({ name: 'PERCSALDORESERVARCA', type: 'number', nullable: true })
-  percsaldoreservarca: number;
+  rcaReserveBalancePercent: number;
 
   @Column({ name: 'PERCSTFRETERETIDO', type: 'number', nullable: true })
-  percstfreteretido: number;
+  retainedFreightStPercent: number;
 
   @Column({ name: 'PERCVENDA', type: 'number', nullable: true })
-  percvenda: number;
+  salePercent: number;
 
   @Column({ name: 'PERDESC', type: 'varchar2', nullable: true })
-  perdesc: string;
+  discountPercent: string;
 
   @Column({ name: 'PERDESCAVISTA', type: 'varchar2', nullable: true })
-  perdescavista: string;
+  cashDiscountPercent: string;
 
   @Column({ name: 'PERDESCFIN', type: 'varchar2', nullable: true })
-  perdescfin: string;
+  financialDiscountPercent: string;
 
   @Column({ name: 'PERDESCLIB', type: 'varchar2', nullable: true })
-  perdesclib: string;
+  releasedDiscountPercent: string;
 
   @Column({ name: 'PERMITEFATURARCOMWMSPEND', type: 'varchar2', nullable: true })
   permitefaturarcomwmspend: string;
@@ -1145,432 +1145,432 @@ export class PcpedcEntity {
   permiteprodsemdistribuicao: string;
 
   @Column({ name: 'PLACAVEICULO', type: 'varchar2', nullable: true })
-  placaveiculo: string;
+  vehiclePlate: string;
 
   @Column({ name: 'PLANOSUPPLI', type: 'varchar2', nullable: true })
-  planosuppli: string;
+  suppliPlan: string;
 
   @Column({ name: 'PLPAGAVISTA', type: 'varchar2', nullable: true })
-  plpagavista: string;
+  cashPaymentPlan: string;
 
   @Column({ name: 'POSICAO', type: 'varchar2', nullable: true })
-  posicao: string;
+  position: string;
 
   @Column({ name: 'PRAZO1', type: 'number', nullable: true })
-  prazo1: number;
+  term1: number;
 
   @Column({ name: 'PRAZO10', type: 'number', nullable: true })
-  prazo10: number;
+  term10: number;
 
   @Column({ name: 'PRAZO11', type: 'number', nullable: true })
-  prazo11: number;
+  term11: number;
 
   @Column({ name: 'PRAZO12', type: 'number', nullable: true })
-  prazo12: number;
+  term12: number;
 
   @Column({ name: 'PRAZO2', type: 'number', nullable: true })
-  prazo2: number;
+  term2: number;
 
   @Column({ name: 'PRAZO3', type: 'number', nullable: true })
-  prazo3: number;
+  term3: number;
 
   @Column({ name: 'PRAZO4', type: 'number', nullable: true })
-  prazo4: number;
+  term4: number;
 
   @Column({ name: 'PRAZO5', type: 'number', nullable: true })
-  prazo5: number;
+  term5: number;
 
   @Column({ name: 'PRAZO6', type: 'number', nullable: true })
-  prazo6: number;
+  term6: number;
 
   @Column({ name: 'PRAZO7', type: 'number', nullable: true })
-  prazo7: number;
+  term7: number;
 
   @Column({ name: 'PRAZO8', type: 'number', nullable: true })
-  prazo8: number;
+  term8: number;
 
   @Column({ name: 'PRAZO9', type: 'number', nullable: true })
-  prazo9: number;
+  term9: number;
 
   @Column({ name: 'PRAZOADICIONAL', type: 'number', nullable: true })
-  prazoadicional: number;
+  additionalTerm: number;
 
   @Column({ name: 'PRAZOMEDIO', type: 'number', nullable: true })
-  prazomedio: number;
+  averageTerm: number;
 
   @Column({ name: 'PRAZOMEDIOPLPAG', type: 'number', nullable: true })
-  prazomedioplpag: number;
+  payPlanAverageTerm: number;
 
   @Column({ name: 'PRAZOPONDERADO', type: 'number', nullable: true })
-  prazoponderado: number;
+  weightedTerm: number;
 
   @Column({ name: 'PRECISAOLATLNG', type: 'varchar2', nullable: true })
   precisaolatlng: string;
 
   @Column({ name: 'PRONTAENTREGA', type: 'varchar2', nullable: true })
-  prontaentrega: string;
+  readyDelivery: string;
 
   @Column({ name: 'PROTOCOLONFCE', type: 'varchar2', nullable: true })
-  protocolonfce: string;
+  nfceProtocol: string;
 
   @Column({ name: 'PROTOCOLONFP', type: 'varchar2', nullable: true })
-  protocolonfp: string;
+  nfpProtocol: string;
 
   @Column({ name: 'QRCODENFCE', type: 'varchar2', nullable: true })
-  qrcodenfce: string;
+  nfceQrCode: string;
 
   @Column({ name: 'QRCODESAT', type: 'varchar2', nullable: true })
-  qrcodesat: string;
+  satQrCode: string;
 
   @Column({ name: 'QTPALETE', type: 'number', nullable: true })
-  qtpalete: number;
+  palletQuantity: number;
 
   @Column({ name: 'QTPARCELAS', type: 'number', nullable: true })
-  qtparcelas: number;
+  installmentQuantity: number;
 
   @Column({ name: 'RECALPRECOALTPLPAG', type: 'varchar2', nullable: true })
-  recalprecoaltplpag: string;
+  recalcPricePayPlanChange: string;
 
   @Column({ name: 'RECARGA', type: 'varchar2', nullable: true })
-  recarga: string;
+  recharge: string;
 
   @Column({ name: 'RESERVAESTOQUETV7', type: 'varchar2', nullable: true })
-  reservaestoquetv7: string;
+  tv7StockReserve: string;
 
   @Column({ name: 'RESERVARITENSTV7', type: 'varchar2', nullable: true })
-  reservaritenstv7: string;
+  tv7ReserveItems: string;
 
   @Column({ name: 'RESTRICAOTRANSP', type: 'varchar2', nullable: true })
-  restricaotransp: string;
+  carrierRestriction: string;
 
   @Column({ name: 'RESTRICAOTRANSPORTE', type: 'varchar2', nullable: true })
-  restricaotransporte: string;
+  transportRestriction: string;
 
   @Column({ name: 'ROTINA', type: 'varchar2', nullable: true })
-  rotina: string;
+  routine: string;
 
   @Column({ name: 'ROTINALANC', type: 'varchar2', nullable: true })
-  rotinalanc: string;
+  entryRoutine: string;
 
   @Column({ name: 'ROTINALANCULTALT', type: 'varchar2', nullable: true })
-  rotinalancultalt: string;
+  lastChangeEntryRoutine: string;
 
   @Column({ name: 'SERIEECF', type: 'varchar2', nullable: true })
-  serieecf: string;
+  ecfSeries: string;
 
   @Column({ name: 'SERIEMANIF', type: 'varchar2', nullable: true })
-  seriemanif: string;
+  manifestSeries: string;
 
   @Column({ name: 'SISTEMALEGADO', type: 'varchar2', nullable: true })
-  sistemalegado: string;
+  legacySystem: string;
 
   @Column({ name: 'SITUACAOPROCESSAMENTO', type: 'varchar2', nullable: true })
-  situacaoprocessamento: string;
+  processingStatus: string;
 
   @Column({ name: 'SITUACAOSAT', type: 'varchar2', nullable: true })
-  situacaosat: string;
+  satStatus: string;
 
   @Column({ name: 'SOFTNUMLANC', type: 'varchar2', nullable: true })
-  softnumlanc: string;
+  softEntryNum: string;
 
   @Column({ name: 'STATUSPEDIDOCIASHOP', type: 'varchar2', nullable: true })
-  statuspedidociashop: string;
+  ciashopOrderStatus: string;
 
   @Column({ name: 'STATUSTRANSACAODIG', type: 'varchar2', nullable: true })
-  statustransacaodig: string;
+  digTransactionStatus: string;
 
   @Column({ name: 'SUBSERIE', type: 'varchar2', nullable: true })
-  subserie: string;
+  subSeries: string;
 
   @Column({ name: 'TAXACASOMOEDAREAL', type: 'varchar2', nullable: true })
-  taxacasomoedareal: string;
+  realCurrencyRateCase: string;
 
   @Column({ name: 'TIB_IDCOTACAO', type: 'varchar2', nullable: true })
-  tibIdcotacao: string;
+  tibQuoteId: string;
 
   @Column({ name: 'TIB_ORDEMCOTACAO', type: 'varchar2', nullable: true })
-  tibOrdemcotacao: string;
+  tibQuoteOrder: string;
 
   @Column({ name: 'TIPOCALCVLATEND', type: 'varchar2', nullable: true })
-  tipocalcvlatend: string;
+  attendValueCalcType: string;
 
   @Column({ name: 'TIPOCARGA', type: 'varchar2', nullable: true })
-  tipocarga: string;
+  loadType: string;
 
   @Column({ name: 'TIPOCFOPTV4', type: 'varchar2', nullable: true })
-  tipocfoptv4: string;
+  cfopTv4Type: string;
 
   @Column({ name: 'TIPOCONTACORRENTE', type: 'varchar2', nullable: true })
-  tipocontacorrente: string;
+  checkingAccountType: string;
 
   @Column({ name: 'TIPODOCUMENTO', type: 'varchar2', nullable: true })
-  tipodocumento: string;
+  documentType: string;
 
   @Column({ name: 'TIPOEMBALAGEM', type: 'varchar2', nullable: true })
-  tipoembalagem: string;
+  packagingType: string;
 
   @Column({ name: 'TIPOEMISSAO', type: 'varchar2', nullable: true })
-  tipoemissao: string;
+  issueType: string;
 
   @Column({ name: 'TIPOEXPEDICAOCESTABASICA', type: 'varchar2', nullable: true })
-  tipoexpedicaocestabasica: string;
+  basicBasketDispatchType: string;
 
   @Column({ name: 'TIPOFORMULARIONF', type: 'varchar2', nullable: true })
-  tipoformularionf: string;
+  nfFormType: string;
 
   @Column({ name: 'TIPOFV', type: 'varchar2', nullable: true })
-  tipofv: string;
+  fvType: string;
 
   @Column({ name: 'TIPOMOVCCRCA', type: 'varchar2', nullable: true })
-  tipomovccrca: string;
+  rcaCcMovType: string;
 
   @Column({ name: 'TIPOOPER', type: 'varchar2', nullable: true })
-  tipooper: string;
+  operType: string;
 
   @Column({ name: 'TIPOOPERACAOTEF', type: 'varchar2', nullable: true })
-  tipooperacaotef: string;
+  tefOperType: string;
 
   @Column({ name: 'TIPOPRIORIDADEENTREGA', type: 'varchar2', nullable: true })
-  tipoprioridadeentrega: string;
+  deliveryPriorityType: string;
 
   @Column({ name: 'TIPORETIRADA', type: 'varchar2', nullable: true })
-  tiporetirada: string;
+  withdrawType: string;
 
   @Column({ name: 'TIPOVENDA', type: 'varchar2', nullable: true })
-  tipovenda: string;
+  saleType: string;
 
   @Column({ name: 'TOTPESO', type: 'number', nullable: true })
-  totpeso: number;
+  totalWeight: number;
 
   @Column({ name: 'TOTPESOAGRUPADO', type: 'number', nullable: true })
-  totpesoagrupado: number;
+  totalGroupedWeight: number;
 
   @Column({ name: 'TOTPESOLIQ', type: 'number', nullable: true })
-  totpesoliq: number;
+  totalNetWeight: number;
 
   @Column({ name: 'TOTPESOLIQAGRUPADO', type: 'number', nullable: true })
-  totpesoliqagrupado: number;
+  totalGroupedNetWeight: number;
 
   @Column({ name: 'TOTPESOPALETE', type: 'number', nullable: true })
-  totpesopalete: number;
+  totalPalletWeight: number;
 
   @Column({ name: 'TOTVLBONIFIC', type: 'number', nullable: true })
-  totvlbonific: number;
+  totalBonusValue: number;
 
   @Column({ name: 'TOTVLDESCCOM', type: 'number', nullable: true })
-  totvldesccom: number;
+  totalComDiscountValue: number;
 
   @Column({ name: 'TOTVLDESCFIN', type: 'number', nullable: true })
-  totvldescfin: number;
+  totalFinDiscountValue: number;
 
   @Column({ name: 'TOTVLDESCFLEX', type: 'number', nullable: true })
-  totvldescflex: number;
+  totalFlexDiscountValue: number;
 
   @Column({ name: 'TOTVLREDCOMISS', type: 'number', nullable: true })
-  totvlredcomiss: number;
+  totalComReductionValue: number;
 
   @Column({ name: 'TOTVLREDCOMISSSUP', type: 'number', nullable: true })
-  totvlredcomisssup: number;
+  totalSupComReductionValue: number;
 
   @Column({ name: 'TOTVOLUME', type: 'number', nullable: true })
-  totvolume: number;
+  totalVolume: number;
 
   @Column({ name: 'TOTVOLUMEAGRUPADO', type: 'number', nullable: true })
-  totvolumeagrupado: number;
+  totalGroupedVolume: number;
 
   @Column({ name: 'TRANSPORTADORA', type: 'varchar2', nullable: true })
-  transportadora: string;
+  carrier: string;
 
   @Column({ name: 'TRIBUTAPORREGIAOFILIAL', type: 'varchar2', nullable: true })
-  tributaporregiaofilial: string;
+  taxByBranchRegion: string;
 
   @Column({ name: 'TRIBVENDATRIANGULAR', type: 'varchar2', nullable: true })
-  tribvendatriangular: string;
+  triangularSaleTax: string;
 
   @Column({ name: 'TROCAALTDEBCREDRCA', type: 'varchar2', nullable: true })
-  trocaaltdebcredrca: string;
+  changeRcaCreditDebitExch: string;
 
   @Column({ name: 'TURNOENTREGA', type: 'varchar2', nullable: true })
-  turnoentrega: string;
+  deliveryShift: string;
 
   @Column({ name: 'UFDESEMBARACO', type: 'varchar2', nullable: true })
-  ufdesembaraco: string;
+  clearanceUf: string;
 
   @Column({ name: 'UFFRETE', type: 'varchar2', nullable: true })
-  uffrete: string;
+  freightUf: string;
 
   @Column({ name: 'UFVEICULO', type: 'varchar2', nullable: true })
-  ufveiculo: string;
+  vehicleUf: string;
 
   @Column({ name: 'UIDREGISTRO', type: 'varchar2', nullable: true })
-  uidregistro: string;
+  recordUid: string;
 
   @Column({ name: 'ULTIMASITUACAOCFAT', type: 'varchar2', nullable: true })
-  ultimasituacaocfat: string;
+  lastCfatStatus: string;
 
   @Column({ name: 'USACFOPVENDANATV10', type: 'varchar2', nullable: true })
-  usacfopvendanatv10: string;
+  useTv10SaleCfop: string;
 
   @Column({ name: 'USACORTECIASHOP', type: 'varchar2', nullable: true })
-  usacorteciashop: string;
+  useCiashopCut: string;
 
   @Column({ name: 'USACREDRCA', type: 'varchar2', nullable: true })
-  usacredrca: string;
+  useRcaCredit: string;
 
   @Column({ name: 'USACREDRCATIPOBNF', type: 'varchar2', nullable: true })
-  usacredrcatipobnf: string;
+  useRcaCreditBnfType: string;
 
   @Column({ name: 'USADEBCREDRCA', type: 'varchar2', nullable: true })
-  usadebcredrca: string;
+  useRcaCreditDebit: string;
 
   @Column({ name: 'USAINTEGRACAOWMS', type: 'varchar2', nullable: true })
-  usaintegracaowms: string;
+  useWmsIntegrator: string;
 
   @Column({ name: 'USASALDOCONTACORRENTEDESCFIN', type: 'varchar2', nullable: true })
-  usasaldocontacorrentedescfin: string;
+  useFinDescCheckingAccountBal: string;
 
   @Column({ name: 'UTILIZAVENDAPOREMBALAGEM', type: 'varchar2', nullable: true })
-  utilizavendaporembalagem: string;
+  usePackagingSale: string;
 
   @Column({ name: 'VALORDESCFIN', type: 'varchar2', nullable: true })
-  valordescfin: string;
+  financialDiscountValue: string;
 
   @Column({ name: 'VENDAASSISTIDA', type: 'varchar2', nullable: true })
-  vendaassistida: string;
+  assistedSale: string;
 
   @Column({ name: 'VENDAASSISTIVA', type: 'varchar2', nullable: true })
-  vendaassistiva: string;
+  assistiveSale: string;
 
   @Column({ name: 'VENDAEXPORTACAO', type: 'varchar2', nullable: true })
-  vendaexportacao: string;
+  exportSale: string;
 
   @Column({ name: 'VENDALOCALCLIEX', type: 'varchar2', nullable: true })
-  vendalocalcliex: string;
+  localExClientSale: string;
 
   @Column({ name: 'VENDALOCESTRANG', type: 'varchar2', nullable: true })
-  vendalocestrang: string;
+  foreignLocSale: string;
 
   @Column({ name: 'VENDANFSERIED', type: 'varchar2', nullable: true })
-  vendanfseried: string;
+  nfSeriesDSale: string;
 
   @Column({ name: 'VENDATRIANGULAR', type: 'varchar2', nullable: true })
-  vendatriangular: string;
+  triangularSale: string;
 
   @Column({ name: 'VERSAOFATURAMENTO', type: 'varchar2', nullable: true })
-  versaofaturamento: string;
+  billingVersion: string;
 
   @Column({ name: 'VERSAOROTINA', type: 'varchar2', nullable: true })
-  versaorotina: string;
+  routineVersion: string;
 
   @Column({ name: 'VILDTSEPARACOMPLFIM', type: 'varchar2', nullable: true })
-  vildtseparacomplfim: string;
+  sepComplEndDate: string;
 
   @Column({ name: 'VILDTSEPARACOMPLINI', type: 'varchar2', nullable: true })
-  vildtseparacomplini: string;
+  sepComplStartDate: string;
 
   @Column({ name: 'VLATEND', type: 'number', nullable: true })
-  vlatend: number;
+  serviceValue: number;
 
   @Column({ name: 'VLBASESTFRETE', type: 'number', nullable: true })
-  vlbasestfrete: number;
+  freightStBaseValue: number;
 
   @Column({ name: 'VLBONIFIC', type: 'number', nullable: true })
-  vlbonific: number;
+  bonusValue: number;
 
   @Column({ name: 'VLCUSTOCONT', type: 'number', nullable: true })
-  vlcustocont: number;
+  accountingCostValue: number;
 
   @Column({ name: 'VLCUSTOFIN', type: 'number', nullable: true })
-  vlcustofin: number;
+  finalCostValue: number;
 
   @Column({ name: 'VLCUSTOREAL', type: 'number', nullable: true })
-  vlcustoreal: number;
+  realCostValue: number;
 
   @Column({ name: 'VLCUSTOREP', type: 'number', nullable: true })
-  vlcustorep: number;
+  replacementCostValue: number;
 
   @Column({ name: 'VLDESCABATIMENTO', type: 'number', nullable: true })
-  vldescabatimento: number;
+  abatementDiscountValue: number;
 
   @Column({ name: 'VLDESCNEG', type: 'number', nullable: true })
-  vldescneg: number;
+  negotiatedDiscountValue: number;
 
   @Column({ name: 'VLDESCONTO', type: 'number', nullable: true })
-  vldesconto: number;
+  discountValue: number;
 
   @Column({ name: 'VLDESCONTOCUPOM', type: 'number', nullable: true })
-  vldescontocupom: number;
+  couponDiscountValue: number;
 
   @Column({ name: 'VLDESCSOCIOTORCEDOR', type: 'number', nullable: true })
-  vldescsociotorcedor: number;
+  supporterPartnerDiscountValue: number;
 
   @Column({ name: 'VLENTRADA', type: 'number', nullable: true })
-  vlentrada: number;
+  entryValue: number;
 
   @Column({ name: 'VLFRETE', type: 'number', nullable: true })
-  vlfrete: number;
+  freightValue: number;
 
   @Column({ name: 'VLFRETEEMPENTREGA', type: 'number', nullable: true })
-  vlfreteempentrega: number;
+  deliveryCompanyFreightValue: number;
 
   @Column({ name: 'VLFRETENF', type: 'number', nullable: true })
-  vlfretenf: number;
+  invoiceFreightValue: number;
 
   @Column({ name: 'VLFRETEOUTRASDESP', type: 'number', nullable: true })
-  vlfreteoutrasdesp: number;
+  otherExpFreightValue: number;
 
   @Column({ name: 'VLFRETERETIDO', type: 'number', nullable: true })
-  vlfreteretido: number;
+  retainedFreightValue: number;
 
   @Column({ name: 'VLFRETETRANSP', type: 'number', nullable: true })
-  vlfretetransp: number;
+  carrierFreightValue: number;
 
   @Column({ name: 'VLICMSFRETENF', type: 'number', nullable: true })
-  vlicmsfretenf: number;
+  invoiceFreightIcmsValue: number;
 
   @Column({ name: 'VLICMSSTFRETE', type: 'number', nullable: true })
-  vlicmsstfrete: number;
+  freightStIcmsValue: number;
 
   @Column({ name: 'VLJUROSPARCELAMENTO', type: 'number', nullable: true })
-  vljurosparcelamento: number;
+  installmentInterestValue: number;
 
   @Column({ name: 'VLOPERACAOFRETE', type: 'number', nullable: true })
-  vloperacaofrete: number;
+  freightOperationValue: number;
 
   @Column({ name: 'VLOUTRASDESP', type: 'number', nullable: true })
-  vloutrasdesp: number;
+  otherExpensesValue: number;
 
   @Column({ name: 'VLRMOEDAESTRANGEIRA', type: 'number', nullable: true })
-  vlrmoedaestrangeira: number;
+  foreignCurrencyValue: number;
 
   @Column({ name: 'VLST', type: 'number', nullable: true })
-  vlst: number;
+  stValue: number;
 
   @Column({ name: 'VLSTFRETERETIDO', type: 'number', nullable: true })
-  vlstfreteretido: number;
+  retainedFreightStValue: number;
 
   @Column({ name: 'VLSUBTOTAL', type: 'number', nullable: true })
-  vlsubtotal: number;
+  subtotalValue: number;
 
   @Column({ name: 'VLTABELA', type: 'number', nullable: true })
-  vltabela: number;
+  listValue: number;
 
   @Column({ name: 'VLTOTAL', type: 'number', nullable: true })
-  vltotal: number;
+  totalValue: number;
 
   @Column({ name: 'VLTOTALCOMTROCO', type: 'number', nullable: true })
-  vltotalcomtroco: number;
+  totalWithChangeValue: number;
 
   @Column({ name: 'VLTRIBUTOS', type: 'number', nullable: true })
-  vltributos: number;
+  taxesValue: number;
 
   @Column({ name: 'VLTXENT', type: 'number', nullable: true })
-  vltxent: number;
+  entryTaxValue: number;
 
   @Column({ name: 'VLVERBACMV', type: 'number', nullable: true })
-  vlverbacmv: number;
+  cmvFundValue: number;
 
   @Column({ name: 'VLVERBACMVCLI', type: 'number', nullable: true })
-  vlverbacmvcli: number;
+  customerCmvFundValue: number;
 
 }
