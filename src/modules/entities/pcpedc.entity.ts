@@ -4,6 +4,9 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
   name: 'PCPEDC',
 })
 export class PcpedcEntity {
+  @PrimaryColumn({ name: 'NUMPED', type: 'number' })
+  orderId: number;
+
   @Column({ name: 'CODPLPAG', type: 'number', nullable: true })
   paymentPlanId: number | null;
 
@@ -573,9 +576,6 @@ export class PcpedcEntity {
 
   @Column({ name: 'GERANDOWMS', type: 'varchar2', nullable: true })
   generatingWms: string | null;
-
-  @PrimaryColumn({ name: 'NUMPED', type: 'number' })
-  orderId: number;
 
   @Column({ name: 'DATA', type: 'date', nullable: true })
   date: Date | null;
