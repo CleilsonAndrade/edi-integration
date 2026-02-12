@@ -23,6 +23,44 @@ export class EDIService {
     private configService: ConfigService,
   ) { }
 
+  async findCompanyByCnpj(cnpj: string): Promise<string | null> {
+    const allowedCodes = process.env.FINANCIAL_BRANCH
+      ? process.env.FINANCIAL_BRANCH.split(',')
+      : [];
+
+    try {
+      this.logger.debug(`  → Buscando filial por CNPJ: ${cnpj}`);
+
+      const company = await this.pcfilialRepository
+        .createQueryBuilder('filial')
+        .where("REGEXP_REPLACE(filial.CGC, '[^0-9]', '') = :cnpj", { cnpj })
+        .getOne();
+
+      if (company?.codeBranch) {
+        this.logger.debug(`  ✓ Filial encontrada: Código ${company.codeBranch}`);
+
+        const companyCodeString = String(company.codeBranch);
+
+        if (!allowedCodes.includes(companyCodeString)) {
+          this.logger.debug(
+            `  ✗ Filial NÃO permitida, as filiais permitidas são as de código: ${allowedCodes.join(', ')}`,
+          );
+          return null;
+        }
+
+        return company.codeBranch;
+      }
+
+      this.logger.warn(`  ✗ Filial NÃO encontrada para CNPJ: ${cnpj}`);
+      return null;
+    } catch (error: unknown) {
+      const stack = error instanceof Error ? error.stack : String(error);
+
+      this.logger.error(` ❌ Erro ao buscar filial por CNPJ ${cnpj}`, stack);
+      return null;
+    }
+  }
+
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<EdiImportResultDto> {
     const parsed = this.parser.parse(ediContent);
 
