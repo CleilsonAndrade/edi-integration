@@ -413,7 +413,7 @@ export class PcpediEntity {
   deliveryType: string | null;
 
   @Column({ name: 'NUMOS', type: 'number', precision: 15, scale: 0, nullable: true })
-  soNumber: number | null;
+  orderServiceNumber: number | null;
 
   @Column({ name: 'DTINICIALSEP', type: 'date', nullable: true })
   separationStartDate: Date | null;
@@ -425,13 +425,13 @@ export class PcpediEntity {
   checkEndDate: Date | null;
 
   @Column({ name: 'SITUACAOOS', type: 'number', precision: 2, scale: 0, nullable: true })
-  soSituation: number | null;
+  orderServiceSituation: number | null;
 
   @Column({ name: 'NUMVIASOS', type: 'number', precision: 3, scale: 0, nullable: true })
-  soCopiesNumber: number | null;
+  orderServiceCopiesNumber: number | null;
 
   @Column({ name: 'QTPENDOS', type: 'number', precision: 10, scale: 4, nullable: true })
-  soPendingQuantity: number | null;
+  orderServicePendingQuantity: number | null;
 
   @Column({ name: 'DTINICIALPEND', type: 'date', nullable: true })
   pendingStartDate: Date | null;
@@ -443,13 +443,13 @@ export class PcpediEntity {
   pendingEmployeeId: number | null;
 
   @Column({ name: 'DTLIBOS', type: 'date', nullable: true })
-  soReleaseDate: Date | null;
+  orderServiceReleaseDate: Date | null;
 
   @Column({ name: 'CODFUNCLIBOS', type: 'number', precision: 8, scale: 0, nullable: true })
-  soReleaseEmployeeId: number | null;
+  orderServiceReleaseEmployeeId: number | null;
 
   @Column({ name: 'LOCALIZACAOOS', type: 'varchar2', length: 60, nullable: true })
-  soLocation: string | null;
+  orderServiceLocation: string | null;
 
   @Column({ name: 'VLDIFALIQUOTAS', type: 'number', precision: 18, scale: 6, nullable: true })
   diffRateValue: number | null;
@@ -611,10 +611,10 @@ export class PcpediEntity {
   assetId: string | null;
 
   @Column({ name: 'VLREDPVENDASIMPLESNA', type: 'number', precision: 18, scale: 6, nullable: true })
-  simpleNationalSalePriceReductionValue: number | null;
+  simplesNacionalSalePriceReductionValue: number | null;
 
   @Column({ name: 'VLREDCMVSIMPLESNAC', type: 'number', precision: 18, scale: 6, nullable: true })
-  simpleNationalCmvReductionValue: number | null;
+  simplesNacionalCmvReductionValue: number | null;
 
   @Column({ name: 'PERDESCFOB', type: 'number', precision: 5, scale: 2, nullable: true })
   fobDiscountPercent: number | null;
@@ -638,7 +638,7 @@ export class PcpediEntity {
   lastChangeEntryRoutine: string | null;
 
   @Column({ name: 'NUMCAIXA', type: 'varchar2', length: 10, nullable: true })
-  caixaNumber: string | null;
+  boxNumber: string | null;
 
   @Column({ name: 'QTLITRAGEM', type: 'number', precision: 18, scale: 6, nullable: true })
   litersQuantity: number | null;
@@ -974,10 +974,10 @@ export class PcpediEntity {
   supervisorId: number | null;
 
   @Column({ name: 'QTMINATACVENDA', type: 'number', precision: 18, scale: 6, nullable: true })
-  minWholesaleSaleQuantity: number | null;
+  minWholeSaleQuantity: number | null;
 
   @Column({ name: 'TIPODESCATACVENDA', type: 'varchar2', length: 1, nullable: true })
-  wholesaleSaleDiscountType: string | null;
+  wholeSaleDiscountType: string | null;
 
   @Column({ name: 'VLTOTSERVICO', type: 'number', precision: 12, scale: 6, nullable: true })
   totalServiceValue: number | null;
@@ -1034,7 +1034,7 @@ export class PcpediEntity {
   fiscalBenefitId: string | null;
 
   @Column({ name: 'CODAGREGACAO', type: 'varchar2', length: 20, nullable: true })
-  agregacaoId: string | null;
+  aggregationId: string | null;
 
   @Column({ name: 'VLBASEFCPICMS', type: 'number', precision: 18, scale: 6, nullable: true })
   fcpIcmsBaseValue: number | null;
@@ -1067,7 +1067,7 @@ export class PcpediEntity {
   funcepAdditionPercent: number | null;
 
   @Column({ name: 'ALIQICMSFECP', type: 'number', precision: 12, scale: 4, nullable: true })
-  rateIcmsfecp: number | null;
+  rateIcmsFecp: number | null;
 
   @Column({ name: 'PGLP', type: 'number', precision: 7, scale: 4, nullable: true })
   pglp: number | null;

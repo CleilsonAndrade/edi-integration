@@ -11,7 +11,7 @@ export class PcpedcEntity {
   paymentPlanId: number | null;
 
   @Column({ name: 'CODFUNCCANCEL', type: 'number', precision: 8, scale: 0, nullable: true })
-  codfunccancelId: number | null;
+  codEmployeeCancelId: number | null;
 
   @Column({ name: 'NUMTRANSVENDA', type: 'number', precision: 10, scale: 0, nullable: true })
   saleTransactionNumber: number | null;
@@ -407,7 +407,7 @@ export class PcpedcEntity {
   entryTaxValue: number | null;
 
   @Column({ name: 'NUMOS', type: 'number', precision: 6, scale: 0, nullable: true })
-  soNumber: number | null;
+  orderServiceNumber: number | null;
 
   @Column({ name: 'VLOPERACAOFRETE', type: 'number', precision: 14, scale: 2, nullable: true })
   freightOperationValue: number | null;
@@ -542,19 +542,19 @@ export class PcpedcEntity {
   processingDateTime: Date | null;
 
   @Column({ name: 'PERMITEPRODSEMDISTRIBUICAO', type: 'varchar2', length: 1, nullable: true })
-  permiteprodsemdistribuicao: string | null;
+  allowsProductionWithoutDistribution: string | null;
 
   @Column({ name: 'SISTEMALEGADO', type: 'varchar2', length: 1, nullable: true })
   legacySystem: string | null;
 
   @Column({ name: 'NUMTRANSENTCROSSDOCK', type: 'number', precision: 10, scale: 0, nullable: true })
-  crossdockEntTransactionNumber: number | null;
+  crossdockBetweenTransactionNumber: number | null;
 
   @Column({ name: 'NUMTRANSENTORIGCONSIG', type: 'number', precision: 10, scale: 0, nullable: true })
-  consigEntOrigTransactionNumber: number | null;
+  consignedBetweenOrigTransactionNumber: number | null;
 
   @Column({ name: 'NUMTRANSENTORIGTV10', type: 'number', precision: 10, scale: 0, nullable: true })
-  tv10EntOrigTransactionNumber: number | null;
+  tv10BetweenOrigTransactionNumber: number | null;
 
   @Column({ name: 'QTPALETE', type: 'number', precision: 10, scale: 0, nullable: true })
   palletQuantity: number | null;
@@ -659,7 +659,7 @@ export class PcpedcEntity {
   minute: number | null;
 
   @Column({ name: 'NUMSEQENTREGA', type: 'number', precision: 20, scale: 0, nullable: true })
-  deliverySequenceAndr: number | null;
+  numberDeliverySequence: number | null;
 
   @Column({ name: 'CUSTOENTREGA', type: 'number', precision: 14, scale: 2, nullable: true })
   deliveryCost: number | null;
@@ -695,7 +695,7 @@ export class PcpedcEntity {
   executingUnitId: string | null;
 
   @Column({ name: 'DTLIMITEFAT', type: 'date', nullable: true })
-  billinglimitDate: Date | null;
+  billingLimitDate: Date | null;
 
   @Column({ name: 'NUMTRANSACAOTRANSF', type: 'number', precision: 10, scale: 0, nullable: true })
   transferTransactionNumber: number | null;
@@ -758,7 +758,7 @@ export class PcpedcEntity {
   vehicleUf: string | null;
 
   @Column({ name: 'DEVSIMBOLICA', type: 'varchar2', length: 1, nullable: true })
-  symbolicDev: string | null;
+  symbolicReturn: string | null;
 
   @Column({ name: 'CODAUTORIZACAOTEFWEB', type: 'varchar2', length: 128, nullable: true })
   webTefAuthCode: string | null;
@@ -860,7 +860,7 @@ export class PcpedcEntity {
   longitude: string | null;
 
   @Column({ name: 'PRECISAOLATLNG', type: 'number', precision: 8, scale: 2, nullable: true })
-  precisaolatlng: number | null;
+  precisionLatLng: number | null;
 
   @Column({ name: 'CODPROMOCAOMED', type: 'number', precision: 9, scale: 0, nullable: true })
   medPromotionId: number | null;
@@ -989,7 +989,7 @@ export class PcpedcEntity {
   assistiveSale: string | null;
 
   @Column({ name: 'TOTPESOLIQ', type: 'number', precision: 18, scale: 6, nullable: true })
-  totalNetWeight: number | null;
+  totalLiqquidWeight: number | null;
 
   @Column({ name: 'NUMORCAPRINC', type: 'number', precision: 10, scale: 0, nullable: true })
   mainQuoteNumber: number | null;
@@ -1085,7 +1085,7 @@ export class PcpedcEntity {
   guaranteeCheckDate: Date | null;
 
   @Column({ name: 'CODFUNCCONFGARANTIA', type: 'number', precision: 8, scale: 0, nullable: true })
-  codfuncconfgarantiaId: number | null;
+  codEmployeeConfGuaranteeId: number | null;
 
   @Column({ name: 'CODIGOSAZONALIDADE', type: 'number', precision: 6, scale: 0, nullable: true })
   seasonalityCode: number | null;
@@ -1268,7 +1268,7 @@ export class PcpedcEntity {
   freightQuoteId: string | null;
 
   @Column({ name: 'DESTACARICMSDEVSIMBOLICA', type: 'varchar2', length: 1, nullable: true })
-  highlightSymbolicDevIcms: string | null;
+  highlightSymbolicReturnIcms: string | null;
 
   @Column({ name: 'CODIGORASTREIOFRETEVENDA', type: 'varchar2', length: 2000, nullable: true })
   trackingCodeSaleFreight: string | null;
