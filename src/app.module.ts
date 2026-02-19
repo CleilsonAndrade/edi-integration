@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { DatabaseConfigService } from './config/database.config';
+import { AppHealthModule } from './modules/app-heath/app-health.module';
 import { EDIModule } from './modules/edi/edi.module';
 
 @Module({
@@ -23,6 +24,7 @@ import { EDIModule } from './modules/edi/edi.module';
     CommonModule,
     ScheduleModule.forRoot(),
 
+    AppHealthModule,
     EDIModule,
 
   ],
