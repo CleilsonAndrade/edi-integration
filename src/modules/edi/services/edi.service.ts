@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
 import { DataSource, Repository } from 'typeorm';
@@ -17,6 +18,8 @@ export class EDIService {
     private pedidoRepository: Repository<PcpedcEntity>,
     @InjectRepository(PcpediEntity)
     private itemRepository: Repository<PcpediEntity>,
+    @InjectRepository(PcfilialEntity)
+    private pcfilialRepository: Repository<PcfilialEntity>,
     private dataSource: DataSource,
     private parser: EDI850Parser,
     private ftpService: FTPService,
@@ -103,7 +106,7 @@ export class EDIService {
         item.descricao = itemData.description;
         item.qt = itemData.quantity;
         item.pvenda = itemData.unitPrice;
-        item.punit = itemData.unitPrice;
+        item.unit = itemData.unitPrice;
         item.vltotal = itemData.quantity * itemData.unitPrice;
         item.codean = itemData.upc;
         item.pesobruto = itemData.grossWeight;
