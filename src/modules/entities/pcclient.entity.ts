@@ -1017,7 +1017,7 @@ export class PcclientEntity {
   @Column({ name: 'MINUTOPROXCONTATO', type: 'number', nullable: true, precision: 2, scale: 0 })
   minuteUtonextContato: number | null;
 
-  @Column({ name: 'MOTIVOBLOQ', type: 'clob', nullable: true, length: 4000 })
+  @Column({ name: 'MOTIVOBLOQ', type: 'clob', nullable: true })
   reasonBlock: string | null;
 
   @Column({ name: 'MOTIVOEXCLUSAO', type: 'varchar2', nullable: true, length: 40 })
@@ -1200,8 +1200,8 @@ export class PcclientEntity {
   @Column({ name: 'OBSTESOURARIA', type: 'varchar2', nullable: true, length: 4000 })
   observationTesouraria: string | null;
 
-  @Column({ name: 'OBS_ADIC', type: 'clob', nullable: true, length: 4000 })
-  observation_Adic: string | null;
+  @Column({ name: 'OBS_ADIC', type: 'clob', nullable: true })
+  observation_Adicadditional: string | null;
 
   @Column({ name: 'ORGAOPUB', type: 'varchar2', nullable: true, length: 1 })
   orgAopub: string | null;

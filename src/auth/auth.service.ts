@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { PcemprEntity } from "../entities/pcempr.entity";
+import { PcemprEntity } from "../modules/entities/pcempr.entity";
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 export function mapPcemprToJwtPayload(entity: PcemprEntity): JwtPayload {

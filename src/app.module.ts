@@ -21,12 +21,11 @@ import { EDIModule } from './modules/edi/edi.module';
       useClass: DatabaseConfigService,
     }),
 
-    CommonModule,
     ScheduleModule.forRoot(),
 
     AppHealthModule,
     EDIModule,
-
+    CommonModule,
   ],
 })
 export class AppModule { }

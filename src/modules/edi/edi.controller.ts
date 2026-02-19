@@ -4,7 +4,7 @@ import { ForbiddenResponse } from 'src/common/dto/forbidden.dto';
 import { InternalServerErrorResponse } from 'src/common/dto/internal-server-error.dto';
 import { NotFoundResponse } from 'src/common/dto/not-found.dto';
 import { UnauthorizedResponse } from 'src/common/dto/unauthorized.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { Roles } from '../../auth/decorators/roles.decorator';
 import { EdiProcessResultDto } from './dto/edi-import-result.dto';
 import { EDITask } from './tasks/edi.task';
 

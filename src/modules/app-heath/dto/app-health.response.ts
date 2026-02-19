@@ -24,7 +24,7 @@ export class AppHealthResponseDto {
   status: 'ok' | 'error' | 'shutting_down';
 
   @ApiProperty({
-    example: 'ftpServer',
+    example: 'edi-integration',
     description: 'Service name.'
   })
   service: string;

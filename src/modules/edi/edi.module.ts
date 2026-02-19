@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from 'src/auth/auth.module';
 import { PcclientEntity } from '../entities/pcclient.entity';
 import { PcemprEntity } from '../entities/pcempr.entity';
 import { PcfilialEntity } from '../entities/pcfilial.entity';
@@ -13,6 +14,7 @@ import { EDITask } from './tasks/edi.task';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([
       PcfilialEntity,
       PcclientEntity,
