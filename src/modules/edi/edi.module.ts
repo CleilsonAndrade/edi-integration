@@ -21,7 +21,7 @@ import { EDITask } from './tasks/edi.task';
       PcemprEntity,
       PcpedcEntity,
       PcpediEntity,
-    ]),
+    ], 'winthor_conn'),
   ],
   controllers: [EDIController],
   providers: [EDIService, FTPService, EDI850Parser, EDITask,],

@@ -18,6 +18,7 @@ import { EDIModule } from './modules/edi/edi.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      name: 'winthor_conn',
       useClass: DatabaseConfigService,
     }),
 

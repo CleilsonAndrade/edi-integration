@@ -13,7 +13,7 @@ import { JwtStrategy } from "./jwt.strategy";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forFeature([PcemprEntity]),
+    TypeOrmModule.forFeature([PcemprEntity], 'winthor_conn'),
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
     JwtModule.registerAsync({

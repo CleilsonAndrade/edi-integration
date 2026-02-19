@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
@@ -14,12 +14,13 @@ export class EDIService {
   private readonly logger = new Logger(EDIService.name);
 
   constructor(
-    @InjectRepository(PcpedcEntity)
+    @InjectRepository(PcpedcEntity, 'winthor_conn')
     private pedidoRepository: Repository<PcpedcEntity>,
-    @InjectRepository(PcpediEntity)
+    @InjectRepository(PcpediEntity, 'winthor_conn')
     private itemRepository: Repository<PcpediEntity>,
-    @InjectRepository(PcfilialEntity)
+    @InjectRepository(PcfilialEntity, 'winthor_conn')
     private pcfilialRepository: Repository<PcfilialEntity>,
+    @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
     private parser: EDI850Parser,
     private ftpService: FTPService,

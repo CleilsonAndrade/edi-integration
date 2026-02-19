@@ -27,7 +27,7 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    @InjectRepository(PcemprEntity)
+    @InjectRepository(PcemprEntity, 'winthor_conn')
     private readonly userRepository: Repository<PcemprEntity>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
