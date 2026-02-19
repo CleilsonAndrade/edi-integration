@@ -13,7 +13,6 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       password: process.env.DB_PASSWORD,
       serviceName: process.env.DB_SERVICE_NAME,
 
-      // entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       autoLoadEntities: true,
 
       synchronize: false,
