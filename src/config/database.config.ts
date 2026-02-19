@@ -10,7 +10,8 @@ export class DatabaseConfigService implements TypeOrmOptionsFactory {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 1521,
       username: process.env.DB_USERNAME,
-      password: process.env.DB_SERVICE_NAME,
+      password: process.env.DB_PASSWORD,
+      serviceName: process.env.DB_SERVICE_NAME,
 
       entities: [__dirname + '/../**/*.entity{.ts,.js'],
 

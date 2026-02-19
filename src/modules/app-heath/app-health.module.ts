@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { AppHealthController } from './app-health.controller';
 import { AppHealthService } from './app-health.service';
+import { FtpHealthIndicator } from './ftp.health';
 
 
 @Module({
@@ -14,7 +15,7 @@ import { AppHealthService } from './app-health.service';
     TypeOrmModule.forFeature([]),
   ],
   controllers: [AppHealthController],
-  providers: [AppHealthService],
+  providers: [AppHealthService, FtpHealthIndicator],
 })
 
 export class AppHealthModule { };
