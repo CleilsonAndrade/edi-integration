@@ -51,13 +51,28 @@ export class FTPService {
         }
 
         const files = list
-          .filter(item => item.type === '-' && item.name.endsWith('.edi'))
+          .filter(item => {
+            const isEdiFile = item.type === '-' && item.name.endsWith('.edi');
+
+            // Só exibe o log se o item passar na validação
+            if (isEdiFile) {
+              this.logger.debug(`Arquivo EDI encontrado: ${item.name}`);
+            }
+
+            return isEdiFile;
+          })
           .map(item => ({
             name: item.name,
             size: item.size,
             date: item.date,
             path: `${remotePath}/${item.name}`,
           }));
+
+        if (files.length > 0) {
+          // Extrai apenas os nomes para o log
+          const fileNames = files.map(f => f.name);
+          this.logger.debug(`Arquivos encontrados para processamento em ${remotePath}: ${fileNames.join(', ')}`);
+        }
 
         resolve(files);
       });

@@ -5,7 +5,7 @@ import * as path from "path";
 export class FileStorageService {
   private readonly logger = new Logger(FileStorageService.name);
 
-  async saveJson(folderName: string, data: any[]): Promise<string | void> {
+  async saveJson(folderName: string, data: any[], isJson: boolean): Promise<string | void> {
     try {
       if (!data || data.length === 0) {
         this.logger.warn(`Nenhum dado para salvar em: ${folderName}`);
@@ -23,7 +23,11 @@ export class FileStorageService {
 
       const fullPath = path.join(directory, fileName);
 
-      await fs.writeFile(fullPath, JSON.stringify(data, null, 2), 'utf-8');
+      if (isJson) {
+        await fs.writeFile(fullPath, JSON.stringify(data, null, 2), 'utf-8');
+      }
+
+      await fs.writeFile(fullPath, data, 'utf-8');
 
       const displayPath = path.join(path.basename(rootDir), path.relative(rootDir, fullPath));
 
@@ -36,11 +40,11 @@ export class FileStorageService {
     }
   }
 
-  private getTimestamp(): string {
+  public getTimestamp(): string {
     const now = new Date();
     const DD = String(now.getDate()).padStart(2, '0');
     const MM = String(now.getMonth() + 1).padStart(2, '0');
-    const YY = String
+    const YY = String(now.getFullYear()).slice(-2);
     const HH = String(now.getHours()).padStart(2, '0');
     const Min = String(now.getMinutes()).padStart(2, '0');
 

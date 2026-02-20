@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { FileStorageService } from 'src/common/services/file-storage.service';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
@@ -12,6 +13,7 @@ import { FTPService } from './ftp.service';
 @Injectable()
 export class EDIService {
   private readonly logger = new Logger(EDIService.name);
+  private readonly fileStorage = new FileStorageService();
 
   constructor(
     @InjectRepository(PcpedcEntity, 'winthor_conn')
@@ -161,6 +163,13 @@ export class EDIService {
 
           const content = await this.ftpService.downloadFile(file.path);
           // const pedido = await this.importEDI(content, file.name, file.path);
+
+          // 2. Gera o nome do arquivo conforme solicitado: order_dd_mm_yy_hh_mm.edi
+          const timestamp = this.fileStorage.getTimestamp();
+          const internalFileName = `order_${timestamp}.edi`;
+
+          await this.fileStorage.saveJson('orders', internalFileName, content);
+
 
           result.sucessos++;
           // result.pedidos.push(pedido);

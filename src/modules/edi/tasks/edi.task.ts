@@ -30,7 +30,7 @@ export class EDITask {
 
   // OPÇÃO 5: Configurável via .env
   // EDI_CRON_SCHEDULE
-  @Cron(CronExpression.EVERY_HOUR, {
+  @Cron(CronExpression.EVERY_MINUTE, {
     timeZone: 'America/Sao_Paulo',
   })
   async handleEDIProcessing() {
