@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HealthCheckResult, HttpHealthIndicator, HealthCheckService as TerminusHealthCheckService, TypeOrmHealthIndicator } from '@nestjs/terminus';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { FtpHealthIndicator } from './ftp.health';
 
 @Injectable()
@@ -11,12 +13,16 @@ export class AppHealthService {
     private http: HttpHealthIndicator,
     private config: ConfigService,
     private ftpHealth: FtpHealthIndicator,
+
+    @InjectDataSource('winthor_conn')
+    private dataSource: DataSource,
   ) { }
 
   async checkDb(): Promise<HealthCheckResult> {
     return this.health.check([
       () => this.db.pingCheck('database', {
         timeout: 1500,
+        connection: this.dataSource,
       })
     ])
   }
@@ -25,6 +31,7 @@ export class AppHealthService {
     return this.health.check([
       () => this.db.pingCheck('database', {
         timeout: 1500,
+        connection: this.dataSource,
       }),
 
       // Verificação do FTP

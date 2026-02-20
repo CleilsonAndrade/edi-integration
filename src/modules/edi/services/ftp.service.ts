@@ -35,7 +35,7 @@ export class FTPService {
         port: this.configService.get<number>('FTP_PORT', 21),
         user: this.configService.get<string>('FTP_USER'),
         password: this.configService.get<string>('FTP_PASSWORD'),
-        secure: this.configService.get<boolean>('FTP_SECURE', false),
+        secure: this.configService.get<boolean>('FTP_SECURE') === true,
         secureOptions: { rejectUnauthorized: false },
       });
     });
