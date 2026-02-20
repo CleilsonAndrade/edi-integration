@@ -1,5 +1,8 @@
-import { Controller, HttpCode, HttpStatus, Post, Request } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import type { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 import { ForbiddenResponse } from 'src/common/dto/forbidden.dto';
 import { InternalServerErrorResponse } from 'src/common/dto/internal-server-error.dto';
 import { NotFoundResponse } from 'src/common/dto/not-found.dto';
@@ -8,8 +11,10 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { EdiProcessResultDto } from './dto/edi-import-result.dto';
 import { EDITask } from './tasks/edi.task';
 
-@ApiTags('EDI')
 @Controller('edi')
+@ApiTags('EDI')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth('BearerAuth')
 export class EDIController {
   constructor(
     private ediTask: EDITask,
@@ -47,10 +52,10 @@ export class EDIController {
     description: 'Server internal error.',
     type: InternalServerErrorResponse,
   })
-  async triggerProcessing(@Request() req: any): Promise<EdiProcessResultDto> {
-    // const { registration } = req.user;
-    // const _executedById = registration;
+  async triggerProcessing(@CurrentUser() user: JwtPayload): Promise<EdiProcessResultDto> {
+    const { registration } = user;
+    const executedById = registration;
 
-    return await this.ediTask.runManually();
+    return await this.ediTask.runManually(executedById);
   }
 }

@@ -58,8 +58,8 @@ export class EDITask {
   }
 
   // Processamento manual via endpoint
-  async runManually() {
-    this.logger.log('Processamento manual iniciado');
+  async runManually(executedById: number) {
+    this.logger.log(`Processamento manual iniciado por usuário ID: ${executedById}`);
     return await this.ediService.processFromFTP();
   }
 }
