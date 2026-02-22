@@ -165,11 +165,8 @@ export class EDIService {
           // const pedido = await this.importEDI(content, file.name, file.path);
 
           // 2. Gera o nome do arquivo conforme solicitado: order_dd_mm_yy_hh_mm.edi
-          const timestamp = this.fileStorage.getTimestamp();
-          const internalFileName = `order_${timestamp}.edi`;
 
-          await this.fileStorage.saveJson('orders', internalFileName, content);
-
+          await this.fileStorage.saveData('order', content, false, '.edi');
 
           result.sucessos++;
           // result.pedidos.push(pedido);

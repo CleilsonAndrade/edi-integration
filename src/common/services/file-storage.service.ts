@@ -3,11 +3,11 @@ import * as fs from 'fs/promises';
 import * as path from "path";
 
 export class FileStorageService {
-  private readonly logger = new Logger(FileStorageService.name);
+  private readonly logger = new Logger(FileStorageService.name)
 
-  async saveJson(folderName: string, data: any[], isJson: boolean): Promise<string | void> {
+  async saveData(folderName: string, data: any[] | string, isJson: boolean, ext?: string): Promise<string | void> {
     try {
-      if (!data || data.length === 0) {
+      if (!data || (Array.isArray(data) && data.length === 0)) {
         this.logger.warn(`Nenhum dado para salvar em: ${folderName}`);
 
         return;
@@ -17,17 +17,17 @@ export class FileStorageService {
       const rootDir = process.cwd();
       const directory = path.join(process.cwd(), 'storage', folderName);
 
-      await fs.mkdir(directory, { recursive: true, })
+      await fs.mkdir(directory, { recursive: true });
 
-      const fileName = `${folderName}_${timestamp}.json`;
+      const fileName = `${folderName}_${timestamp}.${isJson ? '.json' : ext || '.txt'}`;
 
       const fullPath = path.join(directory, fileName);
 
-      if (isJson) {
-        await fs.writeFile(fullPath, JSON.stringify(data, null, 2), 'utf-8');
-      }
+      const contentToWrite = isJson
+        ? JSON.stringify(data, null, 2)
+        : data;
 
-      await fs.writeFile(fullPath, data, 'utf-8');
+      await fs.writeFile(fullPath, contentToWrite, 'utf-8');
 
       const displayPath = path.join(path.basename(rootDir), path.relative(rootDir, fullPath));
 
@@ -40,14 +40,13 @@ export class FileStorageService {
     }
   }
 
-  public getTimestamp(): string {
+  private getTimestamp(): string {
     const now = new Date();
     const DD = String(now.getDate()).padStart(2, '0');
     const MM = String(now.getMonth() + 1).padStart(2, '0');
     const YY = String(now.getFullYear()).slice(-2);
     const HH = String(now.getHours()).padStart(2, '0');
     const Min = String(now.getMinutes()).padStart(2, '0');
-
     return `${DD}_${MM}_${YY}_${HH}_${Min}`;
   }
 }
