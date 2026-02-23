@@ -67,6 +67,107 @@ export class EDIService {
     }
   }
 
+  /**
+   * Verifica se o pedido EDI já foi processado anteriormente
+   * Busca por: Nome do Arquivo OU PO Number
+   */
+  // async isEDIAlreadyProcessed(
+  //   poNumber: string,
+  //   fileName: string
+  // ): Promise<boolean> {
+  //   try {
+  //     // Busca 1: Por nome do arquivo
+  //     const byFile = await this.pedidoRepository
+  //       .createQueryBuilder('ped')
+  //       .where('ped.ARQUIVO = :fileName', { fileName })
+  //       .getOne();
+
+  //     if (byFile) {
+  //       this.logger.warn(`  ⚠ EDI já processado (Arquivo: ${fileName}) - NUMPED: ${byFile.numped}`);
+  //       return true;
+  //     }
+
+  //     // Busca 2: Por número do pedido do fornecedor (PO Number)
+  //     const byPO = await this.pedidoRepository
+  //       .createQueryBuilder('ped')
+  //       .where('ped.NUMPEDFORNEC = :poNumber', { poNumber })
+  //       .getOne();
+
+  //     if (byPO) {
+  //       this.logger.warn(`  ⚠ EDI já processado (PO Number: ${poNumber}) - NUMPED: ${byPO.numped}`);
+  //       return true;
+  //     }
+
+  //     // EDI não encontrado - pode processar
+  //     this.logger.debug(`  ✓ EDI novo, pode processar (PO: ${poNumber}, File: ${fileName})`);
+  //     return false;
+
+  //   } catch (error: unknown) {
+  //     const stack = error instanceof Error ? error.stack : String(error);
+  //     this.logger.error(` ❌ Erro ao verificar duplicidade do EDI`, stack);
+  //     return false;
+  //   }
+  // }
+
+  async validateEDIContent(ediContent: string, fileName: string): Promise<{
+    isValid: boolean;
+    parsed?: any;
+    reason?: string;
+  }> {
+    try {
+      // 1. Validar se o conteúdo não está vazio
+      if (!ediContent || ediContent.trim().length === 0) {
+        return { isValid: false, reason: 'Arquivo vazio' };
+      }
+
+      // 2. Validar se é um arquivo EDI válido
+      if (!ediContent.includes('ISA') || !ediContent.includes('BEG')) {
+        return { isValid: false, reason: 'Formato EDI inválido (faltam segmentos ISA/BEG)' };
+      }
+
+      // 3. Fazer o parse do EDI
+      this.logger.debug(`  → Fazendo parse do arquivo: ${fileName}`);
+      const parsed = this.parser.parse(ediContent);
+
+      // 4. Validar dados obrigatórios
+      if (!parsed.header?.poNumber) {
+        return { isValid: false, reason: 'PO Number não encontrado' };
+      }
+
+      if (!parsed.items || parsed.items.length === 0) {
+        return { isValid: false, reason: 'Nenhum item encontrado no EDI' };
+      }
+
+      // 5. Verificar se já foi processado (por arquivo OU PO Number)
+      // const alreadyProcessed = await this.isEDIAlreadyProcessed(
+      //   parsed.header.poNumber,
+      //   fileName
+      // );
+
+      // if (alreadyProcessed) {
+      //   return {
+      //     isValid: false,
+      //     parsed,
+      //     reason: 'EDI já processado anteriormente'
+      //   };
+      // }
+
+      this.logger.log('parser=======================asdadasdasdas', parsed);
+
+      // 6. Tudo OK - pode processar
+      this.logger.debug(`  ✓ EDI validado com sucesso`);
+      return { isValid: true, parsed };
+
+    } catch (error: unknown) {
+      const stack = error instanceof Error ? error.stack : String(error);
+      this.logger.error(` ❌ Erro ao validar EDI ${fileName}`, stack);
+      return {
+        isValid: false,
+        reason: `Erro no parse: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+      };
+    }
+  }
+
   // async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<EdiImportResultDto> {
   //   const parsed = this.parser.parse(ediContent);
 
@@ -138,8 +239,6 @@ export class EDIService {
   // async processFromFTP(): Promise<EdiProcessResultDto> {
   async processFromFTP(): Promise<any> {
     const remotePath = this.configService.get<string>('FTP_REMOTE_PATH', '/edi');
-    const processedPath = this.configService.get<string>('FTP_PROCESSED_PATH', '/edi/processed');
-    const errorPath = this.configService.get<string>('FTP_ERROR_PATH', '/edi/errors');
 
     const result: EdiProcessResultDto = {
       totalProcessados: 0,
@@ -162,30 +261,43 @@ export class EDIService {
           this.logger.log(`Processando: ${file.name}`);
 
           const content = await this.ftpService.downloadFile(file.path);
+
+          const validation = await this.validateEDIContent(content, file.name);
+
+          // if (!validation.isValid) {
+          //   this.logger.warn(`  ⚠ Arquivo ignorado: ${validation.reason}`);
+
+          //   // Se já foi processado, move para "processed"
+          //   if (validation.reason && validation.reason.includes('já processado')) {
+          //     this.logger.warn(`  ⚠ Arquivo já processado: ${file.name}`);
+          //   }
+          //   // Se tem erro de formato, move para "errors"
+          //   else {
+          //     result.erros++;
+          //     result.arquivosComErro.push(`${file.name} - ${validation.reason}`);
+          //   }
+
+          //   continue; // ⭐ Pula para o próximo arquivo
+          // }
+
           // const pedido = await this.importEDI(content, file.name, file.path);
 
-          // 2. Gera o nome do arquivo conforme solicitado: order_dd_mm_yy_hh_mm.edi
+          this.logger.log('=============================', validation);
+
 
           await this.fileStorage.saveData('order', content, false, '.edi');
+
+          this.logger.log(`  ✅ Arquivo processado com sucesso`);
 
           result.sucessos++;
           // result.pedidos.push(pedido);
 
           // this.logger.log(`✓ PO ${pedido.numpedfornec} importada (NUMPED: ${pedido.numped})`);
-
-          await this.ftpService.moveFile(file.path, `${processedPath}/${file.name}`);
-
         } catch (error) {
           result.erros++;
           result.arquivosComErro.push(file.name);
 
           this.logger.error(`✗ Erro ao processar ${file.name}:`, error.stack);
-
-          try {
-            await this.ftpService.moveFile(file.path, `${errorPath}/${file.name}`);
-          } catch (moveError) {
-            this.logger.error(`Erro ao mover arquivo para erros:`, moveError);
-          }
         }
       }
 

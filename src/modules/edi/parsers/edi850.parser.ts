@@ -63,12 +63,12 @@ export class EDI850Parser {
 
         case 'BEG':
           const begData = line.substring(3);
-          parsed.header.poNumber = begData.substring(4, 22).trim();
+          parsed.header.poNumber = begData.substring(7, 17).trim();
           parsed.header.poDate = begData.substring(22, 30).trim();
           break;
 
         case 'CUR':
-          parsed.header.currency = line.substring(5, 8).trim();
+          parsed.header.currency = line.substring(7, 11).trim();
           break;
 
         case 'REF':
@@ -111,10 +111,13 @@ export class EDI850Parser {
           break;
 
         case 'PO1':
+          // Se já existir um item anterior sendo processado, salva ele na lista antes de começar o novo
           if (currentItem) parsed.items.push(currentItem);
 
           const po1Data = line.substring(3);
-          const lineNum = parseInt(po1Data.substring(0, 4));
+
+          // Parseia os dados brutos
+          const lineNum = parseInt(po1Data.substring(0, 4)); // Ajuste conforme seu layout
           const qtyMatch = po1Data.match(/(\d+)EA/);
           const priceMatch = po1Data.match(/EA([\d.]+)BP/);
           const bpMatch = po1Data.match(/BP([A-Z0-9/]+)PD/);
@@ -122,11 +125,15 @@ export class EDI850Parser {
           const vpMatch = po1Data.match(/VP(\d+)/);
 
           currentItem = {
-            lineNumber: lineNum,
+            lineNumber: isNaN(lineNum) ? 0 : lineNum, // Proteção extra caso o parse falhe
             quantity: qtyMatch ? parseInt(qtyMatch[1]) : 0,
             unitPrice: priceMatch ? parseFloat(priceMatch[1]) : 0,
             buyerPartNumber: bpMatch ? bpMatch[1] : '',
-            description: descMatch ? descMatch[1] : '',
+
+            // AQUI É O PULO DO GATO:
+            // Se houver match, aplica o replace e o trim. Se não, retorna string vazia.
+            description: descMatch ? descMatch[1].replace(/[\x00-\x1F\x7F]/g, "").trim() : '',
+
             vendorPartNumber: vpMatch ? vpMatch[1] : ''
           };
           break;
