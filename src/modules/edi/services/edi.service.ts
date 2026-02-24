@@ -152,7 +152,7 @@ export class EDIService {
       //   };
       // }
 
-      this.logger.log('parser=======================asdadasdasdas', parsed);
+      // this.logger.log('parser=======================', parsed);
 
       // 6. Tudo OK - pode processar
       this.logger.debug(`  ✓ EDI validado com sucesso`);
@@ -282,7 +282,7 @@ export class EDIService {
 
           // const pedido = await this.importEDI(content, file.name, file.path);
 
-          this.logger.log('=============================', validation);
+          this.logger.log('validado=============================', validation);
 
 
           await this.fileStorage.saveData('order', content, false, '.edi');
