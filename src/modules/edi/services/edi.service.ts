@@ -5,6 +5,7 @@ import { FileStorageService } from 'src/common/services/file-storage.service';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
+import { PcprodutEntity } from 'src/modules/entities/pcprodut.entity';
 import { DataSource, Repository } from 'typeorm';
 import { EdiProcessResultDto } from '../dto/edi-import-result.dto';
 import { EDI850Parser } from '../parsers/edi850.parser';
@@ -22,6 +23,9 @@ export class EDIService {
     private itemRepository: Repository<PcpediEntity>,
     @InjectRepository(PcfilialEntity, 'winthor_conn')
     private pcfilialRepository: Repository<PcfilialEntity>,
+    @InjectRepository(PcfilialEntity, 'winthor_conn')
+    private pcproductRepository: Repository<PcprodutEntity>,
+
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
     private parser: EDI850Parser,
@@ -92,7 +96,29 @@ export class EDIService {
     return false;
   }
 
-  async findProductByFactoryCod(factoryCode: string): Promise<any> {
+  async findProductByFactoryCod(factoryCode: string): Promise<PcprodutEntity | null> {
+    try {
+      this.logger.debug(`  → Buscando produto por código de fábrica: ${factoryCode}`);
+
+      const product = await this.pcproductRepository.findOne({
+        where: {
+          manufacturerCode: Number(factoryCode),
+        },
+      });
+
+      if (product) {
+        this.logger.debug(`  ✓ Produto encontrado: CODPROD ${product.productCode}`);
+        return product;
+      }
+
+      this.logger.warn(`  ✗ Produto NÃO encontrado para código de fábrica: ${factoryCode}`);
+      return null;
+    } catch (error: unknown) {
+      const stack = error instanceof Error ? error.stack : String(error);
+
+      this.logger.error(` ❌ Erro ao buscar produto por código de fábrica ${factoryCode}`, stack);
+      return null;
+    }
   }
 
   /**
