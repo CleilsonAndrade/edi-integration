@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { FileStorageService } from 'src/common/services/file-storage.service';
+import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
@@ -119,6 +120,39 @@ export class EDIService {
       this.logger.error(` ❌ Erro ao buscar produto por código de fábrica ${factoryCode}`, stack);
       return null;
     }
+  }
+
+  async getNextSequenceOrderNumber(): Promise<number> {
+    this.logger.debug(`→ Obtendo número de pedido...`);
+
+    const lockNextSequenceOrderNumber = `
+        SELECT NVL(PROXNUMPED, 1) AS PROXNUMPED 
+        FROM PCCONSUM 
+        FOR UPDATE WAIT 5
+      `;
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    const findNextSequenceOrderNumber = await queryRunner.manager.query(lockNextSequenceOrderNumber);
+
+    const startNumPed = findNextSequenceOrderNumber[0].PROXNUMPED;
+    const newValueSequenceOrderNumber = startNumPed + 1;
+
+    await queryRunner.manager
+      .createQueryBuilder()
+      .update(PcconsumEntity)
+      .set({ nextSequenceOrderNumber: newValueSequenceOrderNumber })
+      .execute();
+
+    if (!findNextSequenceOrderNumber || findNextSequenceOrderNumber.length === 0) {
+      throw new Error('PCCONSUM vazia ou erro na leitura da sequência.');
+    }
+
+    this.logger.debug(`  ✓ Número de pedido obtido: ${newValueSequenceOrderNumber}`);
+    await queryRunner.release();
+
+    return newValueSequenceOrderNumber;
   }
 
   /**
