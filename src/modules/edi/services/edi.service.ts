@@ -29,11 +29,31 @@ export class EDIService {
     private configService: ConfigService,
   ) { }
 
-  async findCompanyByCnpj(cnpj: string): Promise<string | null> {
-    const allowedCodes = process.env.FINANCIAL_BRANCH
-      ? process.env.FINANCIAL_BRANCH.split(',')
-      : [];
+  async findCompanyByName(name: string): Promise<string | null> {
+    try {
+      this.logger.debug(`  → Buscando filial por nome: ${name}`);
 
+      const company = await this.pcfilialRepository
+        .createQueryBuilder('filial')
+        .where('filial.NOME = :name', { name })
+        .getOne();
+
+      if (company?.codeBranch) {
+        this.logger.debug(`  ✓ Filial encontrada: Código ${company.codeBranch}`);
+        return String(company.codeBranch);
+      }
+
+      this.logger.warn(`  ✗ Filial NÃO encontrada para nome: ${name}`);
+      return null;
+    } catch (error: unknown) {
+      const stack = error instanceof Error ? error.stack : String(error);
+
+      this.logger.error(` ❌ Erro ao buscar filial por nome ${name}`, stack);
+      return null;
+    }
+  }
+
+  async findCompanyByCnpj(cnpj: string): Promise<string | null> {
     try {
       this.logger.debug(`  → Buscando filial por CNPJ: ${cnpj}`);
 
@@ -46,15 +66,7 @@ export class EDIService {
         this.logger.debug(`  ✓ Filial encontrada: Código ${company.codeBranch}`);
 
         const companyCodeString = String(company.codeBranch);
-
-        if (!allowedCodes.includes(companyCodeString)) {
-          this.logger.debug(
-            `  ✗ Filial NÃO permitida, as filiais permitidas são as de código: ${allowedCodes.join(', ')}`,
-          );
-          return null;
-        }
-
-        return company.codeBranch;
+        return companyCodeString;
       }
 
       this.logger.warn(`  ✗ Filial NÃO encontrada para CNPJ: ${cnpj}`);
@@ -65,6 +77,22 @@ export class EDIService {
       this.logger.error(` ❌ Erro ao buscar filial por CNPJ ${cnpj}`, stack);
       return null;
     }
+  }
+
+  async allowedCompanyByCodBranch(companyCodeString: string): Promise<boolean> {
+    const allowedCodes = process.env.FINANCIAL_BRANCH
+      ? process.env.FINANCIAL_BRANCH.split(',')
+      : [];
+
+    if (allowedCodes.includes(companyCodeString)) {
+      this.logger.debug(`  ✓ Filial ${companyCodeString} permitida para processamento`);
+      return true;
+    }
+    this.logger.warn(`  ✗ Filial ${companyCodeString} NÃO permitida para processamento`);
+    return false;
+  }
+
+  async findProductByFactoryCod(factoryCode: string): Promise<any> {
   }
 
   /**
@@ -168,73 +196,75 @@ export class EDIService {
     }
   }
 
-  // async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<EdiImportResultDto> {
-  //   const parsed = this.parser.parse(ediContent);
+  async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<EdiImportResultDto> {
+    const parsed = this.parser.parse(ediContent);
 
-  //   return await this.dataSource.transaction(async (manager) => {
-  //     // Criar cabeçalho do pedido
-  //     const pedido = new PcpedcEntity();
-  //     pedido.numpedfornec = parsed.header.poNumber;
-  //     pedido.data = this.parser.parseDate(parsed.header.poDate);
-  //     pedido.numcontroledi = parsed.header.controlNumber;
-  //     pedido.projeto = parsed.header.projectNumber;
-  //     pedido.numserie = parsed.header.serialNumber;
 
-  //     // TODO: Buscar códigos de cliente/fornecedor nas tabelas do Winthor
-  //     // Por ora, usando valores fixos - você deve adaptar
-  //     pedido.codcli = 1; // Buscar na PCCLIENT onde CLIENTE = parsed.parties.buyerName
-  //     pedido.codfornec = 1; // Buscar na PCFORNEC onde FORNECEDOR = parsed.header.vendorName
-  //     pedido.codfilial = parsed.parties.shipToLocation;
 
-  //     // Calcular totais
-  //     pedido.qtitens = parsed.totals.totalLineItems;
-  //     pedido.qtpecas = parsed.totals.totalQuantity;
-  //     pedido.vltotal = parsed.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+    return await this.dataSource.transaction(async (manager) => {
+      // Criar cabeçalho do pedido
+      const pedido = new PcpedcEntity();
+      pedido.numpedfornec = parsed.header.poNumber;
+      pedido.data = this.parser.parseDate(parsed.header.poDate);
+      pedido.numcontroledi = parsed.header.controlNumber;
+      pedido.projeto = parsed.header.projectNumber;
+      pedido.numserie = parsed.header.serialNumber;
 
-  //     pedido.arquivo = fileName;
-  //     pedido.pathftp = ftpPath;
+      // TODO: Buscar códigos de cliente/fornecedor nas tabelas do Winthor
+      // Por ora, usando valores fixos - você deve adaptar
+      pedido.codcli = 1; // Buscar na PCCLIENT onde CLIENTE = parsed.parties.buyerName
+      pedido.codfornec = 1; // Buscar na PCFORNEC onde FORNECEDOR = parsed.header.vendorName
+      pedido.codfilial = parsed.parties.shipToLocation;
 
-  //     const savedPedido = await manager.save(PcpedcEntity, pedido);
+      // Calcular totais
+      pedido.qtitens = parsed.totals.totalLineItems;
+      pedido.qtpecas = parsed.totals.totalQuantity;
+      pedido.vltotal = parsed.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
 
-  //     // Criar itens do pedido
-  //     const itens = parsed.items.map(itemData => {
-  //       const item = new PcpediEntity();
-  //       item.numped = savedPedido.numped;
-  //       item.numseqorig = itemData.lineNumber;
+      pedido.arquivo = fileName;
+      pedido.pathftp = ftpPath;
 
-  //       // TODO: Buscar CODPROD na PCPRODUT usando o código do fornecedor ou EAN
-  //       item.codprod = 1; // Buscar onde CODAUXILIAR = itemData.vendorPartNumber ou CODEAN = itemData.upc
+      const savedPedido = await manager.save(PcpedcEntity, pedido);
 
-  //       item.codprodcli = itemData.buyerPartNumber;
-  //       item.codprodfor = itemData.vendorPartNumber;
-  //       item.descricao = itemData.description;
-  //       item.qt = itemData.quantity;
-  //       item.pvenda = itemData.unitPrice;
-  //       item.unit = itemData.unitPrice;
-  //       item.vltotal = itemData.quantity * itemData.unitPrice;
-  //       item.codean = itemData.upc;
-  //       item.pesobruto = itemData.grossWeight;
-  //       item.pesoliq = itemData.netWeight;
-  //       item.dtentrega = itemData.deliveryDate
-  //         ? this.parser.parseDate(itemData.deliveryDate)
-  //         : null;
-  //       item.codfilial = itemData.plantCode;
+      // Criar itens do pedido
+      const itens = parsed.items.map(itemData => {
+        const item = new PcpediEntity();
+        item.numped = savedPedido.numped;
+        item.numseqorig = itemData.lineNumber;
 
-  //       return item;
-  //     });
+        // TODO: Buscar CODPROD na PCPRODUT usando o código do fornecedor ou EAN
+        item.codprod = 1; // Buscar onde CODAUXILIAR = itemData.vendorPartNumber ou CODEAN = itemData.upc
 
-  //     await manager.save(PcpediEntity, itens);
+        item.codprodcli = itemData.buyerPartNumber;
+        item.codprodfor = itemData.vendorPartNumber;
+        item.descricao = itemData.description;
+        item.qt = itemData.quantity;
+        item.pvenda = itemData.unitPrice;
+        item.unit = itemData.unitPrice;
+        item.vltotal = itemData.quantity * itemData.unitPrice;
+        item.codean = itemData.upc;
+        item.pesobruto = itemData.grossWeight;
+        item.pesoliq = itemData.netWeight;
+        item.dtentrega = itemData.deliveryDate
+          ? this.parser.parseDate(itemData.deliveryDate)
+          : null;
+        item.codfilial = itemData.plantCode;
 
-  //     return {
-  //       numped: savedPedido.numped,
-  //       numpedfornec: savedPedido.numpedfornec,
-  //       qtitens: savedPedido.qtitens,
-  //       qtpecas: savedPedido.qtpecas,
-  //       arquivo: savedPedido.arquivo,
-  //       dtimportacao: savedPedido.dtimportacao,
-  //     };
-  //   });
-  // }
+        return item;
+      });
+
+      await manager.save(PcpediEntity, itens);
+
+      return {
+        numped: savedPedido.numped,
+        numpedfornec: savedPedido.numpedfornec,
+        qtitens: savedPedido.qtitens,
+        qtpecas: savedPedido.qtpecas,
+        arquivo: savedPedido.arquivo,
+        dtimportacao: savedPedido.dtimportacao,
+      };
+    });
+  }
 
   // async processFromFTP(): Promise<EdiProcessResultDto> {
   async processFromFTP(): Promise<any> {
@@ -285,7 +315,7 @@ export class EDIService {
           this.logger.log('validado=============================', validation);
 
 
-          await this.fileStorage.saveData('order', content, false, '.edi');
+          await this.fileStorage.saveData('order', content, false, 'edi');
 
           this.logger.log(`  ✅ Arquivo processado com sucesso`);
 
