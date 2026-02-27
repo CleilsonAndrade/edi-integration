@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { FileStorageService } from 'src/common/services/file-storage.service';
+import { PcclientEntity } from 'src/modules/entities/pcclient.entity';
 import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
@@ -19,13 +20,15 @@ export class EDIService {
 
   constructor(
     @InjectRepository(PcpedcEntity, 'winthor_conn')
-    private pedidoRepository: Repository<PcpedcEntity>,
+    private pcpedcRepository: Repository<PcpedcEntity>,
     @InjectRepository(PcpediEntity, 'winthor_conn')
-    private itemRepository: Repository<PcpediEntity>,
+    private pcpediRepository: Repository<PcpediEntity>,
     @InjectRepository(PcfilialEntity, 'winthor_conn')
     private pcfilialRepository: Repository<PcfilialEntity>,
     @InjectRepository(PcfilialEntity, 'winthor_conn')
     private pcproductRepository: Repository<PcprodutEntity>,
+    @InjectRepository(PcclientEntity, 'winthor_conn')
+    private pcclientRepository: Repository<PcclientEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -165,7 +168,7 @@ export class EDIService {
   // ): Promise<boolean> {
   //   try {
   //     // Busca 1: Por nome do arquivo
-  //     const byFile = await this.pedidoRepository
+  //     const byFile = await this.pcpedcRepository
   //       .createQueryBuilder('ped')
   //       .where('ped.ARQUIVO = :fileName', { fileName })
   //       .getOne();
@@ -176,7 +179,7 @@ export class EDIService {
   //     }
 
   //     // Busca 2: Por número do pedido do fornecedor (PO Number)
-  //     const byPO = await this.pedidoRepository
+  //     const byPO = await this.pcpedcRepository
   //       .createQueryBuilder('ped')
   //       .where('ped.NUMPEDFORNEC = :poNumber', { poNumber })
   //       .getOne();
@@ -256,74 +259,12 @@ export class EDIService {
     }
   }
 
-  async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<EdiImportResultDto> {
+  async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
+    const codCompany = await this.findCompanyByName(parsed.parties.buyerName);
 
-
-    return await this.dataSource.transaction(async (manager) => {
-      // Criar cabeçalho do pedido
-      const pedido = new PcpedcEntity();
-      pedido.numpedfornec = parsed.header.poNumber;
-      pedido.data = this.parser.parseDate(parsed.header.poDate);
-      pedido.numcontroledi = parsed.header.controlNumber;
-      pedido.projeto = parsed.header.projectNumber;
-      pedido.numserie = parsed.header.serialNumber;
-
-      // TODO: Buscar códigos de cliente/fornecedor nas tabelas do Winthor
-      // Por ora, usando valores fixos - você deve adaptar
-      pedido.codcli = 1; // Buscar na PCCLIENT onde CLIENTE = parsed.parties.buyerName
-      pedido.codfornec = 1; // Buscar na PCFORNEC onde FORNECEDOR = parsed.header.vendorName
-      pedido.codfilial = parsed.parties.shipToLocation;
-
-      // Calcular totais
-      pedido.qtitens = parsed.totals.totalLineItems;
-      pedido.qtpecas = parsed.totals.totalQuantity;
-      pedido.vltotal = parsed.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
-
-      pedido.arquivo = fileName;
-      pedido.pathftp = ftpPath;
-
-      const savedPedido = await manager.save(PcpedcEntity, pedido);
-
-      // Criar itens do pedido
-      const itens = parsed.items.map(itemData => {
-        const item = new PcpediEntity();
-        item.numped = savedPedido.numped;
-        item.numseqorig = itemData.lineNumber;
-
-        // TODO: Buscar CODPROD na PCPRODUT usando o código do fornecedor ou EAN
-        item.codprod = 1; // Buscar onde CODAUXILIAR = itemData.vendorPartNumber ou CODEAN = itemData.upc
-
-        item.codprodcli = itemData.buyerPartNumber;
-        item.codprodfor = itemData.vendorPartNumber;
-        item.descricao = itemData.description;
-        item.qt = itemData.quantity;
-        item.pvenda = itemData.unitPrice;
-        item.unit = itemData.unitPrice;
-        item.vltotal = itemData.quantity * itemData.unitPrice;
-        item.codean = itemData.upc;
-        item.pesobruto = itemData.grossWeight;
-        item.pesoliq = itemData.netWeight;
-        item.dtentrega = itemData.deliveryDate
-          ? this.parser.parseDate(itemData.deliveryDate)
-          : null;
-        item.codfilial = itemData.plantCode;
-
-        return item;
-      });
-
-      await manager.save(PcpediEntity, itens);
-
-      return {
-        numped: savedPedido.numped,
-        numpedfornec: savedPedido.numpedfornec,
-        qtitens: savedPedido.qtitens,
-        qtpecas: savedPedido.qtpecas,
-        arquivo: savedPedido.arquivo,
-        dtimportacao: savedPedido.dtimportacao,
-      };
-    });
+    this.logger.log('codCompany=======================', codCompany);
   }
 
   // async processFromFTP(): Promise<EdiProcessResultDto> {
@@ -370,9 +311,9 @@ export class EDIService {
           //   continue; // ⭐ Pula para o próximo arquivo
           // }
 
-          // const pedido = await this.importEDI(content, file.name, file.path);
+          const pedido = await this.importEDI(content, file.name, file.path);
 
-          this.logger.log('validado=============================', validation);
+          // this.logger.log('validado=============================', validation);
 
 
           await this.fileStorage.saveData('order', content, false, 'edi');
