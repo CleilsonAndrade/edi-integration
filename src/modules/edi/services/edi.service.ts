@@ -105,9 +105,10 @@ export class EDIService {
     if (isAllowed) {
       this.logger.debug(` ✓ Filial(is) ${companyCodeString} permitida(s)`);
       return true;
+    } else {
+      this.logger.warn(` ✗ Filial(is) ${companyCodeString} NÃO permitida(s).`);
     }
 
-    this.logger.warn(` ✗ Filial(is) ${companyCodeString} contém códigos NÃO permitidos`);
     return false;
   }
 
