@@ -7,7 +7,9 @@ import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
+import { PcpracaEntity } from 'src/modules/entities/pcpraca.entity';
 import { PcprodutEntity } from 'src/modules/entities/pcprodut.entity';
+import { PcusuariEntity } from 'src/modules/entities/pcusuari.entity';
 import { DataSource, Like, Repository } from 'typeorm';
 import { EdiProcessResultDto } from '../dto/edi-import-result.dto';
 import { EDI850Parser } from '../parsers/edi850.parser';
@@ -29,6 +31,10 @@ export class EDIService {
     private pcproductRepository: Repository<PcprodutEntity>,
     @InjectRepository(PcclientEntity, 'winthor_conn')
     private pcclientRepository: Repository<PcclientEntity>,
+    @InjectRepository(PcusuariEntity, 'winthor_conn')
+    private pcusuariRepository: Repository<PcusuariEntity>,
+    @InjectRepository(PcpracaEntity, 'winthor_conn')
+    private pcpracaRepository: Repository<PcpracaEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -47,7 +53,7 @@ export class EDIService {
         .getOne();
 
       if (client?.customerId) {
-        this.logger.debug(`  ✓ Cliente encontrado: Código ${client.customerId}`);
+        this.logger.debug(`  ✓ Cliente encontrado: Código ${client.customerId} - ${client.name}`);
         return String(client.customerId);
       }
 
@@ -89,14 +95,19 @@ export class EDIService {
 
   async allowedCompanyByCodBranch(companyCodeString: string): Promise<boolean> {
     const allowedCodes = process.env.FINANCIAL_BRANCH
-      ? process.env.FINANCIAL_BRANCH.split(',')
+      ? process.env.FINANCIAL_BRANCH.split(',').map(code => code.trim())
       : [];
 
-    if (allowedCodes.includes(companyCodeString)) {
-      this.logger.debug(`  ✓ Filial ${companyCodeString} permitida para processamento`);
+    const inputCodes = companyCodeString.split(',').map(c => c.trim());
+
+    const isAllowed = inputCodes.every(code => allowedCodes.includes(code));
+
+    if (isAllowed) {
+      this.logger.debug(` ✓ Filial(is) ${companyCodeString} permitida(s)`);
       return true;
     }
-    this.logger.warn(`  ✗ Filial ${companyCodeString} NÃO permitida para processamento`);
+
+    this.logger.warn(` ✗ Filial(is) ${companyCodeString} contém códigos NÃO permitidos`);
     return false;
   }
 
@@ -262,9 +273,47 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
+    const branch = await this.allowedCompanyByCodBranch(process.env.FINANCIAL_BRANCH || '')
 
+    if (!branch) {
+      return null;
+    }
+
+    const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
     this.logger.log('codCompany=======================', codCompany);
+
+    const allowedCodes = Number(process.env.SUPERVISOR_ID);
+
+    const codRCA = await this.pcusuariRepository.findOne({
+      where: {
+        userCode: allowedCodes
+      },
+      select: ['name', 'userCode', 'supervisorCode']
+    })
+
+    if (codRCA) {
+      this.logger.log('codRCA=======================', codRCA.supervisorCode);
+      this.logger.debug(`  ✓ RCA encontrado: ${codRCA.userCode} - ${codRCA.name}`);
+    } else {
+      this.logger.warn(`  ✗ RCA NÃO encontrado para ID: ${allowedCodes}`);
+    }
+
+
+    const codSquare = await this.pcpracaRepository.findOne({
+      where: {
+        codSquare: Number(process.env.COD_SQUARE)
+      }
+    })
+
+    if (!codSquare) {
+      this.logger.log('codSquare=======================', codSquare);
+      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${process.env.COD_SQUARE}`);
+    } else {
+      this.logger.debug(`  ✓ Praça encontrada: ${codSquare.codSquare} - ${codSquare.square}`);
+    }
+
+
+    // return
   }
 
   // async processFromFTP(): Promise<EdiProcessResultDto> {

@@ -19,7 +19,7 @@ export class FileStorageService {
 
       await fs.mkdir(directory, { recursive: true });
 
-      const fileName = `${folderName}_${timestamp}.${isJson ? '.json' : ext || '.txt'}`;
+      const fileName = `${folderName}_${timestamp}.${isJson ? 'json' : ext || 'txt'}`;
 
       const fullPath = path.join(directory, fileName);
 
