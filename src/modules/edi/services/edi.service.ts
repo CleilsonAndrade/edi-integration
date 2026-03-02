@@ -7,6 +7,7 @@ import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
+import { PcplpagEntity } from 'src/modules/entities/pcplpag.entity';
 import { PcpracaEntity } from 'src/modules/entities/pcpraca.entity';
 import { PcprodutEntity } from 'src/modules/entities/pcprodut.entity';
 import { PcusuariEntity } from 'src/modules/entities/pcusuari.entity';
@@ -35,6 +36,8 @@ export class EDIService {
     private pcusuariRepository: Repository<PcusuariEntity>,
     @InjectRepository(PcpracaEntity, 'winthor_conn')
     private pcpracaRepository: Repository<PcpracaEntity>,
+    @InjectRepository(PcplpagEntity, 'winthor_conn')
+    private pcplpagRepository: Repository<PcplpagEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -157,7 +160,7 @@ export class EDIService {
     await queryRunner.manager
       .createQueryBuilder()
       .update(PcconsumEntity)
-      .set({ nextSequenceOrderNumber: newValueSequenceOrderNumber })
+      .set({ nextOrderNumber: newValueSequenceOrderNumber })
       .execute();
 
     if (!findNextSequenceOrderNumber || findNextSequenceOrderNumber.length === 0) {
@@ -303,7 +306,8 @@ export class EDIService {
     const codSquare = await this.pcpracaRepository.findOne({
       where: {
         codSquare: Number(process.env.COD_SQUARE)
-      }
+      },
+      select: ['codSquare', 'square', 'regionNumber',]
     })
 
     if (!codSquare) {
@@ -312,6 +316,50 @@ export class EDIService {
     } else {
       this.logger.debug(`  ✓ Praça encontrada: ${codSquare.codSquare} - ${codSquare.square}`);
     }
+
+    const codPaymentPlan = await this.pcplpagRepository.findOne({
+      where: {
+        codPaymentPlan: Number(process.env.COD_PAYMENT_PLAN),
+        status: 'A',
+      },
+      select: ['codPaymentPlan', 'description', 'status', 'billingCode', 'saleType', 'firstPaymentTerm']
+    });
+
+    if (!codPaymentPlan) {
+      this.logger.log('codPaymentPlan=======================', codPaymentPlan);
+      this.logger.warn(`  ✗ Plano de Pagamento NÃO encontrado para código: ${process.env.COD_PAYMENT_PLAN}`);
+    } else {
+      this.logger.debug(`  ✓ Plano de Pagamento encontrado: ${codPaymentPlan.codPaymentPlan}`);
+    }
+
+    const numped = await this.getNextSequenceOrderNumber();
+
+    this.logger.debug('numped=======================', numped);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+
+    try {
+      await queryRunner.startTransaction();
+
+      const order = {
+        orderId: numped,
+        customerId: codCompany ? Number(codCompany) : null,
+        codRCA: codRCA?.supervisorCode || null,
+        codSquare: codSquare?.codSquare || null,
+        codPaymentPlan: codPaymentPlan?.codPaymentPlan || null,
+        orderDate: new Date(),
+        status: 'P', // Pendente
+      }
+
+      await queryRunner.manager.save(PcpedcEntity, order);
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+
 
 
     // return

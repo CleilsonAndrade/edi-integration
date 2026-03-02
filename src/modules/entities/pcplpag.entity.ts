@@ -211,7 +211,6 @@ export class PcplpagEntity {
   @Column({ name: 'CODSUPPLICARD', type: 'varchar2', length: 15, nullable: true })
   supplicardCode: string;
 
-
   @Column({ name: 'DIAFIXOCLIPRIMPARC', type: 'varchar2', length: 1, nullable: false, default: 'S' })
   fixedDayClientFirstInstallment: string;
 
