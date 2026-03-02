@@ -8,7 +8,7 @@ import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
 import { PcprodutEntity } from 'src/modules/entities/pcprodut.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Like, Repository } from 'typeorm';
 import { EdiProcessResultDto } from '../dto/edi-import-result.dto';
 import { EDI850Parser } from '../parsers/edi850.parser';
 import { FTPService } from './ftp.service';
@@ -37,26 +37,26 @@ export class EDIService {
     private configService: ConfigService,
   ) { }
 
-  async findCompanyByName(name: string): Promise<string | null> {
+  async findClientCompanyByName(name: string): Promise<string | null> {
     try {
-      this.logger.debug(`  → Buscando filial por nome: ${name}`);
+      this.logger.debug(`  → Buscando cliente por nome: ${name}`);
 
-      const company = await this.pcfilialRepository
-        .createQueryBuilder('filial')
-        .where('filial.NOME = :name', { name })
+      const client = await this.pcclientRepository
+        .createQueryBuilder('client')
+        .where({ name: Like(`${name.substring(0, 5).toUpperCase()}%`) })
         .getOne();
 
-      if (company?.codeBranch) {
-        this.logger.debug(`  ✓ Filial encontrada: Código ${company.codeBranch}`);
-        return String(company.codeBranch);
+      if (client?.customerId) {
+        this.logger.debug(`  ✓ Cliente encontrado: Código ${client.customerId}`);
+        return String(client.customerId);
       }
 
-      this.logger.warn(`  ✗ Filial NÃO encontrada para nome: ${name}`);
+      this.logger.warn(`  ✗ Cliente NÃO encontrado para nome: ${name}`);
       return null;
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
-      this.logger.error(` ❌ Erro ao buscar filial por nome ${name}`, stack);
+      this.logger.error(` ❌ Erro ao buscar cliente por nome ${name}`, stack);
       return null;
     }
   }
@@ -262,7 +262,7 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    const codCompany = await this.findCompanyByName(parsed.parties.buyerName);
+    const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
 
     this.logger.log('codCompany=======================', codCompany);
   }
