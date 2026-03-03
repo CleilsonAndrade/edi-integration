@@ -386,6 +386,12 @@ export class EDIService {
     const horaAtual = agora.getHours();     // Ex: 12
     const minutosAtuais = agora.getMinutes(); // Ex: 59
 
+    const dataHojeMeiaNoite: Date = new Date();
+
+    // Zera: Horas, Minutos, Segundos e Milissegundos
+    dataHojeMeiaNoite.setHours(0, 0, 0, 0);
+
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -407,6 +413,7 @@ export class EDIService {
       order.saleCondition = 1;
       order.hour = horaAtual;
       order.minute = minutosAtuais;
+      order.customerOrderDate = dataHojeMeiaNoite;
       order.dispatchFreight = codSupplier?.dispatchFreightType || 'C';
       order.freightSupplierId = codSupplier?.supplierCode || null;
       order.loadType = 'R';
