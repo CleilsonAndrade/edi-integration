@@ -381,6 +381,11 @@ export class EDIService {
 
     this.logger.debug('codSupplier?.dispatchFreightType=======================', codSupplier?.dispatchFreightType);
 
+    const agora = new Date();
+
+    const horaAtual = agora.getHours();     // Ex: 12
+    const minutosAtuais = agora.getMinutes(); // Ex: 59
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -400,6 +405,8 @@ export class EDIService {
       order.invoiceFreightValue = 0;
       order.otherExpensesValue = 0;
       order.saleCondition = 1;
+      order.hour = horaAtual;
+      order.minute = minutosAtuais;
       order.dispatchFreight = codSupplier?.dispatchFreightType || 'C';
       order.freightSupplierId = codSupplier?.supplierCode || null;
       order.loadType = 'R';
