@@ -5,6 +5,7 @@ import { PcclientEntity } from '../entities/pcclient.entity';
 import { PcconsumEntity } from '../entities/pcconsum.entity';
 import { PcemprEntity } from '../entities/pcempr.entity';
 import { PcfilialEntity } from '../entities/pcfilial.entity';
+import { PcfornecEntity } from '../entities/pcfornec.entity';
 import { PcpedcEntity } from '../entities/pcpedc.entity';
 import { PcpediEntity } from '../entities/pcpedi.entity';
 import { PcplpagEntity } from '../entities/pcplpag.entity';
@@ -25,6 +26,7 @@ import { EDITask } from './tasks/edi.task';
       PcclientEntity,
       PcconsumEntity,
       PcemprEntity,
+      PcfornecEntity,
       PcpedcEntity,
       PcpediEntity,
       PcusuariEntity,

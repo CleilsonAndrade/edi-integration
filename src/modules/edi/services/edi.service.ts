@@ -6,6 +6,7 @@ import { PcclientEntity } from 'src/modules/entities/pcclient.entity';
 import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
 import { PcemprEntity } from 'src/modules/entities/pcempr.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
+import { PcfornecEntity } from 'src/modules/entities/pcfornec.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
 import { PcplpagEntity } from 'src/modules/entities/pcplpag.entity';
@@ -43,6 +44,8 @@ export class EDIService {
     private pcconsumRepository: Repository<PcconsumEntity>,
     @InjectRepository(PcemprEntity, 'winthor_conn')
     private pcemprRepository: Repository<PcemprEntity>,
+    @InjectRepository(PcfornecEntity, 'winthor_conn')
+    private pcfornecRepository: Repository<PcfornecEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -356,6 +359,28 @@ export class EDIService {
 
     this.logger.debug('numped=======================', numped);
 
+
+    // const supplierCode = this.configService.get<string>('SUPPLIER_CODE', '10913');
+
+    const supplierCode = process.env.SUPPLIER_CODE || '10913';
+
+    const codSupplier = await this.pcfornecRepository.findOne({
+      where: {
+        supplierCode: Number(supplierCode),
+        resale: 'T',
+      },
+    });
+
+    if (!codSupplier) {
+      this.logger.log('codSupplier=======================', codSupplier);
+      this.logger.warn(`  ✗ Fornecedor NÃO encontrado para código: ${supplierCode}`);
+    } else {
+      this.logger.debug(`  ✓ Fornecedor encontrado: ${codSupplier.supplierCode}`);
+    }
+
+
+    this.logger.debug('codSupplier?.dispatchFreightType=======================', codSupplier?.dispatchFreightType);
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -375,8 +400,8 @@ export class EDIService {
       order.invoiceFreightValue = 0;
       order.otherExpensesValue = 0;
       order.saleCondition = 1;
-      order.dispatchFreight = 'C';
-      order.freightSupplierId = 10913;
+      order.dispatchFreight = codSupplier?.dispatchFreightType || 'C';
+      order.freightSupplierId = codSupplier?.supplierCode || null;
       order.loadType = 'R';
       order.term1 = codPaymentPlan?.firstPaymentTerm || 0;
       order.averageTerm = codPaymentPlan?.firstPaymentTerm || 0;
