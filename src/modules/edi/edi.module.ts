@@ -9,6 +9,7 @@ import { PcpedcEntity } from '../entities/pcpedc.entity';
 import { PcpediEntity } from '../entities/pcpedi.entity';
 import { PcplpagEntity } from '../entities/pcplpag.entity';
 import { PcpracaEntity } from '../entities/pcpraca.entity';
+import { PcprodutEntity } from '../entities/pcprodut.entity';
 import { PcusuariEntity } from '../entities/pcusuari.entity';
 import { EDIController } from './edi.controller';
 import { EDI850Parser } from './parsers/edi850.parser';
@@ -28,6 +29,7 @@ import { EDITask } from './tasks/edi.task';
       PcpediEntity,
       PcusuariEntity,
       PcpracaEntity,
+      PcprodutEntity,
       PcplpagEntity,
     ], 'winthor_conn'),
   ],

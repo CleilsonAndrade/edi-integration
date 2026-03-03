@@ -466,6 +466,9 @@ export class PcconsumEntity {
   @Column({ name: 'PERMITEDESCCR', type: 'varchar2', length: 1, nullable: true, default: 'N' })
   allowCrDiscount: string | null;
 
+  @Column({ name: 'PERMITEFATURARCOMWMSPEND', type: 'varchar2', length: 1, default: 'N' })
+  permiteFaturarComWmsPend: string;
+
   @Column({ name: 'CODCONTADESCCR', type: 'number', precision: 10, scale: 0, nullable: true, default: '0' })
   crDiscountAccountCode: number | null;
 

@@ -28,7 +28,7 @@ export class EDIService {
     private pcpediRepository: Repository<PcpediEntity>,
     @InjectRepository(PcfilialEntity, 'winthor_conn')
     private pcfilialRepository: Repository<PcfilialEntity>,
-    @InjectRepository(PcfilialEntity, 'winthor_conn')
+    @InjectRepository(PcprodutEntity, 'winthor_conn')
     private pcproductRepository: Repository<PcprodutEntity>,
     @InjectRepository(PcclientEntity, 'winthor_conn')
     private pcclientRepository: Repository<PcclientEntity>,
@@ -38,6 +38,8 @@ export class EDIService {
     private pcpracaRepository: Repository<PcpracaEntity>,
     @InjectRepository(PcplpagEntity, 'winthor_conn')
     private pcplpagRepository: Repository<PcplpagEntity>,
+    @InjectRepository(PcconsumEntity, 'winthor_conn')
+    private pcconsumRepository: Repository<PcconsumEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -286,11 +288,11 @@ export class EDIService {
     const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
     this.logger.log('codCompany=======================', codCompany);
 
-    const allowedCodes = Number(process.env.SUPERVISOR_ID);
+    const allowedCodRCA = Number(process.env.SUPERVISOR_ID);
 
     const codRCA = await this.pcusuariRepository.findOne({
       where: {
-        userCode: allowedCodes
+        userCode: allowedCodRCA
       },
       select: ['name', 'userCode', 'supervisorCode']
     })
@@ -299,7 +301,7 @@ export class EDIService {
       this.logger.log('codRCA=======================', codRCA.supervisorCode);
       this.logger.debug(`  ✓ RCA encontrado: ${codRCA.userCode} - ${codRCA.name}`);
     } else {
-      this.logger.warn(`  ✗ RCA NÃO encontrado para ID: ${allowedCodes}`);
+      this.logger.warn(`  ✗ RCA NÃO encontrado para ID: ${allowedCodRCA}`);
     }
 
 
@@ -342,19 +344,27 @@ export class EDIService {
     try {
       await queryRunner.startTransaction();
 
-      const order = {
-        orderId: numped,
-        customerId: codCompany ? Number(codCompany) : null,
-        codRCA: codRCA?.supervisorCode || null,
-        codSquare: codSquare?.codSquare || null,
-        codPaymentPlan: codPaymentPlan?.codPaymentPlan || null,
-        orderDate: new Date(),
-        status: 'P', // Pendente
-      }
+      // 1. Instanciamos a classe para garantir os métodos e metadados
+      const order = new PcpedcEntity();
 
-      await queryRunner.manager.save(PcpedcEntity, order);
+      // 2. Atribuímos os valores (o TS não reclamará de campos faltantes aqui)
+      order.orderId = numped;
+      order.customerId = codCompany ? Number(codCompany) : null;
+      order.representativeId = codRCA?.supervisorCode || null;
+      order.regionId = codSquare?.codSquare || null;
+      order.paymentPlanId = codPaymentPlan?.codPaymentPlan || null;
+      order.date = new Date();
+      order.position = 'P'; // Pendente
+
+      // 4. Salvamos usando o manager do queryRunner
+      await queryRunner.manager.save(order);
+
+      await queryRunner.commitTransaction();
+      this.logger.debug(`  ✓ Pedido ${numped} salvo com sucesso no WinThor.`);
+
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      this.logger.error(`  ✗ Erro ao salvar pedido no banco: ${error.message}`);
       throw error;
     } finally {
       await queryRunner.release();
