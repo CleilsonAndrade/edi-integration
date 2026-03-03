@@ -369,6 +369,24 @@ export class EDIService {
 
       // 2. Atribuímos os valores (o TS não reclamará de campos faltantes aqui)
       order.orderId = numped;
+      order.loadNumber = 0;
+      order.salePercent = 100;
+      order.discountPercent = 0;
+      order.invoiceFreightValue = 0;
+      order.otherExpensesValue = 0;
+      order.saleCondition = 1;
+      order.dispatchFreight = 'C';
+      order.freightSupplierId = 10913;
+      order.loadType = 'R';
+      order.term1 = codPaymentPlan?.firstPaymentTerm || 0;
+      order.averageTerm = codPaymentPlan?.firstPaymentTerm || 0;
+      order.packagingType = 'U';
+      order.orderOrigin = 'T';
+      order.importReconciliation = 'N';
+      order.regionNumber = codSquare?.regionNumber || null;
+      order.financialDiscountPercent = 0;
+      order.useWmsIntegrator = 'N';
+      order.useTv10SaleCfop = 'S';
       order.branchId = branchCode;
       order.customerId = codCompany?.customerId || null;
       order.representativeId = codRCA?.userCode || null;
