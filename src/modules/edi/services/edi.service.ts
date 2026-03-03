@@ -4,6 +4,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { FileStorageService } from 'src/common/services/file-storage.service';
 import { PcclientEntity } from 'src/modules/entities/pcclient.entity';
 import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
+import { PcemprEntity } from 'src/modules/entities/pcempr.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
@@ -40,6 +41,8 @@ export class EDIService {
     private pcplpagRepository: Repository<PcplpagEntity>,
     @InjectRepository(PcconsumEntity, 'winthor_conn')
     private pcconsumRepository: Repository<PcconsumEntity>,
+    @InjectRepository(PcemprEntity, 'winthor_conn')
+    private pcemprRepository: Repository<PcemprEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -48,7 +51,7 @@ export class EDIService {
     private configService: ConfigService,
   ) { }
 
-  async findClientCompanyByName(name: string): Promise<string | null> {
+  async findClientCompanyByName(name: string): Promise<PcclientEntity | null> {
     try {
       this.logger.debug(`  → Buscando cliente por nome: ${name}`);
 
@@ -59,7 +62,7 @@ export class EDIService {
 
       if (client?.customerId) {
         this.logger.debug(`  ✓ Cliente encontrado: Código ${client.customerId} - ${client.name}`);
-        return String(client.customerId);
+        return client;
       }
 
       this.logger.warn(`  ✗ Cliente NÃO encontrado para nome: ${name}`);
@@ -279,16 +282,31 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    const branch = await this.allowedCompanyByCodBranch(process.env.FINANCIAL_BRANCH || '')
+    const branchCode = process.env.FINANCIAL_BRANCH || '';
 
-    if (!branch) {
+    const branchAllowed = await this.allowedCompanyByCodBranch(branchCode)
+
+    if (!branchAllowed) {
       return null;
     }
 
     const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
     this.logger.log('codCompany=======================', codCompany);
 
-    const allowedCodRCA = Number(process.env.SUPERVISOR_ID);
+    const issuerAllowed = await this.pcemprRepository.findOne({
+      where: {
+        registration: Number(process.env.ISSUER_REGISTRATION) || 1,
+      },
+    });
+
+    if (!issuerAllowed) {
+      this.logger.warn(`  ✗ Emitente NÃO encontrado para inscrição: ${process.env.ISSUER_REGISTRATION}`);
+      return null;
+    } else {
+      this.logger.debug(`  ✓ Emitente encontrado: ${issuerAllowed.registration}`);
+    }
+
+    const allowedCodRCA = Number(process.env.RCA_ID) || 3029;
 
     const codRCA = await this.pcusuariRepository.findOne({
       where: {
@@ -321,7 +339,7 @@ export class EDIService {
 
     const codPaymentPlan = await this.pcplpagRepository.findOne({
       where: {
-        codPaymentPlan: Number(process.env.COD_PAYMENT_PLAN),
+        codPaymentPlan: Number(process.env.COD_PAYMENT_PLAN) || 5712,
         status: 'A',
       },
       select: ['codPaymentPlan', 'description', 'status', 'billingCode', 'saleType', 'firstPaymentTerm']
@@ -347,14 +365,23 @@ export class EDIService {
       // 1. Instanciamos a classe para garantir os métodos e metadados
       const order = new PcpedcEntity();
 
+      this.logger.debug(`codCompany?.idBilling=======================`, codCompany?.idBilling);
+
       // 2. Atribuímos os valores (o TS não reclamará de campos faltantes aqui)
       order.orderId = numped;
-      order.customerId = codCompany ? Number(codCompany) : null;
-      order.representativeId = codRCA?.supervisorCode || null;
+      order.branchId = branchCode;
+      order.customerId = codCompany?.customerId || null;
+      order.representativeId = codRCA?.userCode || null;
       order.regionId = codSquare?.codSquare || null;
       order.paymentPlanId = codPaymentPlan?.codPaymentPlan || null;
+      order.saleType = codPaymentPlan?.saleType || null;
+      order.billingId = codCompany?.idBilling || null;
+      order.issuerId = issuerAllowed.registration;
       order.date = new Date();
-      order.position = 'P'; // Pendente
+      order.position = 'B';
+      order.invoiceBranchId = branchCode;
+      order.supervisorId = codRCA?.supervisorCode || null;
+      order.observation = `EDI`;
 
       // 4. Salvamos usando o manager do queryRunner
       await queryRunner.manager.save(order);
