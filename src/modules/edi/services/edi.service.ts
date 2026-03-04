@@ -391,6 +391,8 @@ export class EDIService {
     // Zera: Horas, Minutos, Segundos e Milissegundos
     dataHojeMeiaNoite.setHours(0, 0, 0, 0);
 
+    const numPedRca = process.env.NUMPEDRCA || '00524502P';
+
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -407,6 +409,11 @@ export class EDIService {
       order.orderId = numped;
       order.loadNumber = 0;
       order.salePercent = 100;
+      order.customerOrderNumber = parsed.header.poNumber;
+      order.integrationOrigin = 'EDI';
+      order.xmlVanOrderId = parsed.header.poNumber;
+      order.importDate = dataHojeMeiaNoite;
+      order.imported = 'S';
       order.discountPercent = 0;
       order.invoiceFreightValue = 0;
       order.otherExpensesValue = 0;
