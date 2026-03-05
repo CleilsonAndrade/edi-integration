@@ -12,6 +12,9 @@ export class EnvironmentVariables {
   ORDER_PERCENTUAL_DISCOUNT: number;
 
   @IsNumber() @IsNotEmpty()
+  ORDER_FINANCIAL_PERCENTUAL_DISCOUNT: number;
+
+  @IsNumber() @IsNotEmpty()
   ORDER_VALUE_FREIGHT_INVOICE: number;
 
   @IsNumber() @IsNotEmpty()
@@ -47,6 +50,9 @@ export class EnvironmentVariables {
   @IsString() @IsNotEmpty()
   ORDER_POSITION: string;
 
+  @IsString() @IsNotEmpty()
+  ORDER_GROUPING: string;
+
   @IsNumber() @IsNotEmpty()
   RCA_ID: number;
 
@@ -68,8 +74,8 @@ export class EnvironmentVariables {
   @IsNumber() @IsNotEmpty()
   SUPPLIER_CODE: number;
 
-  @IsNumber() @IsNotEmpty()
-  SUPPLIER_COD_COB: number;
+  @IsString() @IsNotEmpty()
+  SUPPLIER_COD_COB: string;
 
   @IsString() @IsNotEmpty()
   PROVIDER_TYPE_RESALE: string;

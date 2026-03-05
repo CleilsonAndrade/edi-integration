@@ -71,7 +71,6 @@ export class FTPService {
         if (files.length > 0) {
           // Extrai apenas os nomes para o log
           const fileNames = files.map(f => f.name);
-          this.logger.debug(`Arquivos encontrados para processamento em ${remotePath}: ${fileNames.join(', ')}`);
         }
 
         resolve(files);

@@ -50,7 +50,7 @@ export class EDITask {
       this.logger.log(`Resultado: ${result.sucessos}/${result.totalProcessados} processados com sucesso`);
 
       if (result.erros > 0) {
-        this.logger.warn(`Arquivos com erro: ${result.arquivosComErro.join(', ')}`);
+        this.logger.warn(`Arquivo(s) com erro: ${result.arquivosComErro.join(', ')}`);
       }
     } catch (error) {
       this.logger.error('Erro no processamento EDI:', error.stack);

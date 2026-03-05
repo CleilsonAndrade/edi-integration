@@ -56,7 +56,7 @@ export class EDIService {
 
   async findClientCompanyByName(name: string): Promise<PcclientEntity | null> {
     try {
-      this.logger.debug(`  → Buscando cliente por nome: ${name}`);
+      this.logger.debug(`→ Buscando cliente por nome: ${name}`);
 
       const client = await this.pcclientRepository
         .createQueryBuilder('client')
@@ -73,7 +73,7 @@ export class EDIService {
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
-      this.logger.error(` ❌ Erro ao buscar cliente por nome ${name}`, stack);
+      this.logger.error(`  ❌ Erro ao buscar cliente por nome ${name}`, stack);
       return null;
     }
   }
@@ -114,10 +114,10 @@ export class EDIService {
     const isAllowed = inputCodes.every(code => allowedCodes.includes(code));
 
     if (isAllowed) {
-      this.logger.debug(` ✓ Filial(is) ${companyCodeString} permitida(s)`);
+      this.logger.debug(`  ✓ Filial(is) ${companyCodeString} permitida(s)`);
       return true;
     } else {
-      this.logger.warn(` ✗ Filial(is) ${companyCodeString} NÃO permitida(s).`);
+      this.logger.warn(`  ✗ Filial(is) ${companyCodeString} NÃO permitida(s).`);
     }
 
     return false;
@@ -240,7 +240,7 @@ export class EDIService {
       }
 
       // 3. Fazer o parse do EDI
-      this.logger.debug(`  → Fazendo parse do arquivo: ${fileName}`);
+      this.logger.debug(` → Fazendo parse do arquivo: ${fileName}`);
       const parsed = this.parser.parse(ediContent);
 
       // 4. Validar dados obrigatórios
@@ -362,7 +362,6 @@ export class EDIService {
     }
     this.logger.debug(`  ✓ Plano de Pagamento encontrado: ${findPaymentPlan.codPaymentPlan}`);
 
-    const numped = await this.getNextSequenceOrderNumber();
 
     const allowedSupplierCode = this.configService.getOrThrow<number>('SUPPLIER_CODE');
     const allowedResale = this.configService.getOrThrow<string>('PROVIDER_TYPE_RESALE');
@@ -391,6 +390,7 @@ export class EDIService {
 
     const numPedRca = process.env.NUMPEDRCA || '00524502P';
 
+    const numped = await this.getNextSequenceOrderNumber();
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -401,32 +401,33 @@ export class EDIService {
       const order = new PcpedcEntity();
 
       order.orderId = numped;
-      order.loadNumber = 0;
-      order.salePercent = 100;
+      order.loadNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
+      order.salePercent = this.configService.getOrThrow<number>('ORDER_SALE_PERCENTAGE');
       order.customerOrderNumber = parsed.header.poNumber;
-      order.integrationOrigin = process.env.INTEGRATION_SOURCE!;
+      order.integrationOrigin = this.configService.getOrThrow<string>('INTEGRATION_SOURCE');
       order.xmlVanOrderId = parsed.header.poNumber;
-      order.importDate = dataHojeMeiaNoite;
-      order.imported = process.env.INTEGRATION_ORDER!;
-      order.discountPercent = 0;
-      order.invoiceFreightValue = 0;
-      order.otherExpensesValue = 0;
-      order.saleCondition = 1;
+      order.itemCount = parsed.totals.totalQuantity;
+      // order.importDate = dataHojeMeiaNoite;
+      order.imported = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
+      order.discountPercent = this.configService.getOrThrow<number>('ORDER_PERCENTUAL_DISCOUNT');
+      order.invoiceFreightValue = this.configService.getOrThrow<number>('ORDER_VALUE_FREIGHT_INVOICE');
+      order.otherExpensesValue = this.configService.getOrThrow<number>('ORDER_EXPENSES_VALUE');
+      order.saleCondition = this.configService.getOrThrow<number>('ORDER_SALE_CONDITION');
       order.hour = horaAtual;
       order.minute = minutosAtuais;
       order.customerOrderDate = dataHojeMeiaNoite;
       order.dispatchFreight = findCodSupplier.dispatchFreightType;
       order.freightSupplierId = findCodSupplier.supplierCode;
-      order.loadType = 'R';
+      order.loadType = this.configService.getOrThrow<string>('ORDER_LOAD_TYPE');
       order.term1 = findPaymentPlan.firstPaymentTerm;
       order.averageTerm = findPaymentPlan.firstPaymentTerm;
-      order.packagingType = 'U';
-      order.orderOrigin = 'T';
-      order.importReconciliation = 'N';
+      order.packagingType = this.configService.getOrThrow<string>('ORDER_PACKAGING_TYPE');
+      order.orderOrigin = this.configService.getOrThrow<string>('ORDER_ORIGIN');
+      order.importReconciliation = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
       order.regionNumber = findSquare.regionNumber;
-      order.financialDiscountPercent = 0;
-      order.useWmsIntegrator = 'N';
-      order.useTv10SaleCfop = 'S';
+      order.financialDiscountPercent = this.configService.getOrThrow<number>('ORDER_FINANCIAL_PERCENTUAL_DISCOUNT');
+      order.useWmsIntegrator = this.configService.getOrThrow<string>('ORDER_USE_WMS_INTEGRATOR');
+      order.useTv10SaleCfop = this.configService.getOrThrow<string>('ORDER_USE_TYPE_SALE_10_CFOP');
       order.branchId = branchCode;
       order.customerId = codCompany.customerId;
       order.representativeId = findRCA.userCode;
@@ -436,15 +437,18 @@ export class EDIService {
       order.billingId = codCompany.idBilling;
       order.issuerId = findIssuer.registration;
       order.date = new Date();
-      order.position = 'B';
+      order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
       order.invoiceBranchId = branchCode;
       order.supervisorId = findRCA.supervisorCode;
-      order.observation = `EDI`;
+      order.grouping = this.configService.getOrThrow<string>('ORDER_GROUPING');
+      order.observation = `EDI - PO: ${parsed.header.poNumber}`;
+
+      // order.attendValueCalcType = 'msm valor: vl. atentido, vl. tabela, vl. pedido'
 
       await queryRunner.manager.save(order);
 
       await queryRunner.commitTransaction();
-      this.logger.debug(`  ✓ Pedido ${numped} salvo com sucesso no WinThor.`);
+      this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
 
     } catch (error) {
       await queryRunner.rollbackTransaction();
