@@ -126,19 +126,32 @@ export class EDIService {
     return false;
   }
 
-  async findProductByFactoryCod(factoryCode: string): Promise<PcprodutEntity | null> {
+  async findProductByFactoryCod(factoryCode: string): Promise<PctabprEntity | null> {
     try {
       this.logger.debug(`  → Buscando produto por código de fábrica: ${factoryCode}`);
 
-      const product = await this.pcproductRepository.findOne({
+      const findProduct = await this.pcproductRepository.findOne({
         where: {
-          manufacturerCode: Number(factoryCode),
+          manufacturerCode: factoryCode
         },
-      });
+        select: ['productCode', 'description', 'manufacturerCode']
+      })
 
-      if (product) {
-        this.logger.debug(`  ✓ Produto encontrado: CODPROD ${product.productCode}`);
-        return product;
+      if (!findProduct?.productCode) {
+        this.logger.warn(`  ✗ Produto NÃO encontrado para código do fabricante: ${factoryCode}`);
+        return null;
+      }
+
+      const productOrder = await this.pctabprRepository.findOne({
+        where: {
+          productCode: findProduct.productCode,
+          regionNumber: 368
+        }
+      })
+
+      if (productOrder) {
+        this.logger.debug(`  ✓ Produto encontrado: CODPROD ${productOrder.productCode}`);
+        return productOrder;
       }
 
       this.logger.warn(`  ✗ Produto NÃO encontrado para código de fábrica: ${factoryCode}`);
@@ -287,6 +300,10 @@ export class EDIService {
 
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
+
+    parsed.items.forEach((item, index) => {
+      this.logger.debug(this.findProductByFactoryCod(item.vendorPartNumber));
+    });
 
     const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
 

@@ -310,8 +310,8 @@ export class PcprodutEntity {
   @Column({ name: 'CODEXCECAOPISCOFINS', type: 'number', precision: 6, scale: 0, nullable: true })
   pisCofinsExceptionCode: number | null;
 
-  @Column({ name: 'CODFAB', type: 'number', precision: 4, scale: 0, nullable: true })
-  manufacturerCode: number | null;
+  @Column({ name: 'CODFAB', type: 'varchar2', length: 30, nullable: true })
+  manufacturerCode: string | null;
 
   @Column({ name: 'CODFILIAL', type: 'number', precision: 2, scale: 0, nullable: true })
   branchCode: number | null;
