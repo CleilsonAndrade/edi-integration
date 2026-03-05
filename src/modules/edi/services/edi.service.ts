@@ -285,7 +285,7 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    const branchCode = process.env.FINANCIAL_BRANCH || '';
+    const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
 
     const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
 
@@ -299,7 +299,7 @@ export class EDIService {
       return null;
     }
 
-    const allowedIssuer = Number(process.env.ISSUER_REGISTRATION) || 0;
+    const allowedIssuer = this.configService.getOrThrow<number>('ISSUER_REGISTRATION');
 
     const findIssuer = await this.pcemprRepository.findOne({
       where: {
@@ -314,7 +314,7 @@ export class EDIService {
     this.logger.debug(`  ✓ Emitente encontrado: ${findIssuer.registration}`);
 
 
-    const allowedCodRCA = Number(process.env.RCA_ID) || 0;
+    const allowedCodRCA = this.configService.getOrThrow<number>('RCA_ID');
 
     const findRCA = await this.pcusuariRepository.findOne({
       where: {
@@ -330,7 +330,7 @@ export class EDIService {
     this.logger.debug(`  ✓ RCA encontrado: ${findRCA.userCode} - ${findRCA.name}`);
 
 
-    const allowedCodSquare = Number(process.env.COD_SQUARE) || 0;
+    const allowedCodSquare = this.configService.getOrThrow<number>('SQUARE_COD');
 
     const findSquare = await this.pcpracaRepository.findOne({
       where: {
@@ -346,12 +346,12 @@ export class EDIService {
     this.logger.debug(`  ✓ Praça encontrada: ${findSquare.codSquare} - ${findSquare.square}`);
 
 
-    const allowedCodPaymentPlan = Number(process.env.COD_PAYMENT_PLAN) || 0;
+    const allowedCodPaymentPlan = this.configService.getOrThrow<number>('PAYMENT_PLAN_COD');
 
     const findPaymentPlan = await this.pcplpagRepository.findOne({
       where: {
         codPaymentPlan: allowedCodPaymentPlan,
-        status: 'A',
+        status: this.configService.getOrThrow<string>('PAYMENT_PLAN_STATUS'),
       },
       select: ['codPaymentPlan', 'description', 'status', 'billingCode', 'saleType', 'firstPaymentTerm']
     });
@@ -364,12 +364,12 @@ export class EDIService {
 
     const numped = await this.getNextSequenceOrderNumber();
 
-    const allowedSupplierCode = Number(process.env.SUPPLIER_CODE) || 0;
-    const allowedResale = process.env.PROVIDER_TYPE_RESALE || 'T';
+    const allowedSupplierCode = this.configService.getOrThrow<number>('SUPPLIER_CODE');
+    const allowedResale = this.configService.getOrThrow<string>('PROVIDER_TYPE_RESALE');
 
     const findCodSupplier = await this.pcfornecRepository.findOne({
       where: {
-        supplierCode: Number(allowedSupplierCode),
+        supplierCode: allowedSupplierCode,
         resale: allowedResale,
       },
     });
@@ -404,10 +404,10 @@ export class EDIService {
       order.loadNumber = 0;
       order.salePercent = 100;
       order.customerOrderNumber = parsed.header.poNumber;
-      order.integrationOrigin = 'EDI';
+      order.integrationOrigin = process.env.INTEGRATION_SOURCE!;
       order.xmlVanOrderId = parsed.header.poNumber;
       order.importDate = dataHojeMeiaNoite;
-      order.imported = 'S';
+      order.imported = process.env.INTEGRATION_ORDER!;
       order.discountPercent = 0;
       order.invoiceFreightValue = 0;
       order.otherExpensesValue = 0;

@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { DatabaseConfigService } from './config/database.config';
+import { validate } from './config/env.config';
 import { AppHealthModule } from './modules/app-heath/app-health.module';
 import { EDIModule } from './modules/edi/edi.module';
 
@@ -12,6 +13,7 @@ import { EDIModule } from './modules/edi/edi.module';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
+      validate,
       load: [], // Set acesso ao FTP EDI
       envFilePath: '.env'
     }),
