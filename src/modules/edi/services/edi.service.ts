@@ -128,7 +128,7 @@ export class EDIService {
 
   async findProductByFactoryCod(factoryCode: string): Promise<PctabprEntity | null> {
     try {
-      this.logger.debug(`  → Buscando produto por código de fábrica: ${factoryCode}`);
+      this.logger.debug(`→ Buscando produto por código de fábrica: ${factoryCode}`);
 
       const findProduct = await this.pcproductRepository.findOne({
         where: {
