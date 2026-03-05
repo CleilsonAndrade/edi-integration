@@ -287,87 +287,98 @@ export class EDIService {
 
     const branchCode = process.env.FINANCIAL_BRANCH || '';
 
-    const branchAllowed = await this.allowedCompanyByCodBranch(branchCode)
+    const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
 
-    if (!branchAllowed) {
+    if (!codCompany) {
       return null;
     }
 
-    const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
+    const allowedBranch = await this.allowedCompanyByCodBranch(branchCode)
 
-    const issuerAllowed = await this.pcemprRepository.findOne({
+    if (!allowedBranch) {
+      return null;
+    }
+
+    const allowedIssuer = Number(process.env.ISSUER_REGISTRATION) || 0;
+
+    const findIssuer = await this.pcemprRepository.findOne({
       where: {
-        registration: Number(process.env.ISSUER_REGISTRATION) || 1,
+        registration: allowedIssuer,
       },
     });
 
-    if (!issuerAllowed) {
-      this.logger.warn(`  ✗ Emitente NÃO encontrado para inscrição: ${process.env.ISSUER_REGISTRATION}`);
+    if (!findIssuer) {
+      this.logger.warn(`  ✗ Emitente NÃO encontrado para matricula: ${allowedIssuer}`);
       return null;
-    } else {
-      this.logger.debug(`  ✓ Emitente encontrado: ${issuerAllowed.registration}`);
     }
+    this.logger.debug(`  ✓ Emitente encontrado: ${findIssuer.registration}`);
 
-    const allowedCodRCA = Number(process.env.RCA_ID) || 3029;
 
-    const codRCA = await this.pcusuariRepository.findOne({
+    const allowedCodRCA = Number(process.env.RCA_ID) || 0;
+
+    const findRCA = await this.pcusuariRepository.findOne({
       where: {
         userCode: allowedCodRCA
       },
       select: ['name', 'userCode', 'supervisorCode']
     })
 
-    if (codRCA) {
-      this.logger.debug(`  ✓ RCA encontrado: ${codRCA.userCode} - ${codRCA.name}`);
-    } else {
+    if (!findRCA) {
       this.logger.warn(`  ✗ RCA NÃO encontrado para ID: ${allowedCodRCA}`);
+      return null;
     }
+    this.logger.debug(`  ✓ RCA encontrado: ${findRCA.userCode} - ${findRCA.name}`);
 
 
-    const codSquare = await this.pcpracaRepository.findOne({
+    const allowedCodSquare = Number(process.env.COD_SQUARE) || 0;
+
+    const findSquare = await this.pcpracaRepository.findOne({
       where: {
-        codSquare: Number(process.env.COD_SQUARE)
+        codSquare: allowedCodSquare
       },
       select: ['codSquare', 'square', 'regionNumber',]
     })
 
-    if (!codSquare) {
-      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${process.env.COD_SQUARE}`);
-    } else {
-      this.logger.debug(`  ✓ Praça encontrada: ${codSquare.codSquare} - ${codSquare.square}`);
+    if (!findSquare) {
+      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${allowedCodSquare}`);
+      return null;
     }
+    this.logger.debug(`  ✓ Praça encontrada: ${findSquare.codSquare} - ${findSquare.square}`);
 
-    const codPaymentPlan = await this.pcplpagRepository.findOne({
+
+    const allowedCodPaymentPlan = Number(process.env.COD_PAYMENT_PLAN) || 0;
+
+    const findPaymentPlan = await this.pcplpagRepository.findOne({
       where: {
-        codPaymentPlan: Number(process.env.COD_PAYMENT_PLAN) || 5712,
+        codPaymentPlan: allowedCodPaymentPlan,
         status: 'A',
       },
       select: ['codPaymentPlan', 'description', 'status', 'billingCode', 'saleType', 'firstPaymentTerm']
     });
 
-    if (!codPaymentPlan) {
-      this.logger.warn(`  ✗ Plano de Pagamento NÃO encontrado para código: ${process.env.COD_PAYMENT_PLAN}`);
-    } else {
-      this.logger.debug(`  ✓ Plano de Pagamento encontrado: ${codPaymentPlan.codPaymentPlan}`);
+    if (!findPaymentPlan) {
+      this.logger.warn(`  ✗ Plano de Pagamento NÃO encontrado para código: ${allowedCodPaymentPlan}`);
+      return null;
     }
+    this.logger.debug(`  ✓ Plano de Pagamento encontrado: ${findPaymentPlan.codPaymentPlan}`);
 
     const numped = await this.getNextSequenceOrderNumber();
 
+    const allowedSupplierCode = Number(process.env.SUPPLIER_CODE) || 0;
+    const allowedResale = process.env.PROVIDER_TYPE_RESALE || 'T';
 
-    const supplierCode = process.env.SUPPLIER_CODE || '10913';
-
-    const codSupplier = await this.pcfornecRepository.findOne({
+    const findCodSupplier = await this.pcfornecRepository.findOne({
       where: {
-        supplierCode: Number(supplierCode),
-        resale: 'T',
+        supplierCode: Number(allowedSupplierCode),
+        resale: allowedResale,
       },
     });
 
-    if (!codSupplier) {
-      this.logger.warn(`  ✗ Fornecedor NÃO encontrado para código: ${supplierCode}`);
-    } else {
-      this.logger.debug(`  ✓ Fornecedor encontrado: ${codSupplier.supplierCode}`);
+    if (!findCodSupplier) {
+      this.logger.warn(`  ✗ Fornecedor NÃO encontrado para código: ${allowedSupplierCode} e tipo de revenda "${allowedResale}"`);
+      return null;
     }
+    this.logger.debug(`  ✓ Fornecedor encontrado: ${findCodSupplier.supplierCode}`);
 
     const agora = new Date();
 
@@ -404,30 +415,30 @@ export class EDIService {
       order.hour = horaAtual;
       order.minute = minutosAtuais;
       order.customerOrderDate = dataHojeMeiaNoite;
-      order.dispatchFreight = codSupplier?.dispatchFreightType || 'C';
-      order.freightSupplierId = codSupplier?.supplierCode || null;
+      order.dispatchFreight = findCodSupplier.dispatchFreightType;
+      order.freightSupplierId = findCodSupplier.supplierCode;
       order.loadType = 'R';
-      order.term1 = codPaymentPlan?.firstPaymentTerm || 0;
-      order.averageTerm = codPaymentPlan?.firstPaymentTerm || 0;
+      order.term1 = findPaymentPlan.firstPaymentTerm;
+      order.averageTerm = findPaymentPlan.firstPaymentTerm;
       order.packagingType = 'U';
       order.orderOrigin = 'T';
       order.importReconciliation = 'N';
-      order.regionNumber = codSquare?.regionNumber || null;
+      order.regionNumber = findSquare.regionNumber;
       order.financialDiscountPercent = 0;
       order.useWmsIntegrator = 'N';
       order.useTv10SaleCfop = 'S';
       order.branchId = branchCode;
-      order.customerId = codCompany?.customerId || null;
-      order.representativeId = codRCA?.userCode || null;
-      order.regionId = codSquare?.codSquare || null;
-      order.paymentPlanId = codPaymentPlan?.codPaymentPlan || null;
-      order.saleType = codPaymentPlan?.saleType || null;
-      order.billingId = codCompany?.idBilling || null;
-      order.issuerId = issuerAllowed.registration;
+      order.customerId = codCompany.customerId;
+      order.representativeId = findRCA.userCode;
+      order.regionId = findSquare.codSquare;
+      order.paymentPlanId = findPaymentPlan.codPaymentPlan;
+      order.saleType = findPaymentPlan.saleType;
+      order.billingId = codCompany.idBilling;
+      order.issuerId = findIssuer.registration;
       order.date = new Date();
       order.position = 'B';
       order.invoiceBranchId = branchCode;
-      order.supervisorId = codRCA?.supervisorCode || null;
+      order.supervisorId = findRCA.supervisorCode;
       order.observation = `EDI`;
 
       await queryRunner.manager.save(order);
