@@ -150,7 +150,7 @@ export class EDIService {
       })
 
       if (productOrder) {
-        this.logger.debug(`  ✓ Produto encontrado: CODPROD ${productOrder.productCode}`);
+        this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
         return productOrder;
       }
 
