@@ -294,7 +294,6 @@ export class EDIService {
     }
 
     const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
-    this.logger.log('codCompany=======================', codCompany);
 
     const issuerAllowed = await this.pcemprRepository.findOne({
       where: {
@@ -319,7 +318,6 @@ export class EDIService {
     })
 
     if (codRCA) {
-      this.logger.log('codRCA=======================', codRCA.supervisorCode);
       this.logger.debug(`  ✓ RCA encontrado: ${codRCA.userCode} - ${codRCA.name}`);
     } else {
       this.logger.warn(`  ✗ RCA NÃO encontrado para ID: ${allowedCodRCA}`);
@@ -334,7 +332,6 @@ export class EDIService {
     })
 
     if (!codSquare) {
-      this.logger.log('codSquare=======================', codSquare);
       this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${process.env.COD_SQUARE}`);
     } else {
       this.logger.debug(`  ✓ Praça encontrada: ${codSquare.codSquare} - ${codSquare.square}`);
@@ -349,7 +346,6 @@ export class EDIService {
     });
 
     if (!codPaymentPlan) {
-      this.logger.log('codPaymentPlan=======================', codPaymentPlan);
       this.logger.warn(`  ✗ Plano de Pagamento NÃO encontrado para código: ${process.env.COD_PAYMENT_PLAN}`);
     } else {
       this.logger.debug(`  ✓ Plano de Pagamento encontrado: ${codPaymentPlan.codPaymentPlan}`);
@@ -357,10 +353,6 @@ export class EDIService {
 
     const numped = await this.getNextSequenceOrderNumber();
 
-    this.logger.debug('numped=======================', numped);
-
-
-    // const supplierCode = this.configService.get<string>('SUPPLIER_CODE', '10913');
 
     const supplierCode = process.env.SUPPLIER_CODE || '10913';
 
@@ -372,23 +364,18 @@ export class EDIService {
     });
 
     if (!codSupplier) {
-      this.logger.log('codSupplier=======================', codSupplier);
       this.logger.warn(`  ✗ Fornecedor NÃO encontrado para código: ${supplierCode}`);
     } else {
       this.logger.debug(`  ✓ Fornecedor encontrado: ${codSupplier.supplierCode}`);
     }
 
-
-    this.logger.debug('codSupplier?.dispatchFreightType=======================', codSupplier?.dispatchFreightType);
-
     const agora = new Date();
 
-    const horaAtual = agora.getHours();     // Ex: 12
-    const minutosAtuais = agora.getMinutes(); // Ex: 59
+    const horaAtual = agora.getHours();
+    const minutosAtuais = agora.getMinutes();
 
     const dataHojeMeiaNoite: Date = new Date();
 
-    // Zera: Horas, Minutos, Segundos e Milissegundos
     dataHojeMeiaNoite.setHours(0, 0, 0, 0);
 
     const numPedRca = process.env.NUMPEDRCA || '00524502P';
@@ -400,12 +387,8 @@ export class EDIService {
     try {
       await queryRunner.startTransaction();
 
-      // 1. Instanciamos a classe para garantir os métodos e metadados
       const order = new PcpedcEntity();
 
-      this.logger.debug(`codCompany?.idBilling=======================`, codCompany?.idBilling);
-
-      // 2. Atribuímos os valores (o TS não reclamará de campos faltantes aqui)
       order.orderId = numped;
       order.loadNumber = 0;
       order.salePercent = 100;
@@ -447,7 +430,6 @@ export class EDIService {
       order.supervisorId = codRCA?.supervisorCode || null;
       order.observation = `EDI`;
 
-      // 4. Salvamos usando o manager do queryRunner
       await queryRunner.manager.save(order);
 
       await queryRunner.commitTransaction();
@@ -460,8 +442,6 @@ export class EDIService {
     } finally {
       await queryRunner.release();
     }
-
-
 
     // return
   }
