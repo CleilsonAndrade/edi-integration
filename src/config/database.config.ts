@@ -1,17 +1,23 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 
 @Injectable()
 export class DatabaseConfigService implements TypeOrmOptionsFactory {
+
+  constructor(
+    private readonly configService: ConfigService,
+  ) { }
+
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       name: 'winthor_conn',
       type: 'oracle',
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 1521,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      serviceName: process.env.DB_SERVICE_NAME,
+      host: this.configService.getOrThrow('DB_HOST'),
+      port: this.configService.get('DB_PORT', 1521),
+      username: this.configService.getOrThrow('DB_USERNAME'),
+      password: this.configService.getOrThrow('DB_PASSWORD'),
+      serviceName: this.configService.getOrThrow('DB_SERVICE_NAME'),
 
       autoLoadEntities: true,
 

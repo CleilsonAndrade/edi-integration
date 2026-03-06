@@ -31,10 +31,10 @@ export class FTPService {
       });
 
       this.client.connect({
-        host: this.configService.get<string>('FTP_HOST'),
+        host: this.configService.getOrThrow<string>('FTP_HOST'),
         port: this.configService.get<number>('FTP_PORT', 21),
-        user: this.configService.get<string>('FTP_USER'),
-        password: this.configService.get<string>('FTP_PASSWORD'),
+        user: this.configService.getOrThrow<string>('FTP_USER'),
+        password: this.configService.getOrThrow<string>('FTP_PASSWORD'),
         secure: this.configService.get<boolean>('FTP_SECURE') === true,
         secureOptions: { rejectUnauthorized: false },
       });

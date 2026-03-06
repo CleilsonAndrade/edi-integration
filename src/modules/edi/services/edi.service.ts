@@ -108,9 +108,10 @@ export class EDIService {
   }
 
   async allowedCompanyByCodBranch(companyCodeString: string): Promise<boolean> {
-    const allowedCodes = process.env.FINANCIAL_BRANCH
-      ? process.env.FINANCIAL_BRANCH.split(',').map(code => code.trim())
-      : [];
+    const allowedCodes = (this.configService.get<string>('FINANCIAL_BRANCH') ?? '')
+      .split(',')
+      .map(code => code.trim())
+      .filter(Boolean);
 
     const inputCodes = companyCodeString.split(',').map(c => c.trim());
 
@@ -178,6 +179,10 @@ export class EDIService {
 
     const findNextSequenceOrderNumber = await queryRunner.manager.query(lockNextSequenceOrderNumber);
 
+    if (!findNextSequenceOrderNumber || findNextSequenceOrderNumber.length === 0) {
+      throw new Error('PCCONSUM vazia ou erro na leitura da sequência.');
+    }
+
     const startNumPed = findNextSequenceOrderNumber[0].PROXNUMPED;
     const newValueSequenceOrderNumber = startNumPed + 1;
 
@@ -186,10 +191,6 @@ export class EDIService {
       .update(PcconsumEntity)
       .set({ nextOrderNumber: newValueSequenceOrderNumber })
       .execute();
-
-    if (!findNextSequenceOrderNumber || findNextSequenceOrderNumber.length === 0) {
-      throw new Error('PCCONSUM vazia ou erro na leitura da sequência.');
-    }
 
     this.logger.debug(`  ✓ Número de pedido obtido: ${newValueSequenceOrderNumber}`);
     await queryRunner.release();
