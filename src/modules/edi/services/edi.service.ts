@@ -131,12 +131,16 @@ export class EDIService {
     try {
       this.logger.debug(`→ Buscando produto por código de fábrica: ${factoryCode}`);
 
+      const originalCode = factoryCode.toUpperCase();
+      const normalizedFactoryCode = factoryCode.replace(/[-#]/g, '').toUpperCase();
+
       const findProduct = await this.pcproductRepository.findOne({
-        where: {
-          manufacturerCode: factoryCode
-        },
+        where: [
+          { manufacturerCode: originalCode },
+          { manufacturerCode: normalizedFactoryCode }
+        ],
         select: ['productCode', 'description', 'manufacturerCode']
-      })
+      });
 
       if (!findProduct?.productCode) {
         this.logger.warn(`  ✗ Produto NÃO encontrado para código do fabricante: ${factoryCode}`);
@@ -302,9 +306,10 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    parsed.items.forEach((item, index) => {
-      this.logger.debug(this.findProductByFactoryCod(item.vendorPartNumber));
-    });
+    const _products = await Promise.all(
+      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber))
+    );
+
 
     const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
 
