@@ -437,6 +437,7 @@ export class EDIService {
       order.imported = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
       order.discountPercent = this.configService.getOrThrow<number>('ORDER_PERCENTUAL_DISCOUNT');
       order.invoiceFreightValue = this.configService.getOrThrow<number>('ORDER_VALUE_FREIGHT_INVOICE');
+      order.freightValue = this.configService.getOrThrow<number>('ORDER_VALUE_FREIGHT');
       order.otherExpensesValue = this.configService.getOrThrow<number>('ORDER_EXPENSES_VALUE');
       order.saleCondition = this.configService.getOrThrow<number>('ORDER_SALE_CONDITION');
       order.hour = horaAtual;

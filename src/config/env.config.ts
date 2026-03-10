@@ -79,6 +79,9 @@ export class EnvironmentVariables {
 
   @IsString() @IsNotEmpty()
   PROVIDER_TYPE_RESALE: string;
+
+  @IsNumber() @IsNotEmpty()
+  ORDER_FREIGHT_VALUE
 }
 
 export function validate(config: Record<string, unknown>) {
