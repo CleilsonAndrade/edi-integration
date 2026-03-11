@@ -57,7 +57,7 @@ export class EDIService {
     private configService: ConfigService,
   ) { }
 
-  async findClientCompanyByName(name: string): Promise<PcclientEntity | null> {
+  async findCostumerCompanyByName(name: string): Promise<PcclientEntity | null> {
     try {
       this.logger.debug(`→ Buscando cliente por nome: ${name}`);
 
@@ -81,32 +81,6 @@ export class EDIService {
     }
   }
 
-  async findCompanyByCnpj(cnpj: string): Promise<string | null> {
-    try {
-      this.logger.debug(`  → Buscando filial por CNPJ: ${cnpj}`);
-
-      const company = await this.pcfilialRepository
-        .createQueryBuilder('filial')
-        .where("REGEXP_REPLACE(filial.CGC, '[^0-9]', '') = :cnpj", { cnpj })
-        .getOne();
-
-      if (company?.codeBranch) {
-        this.logger.debug(`  ✓ Filial encontrada: Código ${company.codeBranch}`);
-
-        const companyCodeString = String(company.codeBranch);
-        return companyCodeString;
-      }
-
-      this.logger.warn(`  ✗ Filial NÃO encontrada para CNPJ: ${cnpj}`);
-      return null;
-    } catch (error: unknown) {
-      const stack = error instanceof Error ? error.stack : String(error);
-
-      this.logger.error(` ❌ Erro ao buscar filial por CNPJ ${cnpj}`, stack);
-      return null;
-    }
-  }
-
   async allowedCompanyByCodBranch(companyCodeString: string): Promise<boolean> {
     const allowedCodes = (this.configService.get<string>('FINANCIAL_BRANCH') ?? '')
       .split(',')
@@ -125,6 +99,35 @@ export class EDIService {
     }
 
     return false;
+  }
+
+  async findCompanyByCnpj(cnpj: string): Promise<PcfilialEntity | null> {
+    try {
+      this.logger.debug(`→ Buscando filial por CNPJ: ${cnpj}`);
+
+      const company = await this.pcfilialRepository
+        .createQueryBuilder('filial')
+        .where("REGEXP_REPLACE(filial.CGC, '[^0-9]', '') = :cnpj", { cnpj })
+        .getOne();
+
+      if (!company?.codeBranch) {
+        this.logger.warn(`  ✗ Filial NÃO encontrada para o CNPJ: ${cnpj}`);
+        return null;
+      }
+
+      const branch = await this.allowedCompanyByCodBranch(company?.codeBranch ? String(company.codeBranch) : '');
+
+      if (!branch) {
+        return null;
+      }
+
+      return company;
+    } catch (error: unknown) {
+      const stack = error instanceof Error ? error.stack : String(error);
+
+      this.logger.error(` ❌ Erro ao buscar filial por CNPJ ${cnpj}`, stack);
+      return null;
+    }
   }
 
   async findProductByFactoryCod(factoryCode: string): Promise<PctabprEntity | null> {
@@ -310,18 +313,17 @@ export class EDIService {
       parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber))
     );
 
-
     const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
 
-    const codCompany = await this.findClientCompanyByName(parsed.parties.buyerName);
+    const company = await this.findCompanyByCnpj(branchCode)
 
-    if (!codCompany) {
+    if (!company) {
       return null;
     }
 
-    const allowedBranch = await this.allowedCompanyByCodBranch(branchCode)
+    const costumer = await this.findCostumerCompanyByName(parsed.parties.buyerName);
 
-    if (!allowedBranch) {
+    if (!costumer) {
       return null;
     }
 
@@ -362,7 +364,7 @@ export class EDIService {
       where: {
         codSquare: allowedCodSquare
       },
-      select: ['codSquare', 'square', 'regionNumber',]
+      select: ['codSquare', 'square', 'regionNumber', 'freightValue']
     })
 
     if (!findSquare) {
@@ -437,7 +439,7 @@ export class EDIService {
       order.imported = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
       order.discountPercent = this.configService.getOrThrow<number>('ORDER_PERCENTUAL_DISCOUNT');
       order.invoiceFreightValue = this.configService.getOrThrow<number>('ORDER_VALUE_FREIGHT_INVOICE');
-      order.freightValue = this.configService.getOrThrow<number>('ORDER_VALUE_FREIGHT');
+      order.freightValue = findSquare.freightValue;
       order.otherExpensesValue = this.configService.getOrThrow<number>('ORDER_EXPENSES_VALUE');
       order.saleCondition = this.configService.getOrThrow<number>('ORDER_SALE_CONDITION');
       order.hour = horaAtual;
@@ -452,16 +454,16 @@ export class EDIService {
       order.orderOrigin = this.configService.getOrThrow<string>('ORDER_ORIGIN');
       order.importReconciliation = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
       order.regionNumber = findSquare.regionNumber;
-      order.financialDiscountPercent = this.configService.getOrThrow<number>('ORDER_FINANCIAL_PERCENTUAL_DISCOUNT');
-      order.useWmsIntegrator = this.configService.getOrThrow<string>('ORDER_USE_WMS_INTEGRATOR');
+      order.financialDiscountPercent = costumer.percentageDiscountFin;
+      order.useWmsIntegrator = company.useWmsIntegration;
       order.useTv10SaleCfop = this.configService.getOrThrow<string>('ORDER_USE_TYPE_SALE_10_CFOP');
       order.branchId = branchCode;
-      order.customerId = codCompany.customerId;
+      order.customerId = costumer.customerId;
       order.representativeId = findRCA.userCode;
       order.regionId = findSquare.codSquare;
       order.paymentPlanId = findPaymentPlan.codPaymentPlan;
       order.saleType = findPaymentPlan.saleType;
-      order.billingId = codCompany.idBilling;
+      order.billingId = costumer.idBilling;
       order.issuerId = findIssuer.registration;
       order.date = new Date();
       order.position = this.configService.getOrThrow<string>('ORDER_POSITION');

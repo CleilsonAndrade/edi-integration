@@ -12,9 +12,6 @@ export class EnvironmentVariables {
   ORDER_PERCENTUAL_DISCOUNT: number;
 
   @IsNumber() @IsNotEmpty()
-  ORDER_FINANCIAL_PERCENTUAL_DISCOUNT: number;
-
-  @IsNumber() @IsNotEmpty()
   ORDER_VALUE_FREIGHT_INVOICE: number;
 
   @IsNumber() @IsNotEmpty()
@@ -40,9 +37,6 @@ export class EnvironmentVariables {
 
   @IsString() @IsNotEmpty()
   ORDER_IMPORT_RECONCILIATION: string;
-
-  @IsString() @IsNotEmpty()
-  ORDER_USE_WMS_INTEGRATOR: string;
 
   @IsString() @IsNotEmpty()
   ORDER_USE_TYPE_SALE_10_CFOP: string;
@@ -79,9 +73,6 @@ export class EnvironmentVariables {
 
   @IsString() @IsNotEmpty()
   PROVIDER_TYPE_RESALE: string;
-
-  @IsNumber() @IsNotEmpty()
-  ORDER_FREIGHT_VALUE
 }
 
 export function validate(config: Record<string, unknown>) {
