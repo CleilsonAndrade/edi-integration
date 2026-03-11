@@ -434,7 +434,7 @@ export class EDIService {
       order.financialDiscountPercent = costumer.percentageDiscountFin;
       order.useWmsIntegrator = company.useWmsIntegration;
       order.useTv10SaleCfop = this.configService.getOrThrow<string>('ORDER_USE_TYPE_SALE_10_CFOP');
-      order.branchId = branchCode;
+      order.branchId = company.codeBranch;
       order.customerId = costumer.customerId;
       order.representativeId = findRCA.userCode;
       order.regionId = findSquare.codSquare;
@@ -444,7 +444,7 @@ export class EDIService {
       order.issuerId = findIssuer.registration;
       order.date = new Date();
       order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
-      order.invoiceBranchId = branchCode;
+      order.invoiceBranchId = company.codeBranch;
       order.supervisorId = findRCA.supervisorCode;
       order.grouping = this.configService.getOrThrow<string>('ORDER_GROUPING');
       order.observation = `EDI - PO: ${parsed.header.poNumber}`;
