@@ -107,7 +107,7 @@ export class EDIService {
     }
   }
 
-  async findProductByFactoryCod(factoryCode: string): Promise<PctabprEntity | null> {
+  async findProductByFactoryCod(factoryCode: string): Promise<any> {
     try {
       this.logger.debug(`→ Buscando produto por código de fábrica: ${factoryCode}`);
 
@@ -119,7 +119,6 @@ export class EDIService {
           { manufacturerCode: originalCode },
           { manufacturerCode: normalizedFactoryCode }
         ],
-        select: ['productCode', 'description', 'manufacturerCode']
       });
 
       if (!findProduct?.productCode) {
@@ -136,7 +135,7 @@ export class EDIService {
 
       if (productOrder) {
         this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
-        return productOrder;
+        return { ...productOrder, ...findProduct };
       }
 
       this.logger.warn(`  ✗ Produto NÃO encontrado para código de fábrica: ${factoryCode}`);
@@ -290,6 +289,14 @@ export class EDIService {
       parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber))
     );
 
+    const teste = _products.reduce((acc, product) => {
+      return acc + product?.grossWeight || 0;
+    }, 0);
+
+    const teste1 = _products.reduce((acc, product) => {
+      return acc + product?.tablePrice1 || 0;
+    }, 0);
+
     const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
 
     const company = await this.findCompanyByCod(branchCode)
@@ -411,7 +418,7 @@ export class EDIService {
       order.customerOrderNumber = parsed.header.poNumber;
       order.integrationOrigin = this.configService.getOrThrow<string>('INTEGRATION_SOURCE');
       order.xmlVanOrderId = parsed.header.poNumber;
-      order.itemCount = parsed.totals.totalQuantity;
+      order.itemCount = parsed.totals.totalLineItems;
       // order.importDate = dataHojeMeiaNoite;
       order.imported = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
       order.discountPercent = this.configService.getOrThrow<number>('ORDER_PERCENTUAL_DISCOUNT');
@@ -442,6 +449,11 @@ export class EDIService {
       order.saleType = findPaymentPlan.saleType;
       order.billingId = costumer.idBilling;
       order.issuerId = findIssuer.registration;
+      order.totalWeight = teste;
+      order.totalValue = teste1 * parsed.totals.totalQuantity;
+      order.listValue = teste1 * parsed.totals.totalQuantity;
+      order.serviceValue = teste1 * parsed.totals.totalQuantity;
+      order.totalVolume = parsed.totals.totalQuantity;
       order.date = new Date();
       order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
       order.invoiceBranchId = company.codeBranch;
