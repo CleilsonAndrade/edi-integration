@@ -81,51 +81,28 @@ export class EDIService {
     }
   }
 
-  async allowedCompanyByCodBranch(companyCodeString: string): Promise<boolean> {
-    const allowedCodes = (this.configService.get<string>('FINANCIAL_BRANCH') ?? '')
-      .split(',')
-      .map(code => code.trim())
-      .filter(Boolean);
-
-    const inputCodes = companyCodeString.split(',').map(c => c.trim());
-
-    const isAllowed = inputCodes.every(code => allowedCodes.includes(code));
-
-    if (isAllowed) {
-      this.logger.debug(`  ✓ Filial(is) ${companyCodeString} permitida(s)`);
-      return true;
-    } else {
-      this.logger.warn(`  ✗ Filial(is) ${companyCodeString} NÃO permitida(s).`);
-    }
-
-    return false;
-  }
-
-  async findCompanyByCnpj(cnpj: string): Promise<PcfilialEntity | null> {
+  async findCompanyByCod(codBranch: string): Promise<PcfilialEntity | null> {
     try {
-      this.logger.debug(`→ Buscando filial por CNPJ: ${cnpj}`);
+      this.logger.debug(`→ Buscando filial: ${codBranch}`);
 
-      const company = await this.pcfilialRepository
-        .createQueryBuilder('filial')
-        .where("REGEXP_REPLACE(filial.CGC, '[^0-9]', '') = :cnpj", { cnpj })
-        .getOne();
+      const findCompany = await this.pcfilialRepository.findOne({
+        where: {
+          codeBranch: codBranch
+        }
+      });
 
-      if (!company?.codeBranch) {
-        this.logger.warn(`  ✗ Filial NÃO encontrada para o CNPJ: ${cnpj}`);
+      if (!findCompany?.codeBranch) {
+        this.logger.warn(`  ✗ Filial NÃO encontrada para o código: ${codBranch}`);
         return null;
       }
 
-      const branch = await this.allowedCompanyByCodBranch(company?.codeBranch ? String(company.codeBranch) : '');
+      this.logger.debug(`  ✓ Filial encontrada: ${findCompany.codeBranch} - ${findCompany.tradeName}`);
 
-      if (!branch) {
-        return null;
-      }
-
-      return company;
+      return findCompany;
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
-      this.logger.error(` ❌ Erro ao buscar filial por CNPJ ${cnpj}`, stack);
+      this.logger.error(` ❌ Erro ao buscar filial por código ${codBranch}`, stack);
       return null;
     }
   }
@@ -315,7 +292,7 @@ export class EDIService {
 
     const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
 
-    const company = await this.findCompanyByCnpj(branchCode)
+    const company = await this.findCompanyByCod(branchCode)
 
     if (!company) {
       return null;
