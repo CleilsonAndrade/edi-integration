@@ -460,8 +460,12 @@ export class EDIService {
       order.supervisorId = findRCA.supervisorCode;
       order.grouping = this.configService.getOrThrow<string>('ORDER_GROUPING');
       order.observation = `EDI - PO: ${parsed.header.poNumber}`;
+      // order.accountingCostValue = ;
+      // order.replacementCostValue = ;
+      // order.realCostValue = ;
+      // order.finalCostValue = ;
+      // order.deliveryDate = ;
 
-      // order.attendValueCalcType = 'msm valor: vl. atentido, vl. tabela, vl. pedido'
 
       await queryRunner.manager.save(order);
 
