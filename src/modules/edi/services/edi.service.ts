@@ -289,11 +289,11 @@ export class EDIService {
       parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber))
     );
 
-    const teste = _products.reduce((acc, product) => {
+    const totalGrossWeight = _products.reduce((acc, product) => {
       return acc + product?.grossWeight || 0;
     }, 0);
 
-    const teste1 = _products.reduce((acc, product) => {
+    const totalValue = _products.reduce((acc, product) => {
       return acc + product?.tablePrice1 || 0;
     }, 0);
 
@@ -449,10 +449,10 @@ export class EDIService {
       order.saleType = findPaymentPlan.saleType;
       order.billingId = costumer.idBilling;
       order.issuerId = findIssuer.registration;
-      order.totalWeight = teste;
-      order.totalValue = teste1 * parsed.totals.totalQuantity;
-      order.listValue = teste1 * parsed.totals.totalQuantity;
-      order.serviceValue = teste1 * parsed.totals.totalQuantity;
+      order.totalWeight = totalGrossWeight;
+      order.totalValue = totalValue * parsed.totals.totalQuantity;
+      order.listValue = totalValue * parsed.totals.totalQuantity;
+      order.serviceValue = totalValue * parsed.totals.totalQuantity;
       order.totalVolume = parsed.totals.totalQuantity;
       order.date = new Date();
       order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
