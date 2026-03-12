@@ -469,6 +469,29 @@ export class EDIService {
 
       await queryRunner.manager.save(order);
 
+      const orderItems = parsed.items.map((item, index) => {
+        const product = _products[index];
+
+        const orderItem = new PcpediEntity();
+
+        orderItem.orderId = numped;
+        orderItem.lineNumber = index + 1;
+        orderItem.productCode = product?.productCode || 0;
+        orderItem.quantity = item.quantity;
+        orderItem.unitPrice = item.unitPrice;
+        orderItem.totalPrice = item.unitPrice * item.quantity;
+        orderItem.buyerPartNumber = item.buyerPartNumber;
+        orderItem.vendorPartNumber = item.vendorPartNumber;
+        orderItem.description = item.description;
+        orderItem.upc = item.upc;
+        orderItem.deliveryDate = item.deliveryDate ? new Date(item.deliveryDate) : null;
+        orderItem.grossWeight = product?.grossWeight || 0;
+        orderItem.netWeight = product?.netWeight || 0;
+
+        return orderItem;
+
+      });
+
       await queryRunner.commitTransaction();
       this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
 
