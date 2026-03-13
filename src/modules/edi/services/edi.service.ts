@@ -285,16 +285,23 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    const _products = await Promise.all(
+    const _products: (PctabprEntity | PcprodutEntity)[] = await Promise.all(
       parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber))
     );
 
     const totalGrossWeight = _products.reduce((acc, product) => {
-      return acc + product?.grossWeight || 0;
+      // Verifica se 'product' não é nulo/undefined E se 'grossWeight' existe nele
+      if (product && 'grossWeight' in product) {
+        return acc + (product.grossWeight || 0);
+      }
+      return acc; // Se não tiver o peso, só retorna o acumulador atual
     }, 0);
 
     const totalValue = _products.reduce((acc, product) => {
-      return acc + product?.tablePrice1 || 0;
+      if (product && 'tablePrice1' in product) {
+        return acc + (product.tablePrice1 || 0);
+      }
+      return acc;
     }, 0);
 
     const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
@@ -475,18 +482,41 @@ export class EDIService {
         const orderItem = new PcpediEntity();
 
         orderItem.orderId = numped;
-        orderItem.lineNumber = index + 1;
-        orderItem.productCode = product?.productCode || 0;
+        orderItem.productId = product?.productCode || 0;
         orderItem.quantity = item.quantity;
-        orderItem.unitPrice = item.unitPrice;
-        orderItem.totalPrice = item.unitPrice * item.quantity;
-        orderItem.buyerPartNumber = item.buyerPartNumber;
-        orderItem.vendorPartNumber = item.vendorPartNumber;
-        orderItem.description = item.description;
-        orderItem.upc = item.upc;
-        orderItem.deliveryDate = item.deliveryDate ? new Date(item.deliveryDate) : null;
-        orderItem.grossWeight = product?.grossWeight || 0;
-        orderItem.netWeight = product?.netWeight || 0;
+        orderItem.missingQuantity = 0;
+        orderItem.salePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.date = new Date();
+        orderItem.customerId = costumer.customerId;
+        orderItem.representativeId = findRCA.userCode;
+        orderItem.listPrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.position = this.configService.getOrThrow<string>('ORDER_ITEM_POSITION');
+        orderItem.st = (product as PctabprEntity)?.stCode || 0;
+        orderItem.commissionPercent = 0;
+        orderItem.discountPercent = 0;
+        orderItem.sequence = 2;
+        orderItem.stId = (product as PctabprEntity)?.stCode || 0;
+        orderItem.ipiPercent = 0;
+        orderItem.ipiValue = 0;
+        orderItem.iva = 99.02;
+        orderItem.tariff = 0;
+        orderItem.icmsRate1 = 18;
+        orderItem.icmsRate2 = 4;
+        orderItem.suframaDiscountValue = 0;
+        orderItem.cmvFreightPercent = 0;
+        orderItem.sourceStBaseReductionPercent = 0;
+        orderItem.issPercent = 0;
+        orderItem.issValue = 0;
+        orderItem.baseSalePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.auxiliaryId = (product as PcprodutEntity)?.auxiliaryCode || 0;
+        orderItem.originalPrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.rcaBasePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.boxQuantity = 0;
+        orderItem.piecesQuantity = 0;
+        orderItem.withdrawBranchId = company.codeBranch;
+        orderItem.icmsExemptDiscountPercent = 0;
+        orderItem.icmsExemptionDiscountValue = 0;
+        orderItem.customerCmvFundValue = 0;
 
         return orderItem;
 
