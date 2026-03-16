@@ -490,7 +490,7 @@ export class EDIService {
         orderItem.customerId = costumer.customerId;
         orderItem.representativeId = findRCA.userCode;
         orderItem.listPrice = (product as PctabprEntity)?.tablePrice1 || 0;
-        orderItem.position = this.configService.getOrThrow<string>('ORDER_ITEM_POSITION');
+        orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
         orderItem.st = (product as PctabprEntity)?.stCode || 0;
         orderItem.commissionPercent = 0;
         orderItem.discountPercent = 0;
@@ -521,6 +521,8 @@ export class EDIService {
         return orderItem;
 
       });
+
+      await queryRunner.manager.save(orderItems);
 
       await queryRunner.commitTransaction();
       this.logger.debug(`  ✓ Pedido ${numped} salvo.`);

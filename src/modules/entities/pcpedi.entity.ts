@@ -1216,9 +1216,6 @@ export class PcpediEntity {
   @Column({ name: 'QTCOMBOVIRTUAL', type: 'number', precision: 12, scale: 4, nullable: true })
   virtualComboQuantity: number | null;
 
-  @Column({ name: 'CUPOMVINCLANCAMENTO', type: 'number', nullable: true })
-  coupomVincEntry: number | null;
-
   @Column({ name: 'CUSTOULTENTFISCAL', type: 'number', precision: 18, scale: 3, nullable: true })
   lastFiscalEntryCost: number | null;
 
