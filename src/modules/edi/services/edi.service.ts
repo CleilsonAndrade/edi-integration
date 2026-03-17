@@ -158,7 +158,7 @@ export class EDIService {
     this.logger.debug(`→ Obtendo número de pedido...`);
 
     const lockNextSequenceOrderNumber = `
-        SELECT NVL(PROXNUMPED, 1) AS PROXNUMPED 
+        SELECT NVL(PROXNUMORC, 1) AS PROXNUMORC 
         FROM PCCONSUM 
         FOR UPDATE WAIT 5
       `;
@@ -172,8 +172,8 @@ export class EDIService {
       throw new Error('PCCONSUM vazia ou erro na leitura da sequência.');
     }
 
-    const startNumPed = findNextSequenceOrderNumber[0].PROXNUMPED;
-    const newValueSequenceOrderNumber = startNumPed + 1;
+    const startNumOrc = findNextSequenceOrderNumber[0].PROXNUMORC;
+    const newValueSequenceOrderNumber = startNumOrc + 1;
 
     await queryRunner.manager
       .createQueryBuilder()
@@ -185,6 +185,33 @@ export class EDIService {
     await queryRunner.release();
 
     return newValueSequenceOrderNumber;
+  }
+
+  async getNextPedidoSequencial(codUsur: number): Promise<string> {
+    return await this.dataSource.transaction(async (manager) => {
+      // 1. Busca o maior número de pedido que comece com o prefixo do RCA
+      // Usamos LIKE '3029%' e convertemos para número para garantir o MAX correto
+      const result = await manager.query(`
+      SELECT MAX(NUMORCA) as LAST_PED 
+      FROM PCORCAVENDAC 
+      WHERE NUMORCA LIKE :prefix
+    `, [`${codUsur}%`]);
+
+      let nextNumber: number;
+      const lastPed = result[0]?.LAST_PED;
+
+      if (lastPed) {
+        // Se encontrou, soma 1 ao valor total
+        // Ex: 3029000034 + 1 = 3029000035
+        nextNumber = Number(lastPed) + 1;
+      } else {
+        // Se for o primeiro pedido do dia/RCA, inicia o sequencial
+        // Ex: 3029 + 000001 = 3029000001
+        nextNumber = Number(`${codUsur}000001`);
+      }
+
+      return nextNumber.toString();
+    });
   }
 
   /**
@@ -415,7 +442,8 @@ export class EDIService {
 
     const numPedRca = process.env.NUMPEDRCA || '00524502P';
 
-    const numped = await this.getNextSequenceOrderNumber();
+    // const numped = await this.getNextSequenceOrderNumber();
+    const numped = await this.getNextPedidoSequencial(findRCA.userCode);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -539,7 +567,7 @@ export class EDIService {
 
       const order = new PcorcavendacEntity();
 
-      order.orderNumber = numped;
+      order.orderNumber = Number(numped);
       order.transportNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
       order.salesPercentage = this.configService.getOrThrow<number>('ORDER_SALE_PERCENTAGE');
       order.clientOrderNumber = parsed.header.poNumber;
