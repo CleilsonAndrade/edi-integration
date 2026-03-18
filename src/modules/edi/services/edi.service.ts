@@ -575,7 +575,7 @@ export class EDIService {
         orderItem.st = (product as PctabprEntity)?.stCode || 0;
         orderItem.commissionPercent = 0;
         orderItem.discountPercent = 0;
-        orderItem.sequenceNumber = 2;
+        orderItem.sequenceNumber = item.lineNumber;
         orderItem.stCode = (product as PctabprEntity)?.stCode || 0;
         orderItem.ipiPercent = 0;
         orderItem.ipiValue = 0;
