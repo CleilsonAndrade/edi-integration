@@ -187,30 +187,28 @@ export class EDIService {
     return newValueSequenceOrderNumber;
   }
 
-  async getNextPedidoSequencial(codUsur: number): Promise<string> {
+  async getNextPedidoSequencial(codUsur: number): Promise<number> {
     return await this.dataSource.transaction(async (manager) => {
-      // 1. Busca o maior número de pedido que comece com o prefixo do RCA
-      // Usamos LIKE '3029%' e convertemos para número para garantir o MAX correto
-      const result = await manager.query(`
-      SELECT MAX(NUMORCA) as LAST_PED 
-      FROM PCORCAVENDAC 
-      WHERE NUMORCA LIKE :prefix
-    `, [`${codUsur}%`]);
+      // 1. Usamos o QueryBuilder para executar a função nativa do WinThor
+      // O 'getRawOne' é ideal para capturar resultados de funções SQL (DUAL)
+      const result = await manager
+        .createQueryBuilder()
+        .select(`ferramentas.f_prox_numped(${codUsur})`, 'NEXT_PED')
+        .from('DUAL', 'dual') // No Oracle, funções isoladas rodam na DUAL
+        .getRawOne();
 
-      let nextNumber: number;
-      const lastPed = result[0]?.LAST_PED;
+      // 2. O Oracle retorna as colunas em CAIXA ALTA por padrão
+      const nextNumber = result?.NEXT_PED || result?.next_ped;
 
-      if (lastPed) {
-        // Se encontrou, soma 1 ao valor total
-        // Ex: 3029000034 + 1 = 3029000035
-        nextNumber = Number(lastPed) + 1;
-      } else {
-        // Se for o primeiro pedido do dia/RCA, inicia o sequencial
-        // Ex: 3029 + 000001 = 3029000001
-        nextNumber = Number(`${codUsur}000001`);
+      if (!nextNumber) {
+        // Caso não exista registro prévio ou a função falhe, 
+        // mantemos sua lógica de fallback para o primeiro pedido
+        return Number(`${codUsur}000001`);
       }
 
-      return nextNumber.toString();
+      // Como a função f_prox_numped já incrementa o valor no banco,
+      // você não precisa somar +1 manualmente no código.
+      return Number(nextNumber);
     });
   }
 
@@ -218,43 +216,53 @@ export class EDIService {
    * Verifica se o pedido EDI já foi processado anteriormente
    * Busca por: Nome do Arquivo OU PO Number
    */
-  // async isEDIAlreadyProcessed(
-  //   poNumber: string,
-  //   fileName: string
-  // ): Promise<boolean> {
-  //   try {
-  //     // Busca 1: Por nome do arquivo
-  //     const byFile = await this.pcpedcRepository
-  //       .createQueryBuilder('ped')
-  //       .where('ped.ARQUIVO = :fileName', { fileName })
-  //       .getOne();
+  async isEDIAlreadyProcessed(
+    poNumber: string,
+    fileName: string
+  ): Promise<boolean> {
+    try {
+      // Busca 1: Por número do pedido do fornecedor (PO Number)
+      // No seu importEDI, o PO Number é salvo na propriedade 'clientOrderNumber'
+      const byPO = await this.pcorcavendacRepository
+        .createQueryBuilder('ped')
+        .where('ped.clientOrderNumber = :poNumber', { poNumber })
+        .getOne();
 
-  //     if (byFile) {
-  //       this.logger.warn(`  ⚠ EDI já processado (Arquivo: ${fileName}) - NUMPED: ${byFile.numped}`);
-  //       return true;
-  //     }
+      if (byPO) {
+        // Usamos orderNumber pois é a propriedade mapeada para o NUMORCA na entidade
+        this.logger.warn(`  ⚠ EDI já processado (PO Number: ${poNumber}) - Numero Orçamento: ${byPO.orderNumber}`);
+        return true;
+      }
 
-  //     // Busca 2: Por número do pedido do fornecedor (PO Number)
-  //     const byPO = await this.pcpedcRepository
-  //       .createQueryBuilder('ped')
-  //       .where('ped.NUMPEDFORNEC = :poNumber', { poNumber })
-  //       .getOne();
+      // Busca 2: Por nome do arquivo
+      // ATENÇÃO: No seu importEDI atual, você não está salvando o nome do arquivo 
+      // na tabela PCORCAVENDAC. Se a sua entidade possui uma propriedade para isso 
+      // (ex: 'arquivo' ou 'xmlVanOrderId'), descomente e ajuste o nome abaixo.
+      // Caso contrário, a busca por PO Number já é suficiente para evitar a duplicidade.
 
-  //     if (byPO) {
-  //       this.logger.warn(`  ⚠ EDI já processado (PO Number: ${poNumber}) - NUMPED: ${byPO.numped}`);
-  //       return true;
-  //     }
+      /*
+      const byFile = await this.pcorcavendacRepository
+        .createQueryBuilder('ped')
+        // Substitua 'arquivo' pelo nome real da propriedade na sua PcorcavendacEntity
+        .where('ped.arquivo = :fileName', { fileName }) 
+        .getOne();
+  
+      if (byFile) {
+        this.logger.warn(`  ⚠ EDI já processado (Arquivo: ${fileName}) - NUMORCA: ${byFile.orderNumber}`);
+        return true;
+      }
+      */
 
-  //     // EDI não encontrado - pode processar
-  //     this.logger.debug(`  ✓ EDI novo, pode processar (PO: ${poNumber}, File: ${fileName})`);
-  //     return false;
+      // EDI não encontrado - pode processar
+      this.logger.debug(`  ✓ EDI novo, pode processar (PO: ${poNumber}, File: ${fileName})`);
+      return false;
 
-  //   } catch (error: unknown) {
-  //     const stack = error instanceof Error ? error.stack : String(error);
-  //     this.logger.error(` ❌ Erro ao verificar duplicidade do EDI`, stack);
-  //     return false;
-  //   }
-  // }
+    } catch (error: unknown) {
+      const stack = error instanceof Error ? error.stack : String(error);
+      this.logger.error(` ❌ Erro ao verificar duplicidade do EDI`, stack);
+      return false;
+    }
+  }
 
   async validateEDIContent(ediContent: string, fileName: string): Promise<{
     isValid: boolean;
@@ -286,18 +294,18 @@ export class EDIService {
       }
 
       // 5. Verificar se já foi processado (por arquivo OU PO Number)
-      // const alreadyProcessed = await this.isEDIAlreadyProcessed(
-      //   parsed.header.poNumber,
-      //   fileName
-      // );
+      const alreadyProcessed = await this.isEDIAlreadyProcessed(
+        parsed.header.poNumber,
+        fileName
+      );
 
-      // if (alreadyProcessed) {
-      //   return {
-      //     isValid: false,
-      //     parsed,
-      //     reason: 'EDI já processado anteriormente'
-      //   };
-      // }
+      if (alreadyProcessed) {
+        return {
+          isValid: false,
+          parsed,
+          reason: 'EDI já processado anteriormente' // Motivo que aparecerá no log de arquivos ignorados
+        };
+      }
 
       // this.logger.log('parser=======================', parsed);
 
@@ -567,7 +575,7 @@ export class EDIService {
 
       const order = new PcorcavendacEntity();
 
-      order.orderNumber = Number(numped);
+      order.orderNumber = numped;
       order.transportNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
       order.salesPercentage = this.configService.getOrThrow<number>('ORDER_SALE_PERCENTAGE');
       order.clientOrderNumber = parsed.header.poNumber;
@@ -702,52 +710,51 @@ export class EDIService {
       await this.ftpService.connect();
 
       const files = await this.ftpService.listFiles(remotePath);
-      result.totalProcessados = files.length;
 
-      this.logger.log(`Encontrados ${files.length} arquivos EDI no FTP`);
+      // Filtra apenas arquivos com extensão .edi
+      const ediFiles = files.filter(f => f.name && f.name.endsWith('.edi'));
 
-      for (const file of files) {
+      result.totalProcessados = ediFiles.length;
+      this.logger.log(`Encontrados ${ediFiles.length} arquivos EDI no FTP`);
+
+      for (const file of ediFiles) {
         try {
           this.logger.log(`Processando: ${file.name}`);
 
+          // Baixa o arquivo em memória para avaliar
           const content = await this.ftpService.downloadFile(file.path);
 
+          // A validação vai checar no banco de dados se o PO Number já existe
           const validation = await this.validateEDIContent(content, file.name);
 
-          // if (!validation.isValid) {
-          //   this.logger.warn(`  ⚠ Arquivo ignorado: ${validation.reason}`);
+          if (!validation.isValid) {
+            this.logger.warn(`  ⚠ Arquivo ignorado: ${validation.reason}`);
 
-          //   // Se já foi processado, move para "processed"
-          //   if (validation.reason && validation.reason.includes('já processado')) {
-          //     this.logger.warn(`  ⚠ Arquivo já processado: ${file.name}`);
-          //   }
-          //   // Se tem erro de formato, move para "errors"
-          //   else {
-          //     result.erros++;
-          //     result.arquivosComErro.push(`${file.name} - ${validation.reason}`);
-          //   }
+            if (validation.reason && validation.reason.includes('já processado')) {
+              this.logger.debug(`  ✓ Arquivo já consta no banco, pulando...`);
+            } else {
+              // Se for erro de estrutura do arquivo (sem ISA/BEG, etc)
+              result.erros++;
+              result.arquivosComErro.push(`${file.name} - ${validation.reason}`);
+            }
 
-          //   continue; // ⭐ Pula para o próximo arquivo
-          // }
+            continue; // Pula para o próximo arquivo, não faz nada no FTP
+          }
 
+          // Processa a importação no banco de dados WinThor
           const pedido = await this.importEDI(content, file.name, file.path);
 
-          // this.logger.log('validado=============================', validation);
-
-
+          // Salva o arquivo localmente no seu servidor para backup/auditoria
           await this.fileStorage.saveData('order', content, false, 'edi');
 
-          this.logger.log(`  ✅ Arquivo processado com sucesso`);
-
+          this.logger.log(`  ✅ Arquivo processado e salvo localmente com sucesso`);
           result.sucessos++;
-          // result.pedidos.push(pedido);
 
-          // this.logger.log(`✓ PO ${pedido.numpedfornec} importada (NUMPED: ${pedido.numped})`);
         } catch (error) {
           result.erros++;
           result.arquivosComErro.push(file.name);
-
           this.logger.error(`✗ Erro ao processar ${file.name}:`, error.stack);
+          // Em caso de erro, apenas loga e segue para o próximo. O FTP fica intocado.
         }
       }
 
