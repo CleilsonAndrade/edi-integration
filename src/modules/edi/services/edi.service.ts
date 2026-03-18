@@ -67,14 +67,14 @@ export class EDIService {
     try {
       this.logger.debug(`→ Buscando cliente por nome: ${name}`);
 
-      const client = await this.pcclientRepository
+      const customer = await this.pcclientRepository
         .createQueryBuilder('client')
         .where({ name: Like(`${name.substring(0, 5).toUpperCase()}%`) })
         .getOne();
 
-      if (client?.customerId) {
-        this.logger.debug(`  ✓ Cliente encontrado: Código ${client.customerId} - ${client.name}`);
-        return client;
+      if (customer?.customerId) {
+        this.logger.debug(`  ✓ Cliente encontrado: Código ${customer.customerId} - ${customer.name}`);
+        return customer;
       }
 
       this.logger.warn(`  ✗ Cliente NÃO encontrado para nome: ${name}`);
@@ -91,20 +91,20 @@ export class EDIService {
     try {
       this.logger.debug(`→ Buscando filial: ${codBranch}`);
 
-      const findCompany = await this.pcfilialRepository.findOne({
+      const company = await this.pcfilialRepository.findOne({
         where: {
           codeBranch: codBranch
         }
       });
 
-      if (!findCompany?.codeBranch) {
+      if (!company?.codeBranch) {
         this.logger.warn(`  ✗ Filial NÃO encontrada para o código: ${codBranch}`);
         return null;
       }
 
-      this.logger.debug(`  ✓ Filial encontrada: ${findCompany.codeBranch} - ${findCompany.tradeName}`);
+      this.logger.debug(`  ✓ Filial encontrada: ${company.codeBranch} - ${company.tradeName}`);
 
-      return findCompany;
+      return company;
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
@@ -120,28 +120,28 @@ export class EDIService {
       const originalCode = factoryCode.toUpperCase();
       const normalizedFactoryCode = factoryCode.replace(/[-#]/g, '').toUpperCase();
 
-      const findProduct = await this.pcproductRepository.findOne({
+      const product = await this.pcproductRepository.findOne({
         where: [
           { manufacturerCode: originalCode },
           { manufacturerCode: normalizedFactoryCode }
         ],
       });
 
-      if (!findProduct?.productCode) {
+      if (!product?.productCode) {
         this.logger.warn(`  ✗ Produto NÃO encontrado para código do fabricante: ${factoryCode}`);
         return null;
       }
 
       const productOrder = await this.pctabprRepository.findOne({
         where: {
-          productCode: findProduct.productCode,
+          productCode: product.productCode,
           regionNumber: 368
         }
       })
 
       if (productOrder) {
         this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
-        return { ...productOrder, ...findProduct };
+        return { ...productOrder, ...product };
       }
 
       this.logger.warn(`  ✗ Produto NÃO encontrado para código de fábrica: ${factoryCode}`);
@@ -154,48 +154,15 @@ export class EDIService {
     }
   }
 
-  async getNextSequenceOrderNumber(): Promise<number> {
-    this.logger.debug(`→ Obtendo número de pedido...`);
-
-    const lockNextSequenceOrderNumber = `
-        SELECT NVL(PROXNUMORC, 1) AS PROXNUMORC 
-        FROM PCCONSUM 
-        FOR UPDATE WAIT 5
-      `;
-
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-
-    const findNextSequenceOrderNumber = await queryRunner.manager.query(lockNextSequenceOrderNumber);
-
-    if (!findNextSequenceOrderNumber || findNextSequenceOrderNumber.length === 0) {
-      throw new Error('PCCONSUM vazia ou erro na leitura da sequência.');
-    }
-
-    const startNumOrc = findNextSequenceOrderNumber[0].PROXNUMORC;
-    const newValueSequenceOrderNumber = startNumOrc + 1;
-
-    await queryRunner.manager
-      .createQueryBuilder()
-      .update(PcconsumEntity)
-      .set({ nextOrderNumber: newValueSequenceOrderNumber })
-      .execute();
-
-    this.logger.debug(`  ✓ Número de pedido obtido: ${newValueSequenceOrderNumber}`);
-    await queryRunner.release();
-
-    return newValueSequenceOrderNumber;
-  }
-
-  async getNextPedidoSequencial(codUsur: number): Promise<number> {
+  async getNextBudgetSequentialNumber(codUsur: number): Promise<number> {
     return await this.dataSource.transaction(async (manager) => {
       const result = await manager
         .createQueryBuilder()
-        .select(`ferramentas.f_prox_numped(${codUsur})`, 'NEXT_PED')
+        .select(`ferramentas.f_prox_numped(${codUsur})`, 'NEXT_BUDGET_NUMBER')
         .from('DUAL', 'dual')
         .getRawOne();
 
-      const nextNumber = result?.NEXT_PED || result?.next_ped;
+      const nextNumber: number = result?.NEXT_BUDGET_NUMBER || result?.next_BUDGET_NUMBER;
 
       if (!nextNumber) {
         return Number(`${codUsur}000001`);
@@ -409,7 +376,7 @@ export class EDIService {
 
     const numPedRca = process.env.NUMPEDRCA || '00524502P';
 
-    const numped = await this.getNextPedidoSequencial(findRCA.userCode);
+    const numped = await this.getNextBudgetSequentialNumber(findRCA.userCode);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
