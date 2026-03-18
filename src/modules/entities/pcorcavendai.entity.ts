@@ -327,13 +327,13 @@ export class PcorcavendaiEntity {
   origmerctrib: string | null;
 
   @Column({ name: 'PAUTA', type: 'number', precision: 8, scale: 4, nullable: true })
-  pauta: number | null;
+  tariff: number | null;
 
   @Column({ name: 'PBASECAMPANHA', type: 'number', precision: 18, scale: 6, nullable: true })
   pbasecampanha: number | null;
 
   @Column({ name: 'PBASERCA', type: 'number', precision: 18, scale: 6, nullable: true })
-  pbaserca: number | null;
+  rcaBasePrice: number | null;
 
   @Column({ name: 'PBONIFIC', type: 'number', precision: 18, scale: 6, nullable: true })
   pbonific: number | null;
@@ -357,7 +357,7 @@ export class PcorcavendaiEntity {
   percbaseredst: number | null;
 
   @Column({ name: 'PERCBASEREDSTFONTE', type: 'number', precision: 8, scale: 4, nullable: true })
-  percbaseredstfonte: number | null;
+  sourceStBaseReductionPercent: number | null;
 
   @Column({ name: 'PERCCUSTFORNEC', type: 'number', precision: 12, scale: 4, nullable: true })
   perccustfornec: number | null;
@@ -378,13 +378,13 @@ export class PcorcavendaiEntity {
   percdifaliquotas: number | null;
 
   @Column({ name: 'PERCIPI', type: 'number', precision: 12, scale: 4, nullable: true })
-  percipi: number | null;
+  ipiPercent: number | null;
 
   @Column({ name: 'PERCISS', type: 'number', precision: 8, scale: 4, nullable: true })
-  perciss: number | null;
+  issPercent: number | null;
 
   @Column({ name: 'PERCOM', type: 'number', precision: 8, scale: 4, nullable: true })
-  percom: number | null;
+  commissionPercent: number | null;
 
   @Column({ name: 'PERCOM2', type: 'number', precision: 8, scale: 4, nullable: true })
   percom2: number | null;
@@ -414,7 +414,7 @@ export class PcorcavendaiEntity {
   percvenda: number | null;
 
   @Column({ name: 'PERDESC', type: 'number', precision: 18, scale: 6, nullable: true })
-  perdesc: number | null;
+  discountPercent: number | null;
 
   @Column({ name: 'PERDESCAUX', type: 'number', precision: 5, scale: 2, nullable: true })
   perdescaux: number | null;
@@ -438,7 +438,7 @@ export class PcorcavendaiEntity {
   perdescflex: number | null;
 
   @Column({ name: 'PERDESCISENTOICMS', type: 'number', precision: 4, scale: 2, nullable: true })
-  perdescisentoicms: number | null;
+  icmsExemptDiscountPercent: number | null;
 
   @Column({ name: 'PERDESCMAXCAMPANHA', type: 'number', precision: 18, scale: 6, nullable: true })
   perdescmaxcampanha: number | null;
@@ -462,7 +462,7 @@ export class PcorcavendaiEntity {
   perfcpstret: number | null;
 
   @Column({ name: 'PERFRETECMV', type: 'number', precision: 8, scale: 4, nullable: true })
-  perfretecmv: number | null;
+  cmvFreightPercent: number | null;
 
   @Column({ name: 'PERREDCOMISS', type: 'number', precision: 18, scale: 6, nullable: true })
   perredcomiss: number | null;
@@ -480,10 +480,10 @@ export class PcorcavendaiEntity {
   politicaprioritaria: string | null;
 
   @Column({ name: 'PORIGINAL', type: 'number', precision: 18, scale: 6, nullable: true })
-  poriginal: number | null;
+  originalPrice: number | null;
 
   @Column({ name: 'POSICAO', type: 'varchar2', length: 2, nullable: true })
-  posicao: string | null;
+  position: string | null;
 
   @Column({ name: 'PRAZOMEDIO', type: 'number', precision: 4, scale: 0, nullable: true })
   prazomedio: number | null;
@@ -507,7 +507,7 @@ export class PcorcavendaiEntity {
   promocao: string | null;
 
   @Column({ name: 'PTABELA', type: 'number', precision: 19, scale: 6, nullable: true })
-  ptabela: number | null;
+  listPrice: number | null;
 
   @Column({ name: 'PTABELAAUTPECAS', type: 'number', precision: 18, scale: 6, nullable: true })
   ptabelaautpecas: number | null;
@@ -516,7 +516,7 @@ export class PcorcavendaiEntity {
   ptabelafabricazfm: number | null;
 
   @Column({ name: 'PVENDA', type: 'number', precision: 19, scale: 6, nullable: true })
-  pvenda: number | null;
+  salePrice: number | null;
 
   @Column({ name: 'PVENDA1', type: 'number', precision: 18, scale: 6, nullable: true })
   pvenda1: number | null;
@@ -528,7 +528,7 @@ export class PcorcavendaiEntity {
   pvendaatac: number | null;
 
   @Column({ name: 'PVENDABASE', type: 'number', precision: 18, scale: 6, nullable: true })
-  pvendabase: number | null;
+  baseSalePrice: number | null;
 
   @Column({ name: 'PVENDALIQ', type: 'number', precision: 18, scale: 6, nullable: true })
   pvendaliq: number | null;
@@ -537,13 +537,13 @@ export class PcorcavendaiEntity {
   qbcmonoret: number | null;
 
   @Column({ name: 'QT', type: 'number', precision: 20, scale: 6, nullable: true })
-  qt: number | null;
+  quantity: number | null;
 
   @Column({ name: 'QTCOMBOVIRTUAL', type: 'number', precision: 12, scale: 4, nullable: true })
   qtcombovirtual: number | null;
 
   @Column({ name: 'QTCX', type: 'number', precision: 14, scale: 6, nullable: true })
-  qtcx: number | null;
+  boxQuantity: number | null;
 
   @Column({ name: 'QTDIASENTREGAITEM', type: 'number', precision: 4, scale: 0, nullable: true })
   qtdiasentregaitem: number | null;
@@ -558,7 +558,7 @@ export class PcorcavendaiEntity {
   qtentregueaux: number | null;
 
   @Column({ name: 'QTFALTA', type: 'number', precision: 20, scale: 6, nullable: true })
-  qtfalta: number | null;
+  missingQuantity: number | null;
 
   @Column({ name: 'QTIMEDIATA', type: 'number', precision: 16, scale: 3, nullable: true })
   qtimediata: number | null;
@@ -567,7 +567,7 @@ export class PcorcavendaiEntity {
   qtminimaatacado: number | null;
 
   @Column({ name: 'QTPECAS', type: 'number', precision: 14, scale: 6, nullable: true })
-  qtpecas: number | null;
+  piecesQuantity: number | null;
 
   @Column({ name: 'QTPOSTERIOR', type: 'number', precision: 16, scale: 3, nullable: true })
   qtposterior: number | null;
@@ -696,10 +696,10 @@ export class PcorcavendaiEntity {
   vlcustocont: number | null;
 
   @Column({ name: 'VLCUSTOFIN', type: 'number', precision: 18, scale: 6, nullable: true })
-  vlcustofin: number | null;
+  financialCostValue: number | null;
 
   @Column({ name: 'VLCUSTOREAL', type: 'number', precision: 18, scale: 6, nullable: true })
-  vlcustoreal: number | null;
+  realCostValue: number | null;
 
   @Column({ name: 'VLCUSTOREP', type: 'number', precision: 18, scale: 6, nullable: true })
   vlcustorep: number | null;
@@ -720,7 +720,7 @@ export class PcorcavendaiEntity {
   vldescflex: number | null;
 
   @Column({ name: 'VLDESCICMISENCAO', type: 'number', precision: 18, scale: 6, nullable: true })
-  vldescicmisencao: number | null;
+  icmsExemptionDiscountValue: number | null;
 
   @Column({ name: 'VLDESCPISSUFRAMA', type: 'number', precision: 18, scale: 6, nullable: true })
   vldescpissuframa: number | null;
@@ -735,7 +735,7 @@ export class PcorcavendaiEntity {
   vldescrodape: number | null;
 
   @Column({ name: 'VLDESCSUFRAMA', type: 'number', precision: 18, scale: 6, nullable: true })
-  vldescsuframa: number | null;
+  suframaDiscountValue: number | null;
 
   @Column({ name: 'VLDIFALIQUOTAS', type: 'number', precision: 18, scale: 6, nullable: true })
   vldifaliquotas: number | null;
@@ -786,7 +786,7 @@ export class PcorcavendaiEntity {
   vliisuspenso: number | null;
 
   @Column({ name: 'VLIPI', type: 'number', precision: 18, scale: 6, nullable: true })
-  vlipi: number | null;
+  ipiValue: number | null;
 
   @Column({ name: 'VLIPIPBASERCA', type: 'number', precision: 18, scale: 6, nullable: true })
   vlipipbaserca: number | null;
@@ -807,7 +807,7 @@ export class PcorcavendaiEntity {
   vlisptabela: number | null;
 
   @Column({ name: 'VLISS', type: 'number', precision: 18, scale: 6, nullable: true })
-  vliss: number | null;
+  issValue: number | null;
 
   @Column({ name: 'VLOUTRASDESP', type: 'number', precision: 18, scale: 6, nullable: true })
   vloutrasdesp: number | null;
@@ -837,7 +837,7 @@ export class PcorcavendaiEntity {
   vlverbacmv: number | null;
 
   @Column({ name: 'VLVERBACMVCLI', type: 'number', precision: 18, scale: 6, nullable: true })
-  vlverbacmvcli: number | null;
+  customerCmvFundValue: number | null;
 
   @Column({ name: 'VOLUMEDESEJADO', type: 'number', precision: 12, scale: 4, nullable: true })
   volumedesejado: number | null;

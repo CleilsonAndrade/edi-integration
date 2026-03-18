@@ -548,62 +548,64 @@ export class EDIService {
       order.supervisorCode = findRCA.supervisorCode;
       order.grouping = this.configService.getOrThrow<string>('ORDER_GROUPING');
       order.observation = `EDI - PO: ${parsed.header.poNumber}`;
+      // order.realCostValue = 0;
+      // order.financialCostValue = 0;
       // order.accountingCostValue = ;
       // order.replacementCostValue = ;
-      // order.realCostValue = ;
-      // order.finalCostValue = ;
       // order.deliveryDate = ;
 
 
       await queryRunner.manager.save(order);
 
-      // const orderItems = parsed.items.map((item, index) => {
-      //   const product = _products[index];
+      const orderItems = parsed.items.map((item, index) => {
+        const product = _products[index];
 
-      //   const orderItem = new PcorcavendaiEntity();
+        const orderItem = new PcorcavendaiEntity();
 
-      //   orderItem.orderId = numped;
-      //   orderItem.productId = product?.productCode || 0;
-      //   orderItem.quantity = item.quantity;
-      //   orderItem.missingQuantity = 0;
-      //   orderItem.salePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.date = new Date();
-      //   orderItem.customerId = costumer.customerId;
-      //   orderItem.representativeId = findRCA.userCode;
-      //   orderItem.listPrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
-      //   orderItem.st = (product as PctabprEntity)?.stCode || 0;
-      //   orderItem.commissionPercent = 0;
-      //   orderItem.discountPercent = 0;
-      //   orderItem.sequence = 2;
-      //   orderItem.stId = (product as PctabprEntity)?.stCode || 0;
-      //   orderItem.ipiPercent = 0;
-      //   orderItem.ipiValue = 0;
-      //   orderItem.iva = 99.02;
-      //   orderItem.tariff = 0;
-      //   orderItem.icmsRate1 = 18;
-      //   orderItem.icmsRate2 = 4;
-      //   orderItem.suframaDiscountValue = 0;
-      //   orderItem.cmvFreightPercent = 0;
-      //   orderItem.sourceStBaseReductionPercent = 0;
-      //   orderItem.issPercent = 0;
-      //   orderItem.issValue = 0;
-      //   orderItem.baseSalePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.auxiliaryId = (product as PcprodutEntity)?.auxiliaryCode || 0;
-      //   orderItem.originalPrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.rcaBasePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.boxQuantity = 0;
-      //   orderItem.piecesQuantity = 0;
-      //   orderItem.withdrawBranchId = company.codeBranch;
-      //   orderItem.icmsExemptDiscountPercent = 0;
-      //   orderItem.icmsExemptionDiscountValue = 0;
-      //   orderItem.customerCmvFundValue = 0;
+        orderItem.orderNumber = numped;
+        orderItem.productCode = product?.productCode || 0;
+        orderItem.quantity = item.quantity;
+        orderItem.missingQuantity = 0;
+        orderItem.salePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.date = new Date();
+        orderItem.customerCode = costumer.customerId;
+        orderItem.userCode = findRCA.userCode;
+        orderItem.listPrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
+        orderItem.st = (product as PctabprEntity)?.stCode || 0;
+        orderItem.commissionPercent = 0;
+        orderItem.discountPercent = 0;
+        orderItem.sequenceNumber = 2;
+        orderItem.stCode = (product as PctabprEntity)?.stCode || 0;
+        orderItem.ipiPercent = 0;
+        orderItem.ipiValue = 0;
+        orderItem.iva = 99.02;
+        orderItem.tariff = 0;
+        orderItem.icmsRate1 = 18;
+        orderItem.icmsRate2 = 4;
+        orderItem.suframaDiscountValue = 0;
+        orderItem.cmvFreightPercent = 0;
+        orderItem.sourceStBaseReductionPercent = 0;
+        orderItem.issPercent = 0;
+        orderItem.issValue = 0;
+        orderItem.baseSalePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.auxiliaryCode = (product as PcprodutEntity)?.auxiliaryCode || 0;
+        orderItem.originalPrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.rcaBasePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.boxQuantity = 0;
+        orderItem.piecesQuantity = 0;
+        orderItem.pickupBranchCode = company.codeBranch;
+        orderItem.icmsExemptDiscountPercent = 0;
+        orderItem.icmsExemptionDiscountValue = 0;
+        orderItem.customerCmvFundValue = 0;
+        orderItem.realCostValue = 0;
+        orderItem.financialCostValue = 0;
 
-      //   return orderItem;
+        return orderItem;
 
-      // });
+      });
 
-      // await queryRunner.manager.save(orderItems);
+      await queryRunner.manager.save(orderItems);
 
       await queryRunner.commitTransaction();
       this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
