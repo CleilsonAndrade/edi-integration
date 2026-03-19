@@ -560,23 +560,51 @@ export class EDIService {
       const orderItems = parsed.items.map((item, index) => {
         const product = _products[index];
 
+        // Validação: Se o produto não existe, lança um erro para acionar o rollback
+        if (!product || !product.productCode) {
+          throw new Error(`Produto não encontrado no banco para o código de fábrica/vendorPartNumber: ${item.vendorPartNumber}`);
+        }
+
+        // Extraímos o preço para uma variável para não repetir o cast (product as PctabprEntity) várias vezes
+        const productPrice = (product as PctabprEntity).tablePrice1;
+
+        // 2. Validação do Preço
+        if (productPrice === undefined || productPrice === null || productPrice <= 0) {
+          throw new Error(`Preço inválido ou zerado na tabela de preços para o produto: ${product.productCode}`);
+        }
+
+        const productStCode = (product as PctabprEntity).stCode;
+        // 3. Validação Fiscal (ST)
+        // Checamos por null/undefined porque, dependendo da tipagem do banco, o ST '0' pode ser válido para CST 00.
+        if (productStCode === undefined || productStCode === null) {
+          throw new Error(`Cadastro fiscal incompleto (ST não definida) para o produto: ${product.productCode}`);
+        }
+
+        // Extraindo junto com as outras variáveis no início do map:
+        const productAuxiliaryCode = (product as PcprodutEntity).auxiliaryCode;
+
+        // 4. Validação do Código Auxiliar
+        if (!productAuxiliaryCode || productAuxiliaryCode === 0) {
+          throw new Error(`Código auxiliar (EAN) ausente ou inválido para o produto: ${product.productCode}`);
+        }
+
         const orderItem = new PcorcavendaiEntity();
 
         orderItem.orderNumber = numped;
-        orderItem.productCode = product?.productCode || 0;
+        orderItem.productCode = product?.productCode;
         orderItem.quantity = item.quantity;
         orderItem.missingQuantity = 0;
-        orderItem.salePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.salePrice = productPrice;
         orderItem.date = new Date();
         orderItem.customerCode = costumer.customerId;
         orderItem.userCode = findRCA.userCode;
-        orderItem.listPrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.listPrice = productPrice;
         orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
-        orderItem.st = (product as PctabprEntity)?.stCode || 0;
+        orderItem.st = productStCode;
         orderItem.commissionPercent = 0;
         orderItem.discountPercent = 0;
         orderItem.sequenceNumber = item.lineNumber;
-        orderItem.stCode = (product as PctabprEntity)?.stCode || 0;
+        orderItem.stCode = productStCode;
         orderItem.ipiPercent = 0;
         orderItem.ipiValue = 0;
         orderItem.iva = 99.02;
@@ -588,10 +616,10 @@ export class EDIService {
         orderItem.sourceStBaseReductionPercent = 0;
         orderItem.issPercent = 0;
         orderItem.issValue = 0;
-        orderItem.baseSalePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-        orderItem.auxiliaryCode = (product as PcprodutEntity)?.auxiliaryCode || 0;
-        orderItem.originalPrice = (product as PctabprEntity)?.tablePrice1 || 0;
-        orderItem.rcaBasePrice = (product as PctabprEntity)?.tablePrice1 || 0;
+        orderItem.baseSalePrice = productPrice;
+        orderItem.auxiliaryCode = productAuxiliaryCode;
+        orderItem.originalPrice = productPrice;
+        orderItem.rcaBasePrice = productPrice;
         orderItem.boxQuantity = 0;
         orderItem.piecesQuantity = 0;
         orderItem.pickupBranchCode = company.codeBranch;
