@@ -8,6 +8,7 @@ import { PcfilialEntity } from '../entities/pcfilial.entity';
 import { PcfornecEntity } from '../entities/pcfornec.entity';
 import { PcorcavendacEntity } from '../entities/pcorcavendac.entity';
 import { PcorcavendaiEntity } from '../entities/pcorcavendai.entity';
+import { PcorigemprecoEntity } from '../entities/pcorigempreco.entity';
 import { PcpedcEntity } from '../entities/pcpedc.entity';
 import { PcpediEntity } from '../entities/pcpedi.entity';
 import { PcplpagEntity } from '../entities/pcplpag.entity';
@@ -37,6 +38,7 @@ import { EDITask } from './tasks/edi.task';
       PcusuariEntity,
       PcpracaEntity,
       PcprodutEntity,
+      PcorigemprecoEntity,
       PcplpagEntity,
       PctabprEntity,
     ], 'winthor_conn'),

@@ -9,6 +9,7 @@ import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcfornecEntity } from 'src/modules/entities/pcfornec.entity';
 import { PcorcavendacEntity } from 'src/modules/entities/pcorcavendac.entity';
 import { PcorcavendaiEntity } from 'src/modules/entities/pcorcavendai.entity';
+import { PcorigemprecoEntity } from 'src/modules/entities/pcorigempreco.entity';
 import { PcpedcEntity } from 'src/modules/entities/pcpedc.entity';
 import { PcpediEntity } from 'src/modules/entities/pcpedi.entity';
 import { PcplpagEntity } from 'src/modules/entities/pcplpag.entity';
@@ -55,6 +56,8 @@ export class EDIService {
     private pcorcavendacRepository: Repository<PcorcavendacEntity>,
     @InjectRepository(PcorcavendaiEntity, 'winthor_conn')
     private pcorcavendaiRepository: Repository<PcorcavendaiEntity>,
+    @InjectRepository(PcorigemprecoEntity, 'winthor_conn')
+    private pcOrigemPrecoRepository: Repository<PcorigemprecoEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
