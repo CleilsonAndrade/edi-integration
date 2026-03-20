@@ -145,13 +145,22 @@ export class EDIService {
         }
       })
 
-      if (productOrder) {
-        this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
-        return { ...productOrder, ...product };
+      if (!productOrder) {
+        this.logger.warn(` ✗ Produto ${product.productCode} sem tabela de preço na região 368`);
+        return null;
       }
 
-      this.logger.warn(`  ✗ Produto NÃO encontrado para código de fábrica: ${factoryCode}`);
-      return null;
+      const productOrderTaxRegion = await this.pctributRepository.findOne({
+        where: {
+          statusCode: productOrder.stCode || 0,
+        }
+      })
+
+      this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
+
+      this.logger.log('================================.========>>>>', productOrderTaxRegion)
+
+      return { ...productOrder, ...product, ...productOrderTaxRegion };
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
