@@ -158,9 +158,13 @@ export class EDIService {
 
       this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
 
-      this.logger.log('================================.========>>>>', productOrderTaxRegion)
+      this.logger.log('product========================================>', product)
 
-      return { ...productOrder, ...product, ...productOrderTaxRegion };
+      this.logger.log('productOrder========================================>', productOrder)
+
+      this.logger.log('productOrderTaxRegion========================================>', productOrderTaxRegion)
+
+      return { ...product, ...productOrder, ...productOrderTaxRegion };
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
