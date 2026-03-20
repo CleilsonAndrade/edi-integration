@@ -15,6 +15,7 @@ import { PcplpagEntity } from '../entities/pcplpag.entity';
 import { PcpracaEntity } from '../entities/pcpraca.entity';
 import { PcprodutEntity } from '../entities/pcprodut.entity';
 import { PctabprEntity } from '../entities/pctabpr.entity';
+import { PctributEntity } from '../entities/pctribut.entity';
 import { PcusuariEntity } from '../entities/pcusuari.entity';
 import { EDIController } from './edi.controller';
 import { EDI850Parser } from './parsers/edi850.parser';
@@ -41,6 +42,7 @@ import { EDITask } from './tasks/edi.task';
       PcorigemprecoEntity,
       PcplpagEntity,
       PctabprEntity,
+      PctributEntity,
     ], 'winthor_conn'),
   ],
   controllers: [EDIController],

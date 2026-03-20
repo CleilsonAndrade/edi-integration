@@ -16,6 +16,7 @@ import { PcplpagEntity } from 'src/modules/entities/pcplpag.entity';
 import { PcpracaEntity } from 'src/modules/entities/pcpraca.entity';
 import { PcprodutEntity } from 'src/modules/entities/pcprodut.entity';
 import { PctabprEntity } from 'src/modules/entities/pctabpr.entity';
+import { PctributEntity } from 'src/modules/entities/pctribut.entity';
 import { PcusuariEntity } from 'src/modules/entities/pcusuari.entity';
 import { DataSource, Like, Repository } from 'typeorm';
 import { EdiProcessResultDto } from '../dto/edi-import-result.dto';
@@ -58,6 +59,8 @@ export class EDIService {
     private pcorcavendaiRepository: Repository<PcorcavendaiEntity>,
     @InjectRepository(PcorigemprecoEntity, 'winthor_conn')
     private pcOrigemPrecoRepository: Repository<PcorigemprecoEntity>,
+    @InjectRepository(PctributEntity, 'winthor_conn')
+    private pctributRepository: Repository<PctributEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
