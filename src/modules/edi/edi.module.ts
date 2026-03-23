@@ -4,6 +4,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { PcclientEntity } from '../entities/pcclient.entity';
 import { PcconsumEntity } from '../entities/pcconsum.entity';
 import { PcemprEntity } from '../entities/pcempr.entity';
+import { PcestEntity } from '../entities/pcest.entity';
 import { PcfilialEntity } from '../entities/pcfilial.entity';
 import { PcfornecEntity } from '../entities/pcfornec.entity';
 import { PcorcavendacEntity } from '../entities/pcorcavendac.entity';
@@ -31,6 +32,7 @@ import { EDITask } from './tasks/edi.task';
       PcclientEntity,
       PcconsumEntity,
       PcemprEntity,
+      PcestEntity,
       PcfornecEntity,
       PcpedcEntity,
       PcpediEntity,

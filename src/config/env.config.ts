@@ -11,8 +11,8 @@ export class EnvironmentVariables {
   @IsNumber() @IsNotEmpty()
   ORDER_PERCENTUAL_DISCOUNT: number;
 
-  @IsNumber() @IsNotEmpty()
-  ORDER_VALUE_FREIGHT_INVOICE: number;
+  // @IsNumber() @IsNotEmpty()
+  // ORDER_VALUE_FREIGHT_INVOICE: number;
 
   @IsNumber() @IsNotEmpty()
   ORDER_EXPENSES_VALUE: number;

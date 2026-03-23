@@ -5,6 +5,7 @@ import { FileStorageService } from 'src/common/services/file-storage.service';
 import { PcclientEntity } from 'src/modules/entities/pcclient.entity';
 import { PcconsumEntity } from 'src/modules/entities/pcconsum.entity';
 import { PcemprEntity } from 'src/modules/entities/pcempr.entity';
+import { PcestEntity } from 'src/modules/entities/pcest.entity';
 import { PcfilialEntity } from 'src/modules/entities/pcfilial.entity';
 import { PcfornecEntity } from 'src/modules/entities/pcfornec.entity';
 import { PcorcavendacEntity } from 'src/modules/entities/pcorcavendac.entity';
@@ -61,6 +62,8 @@ export class EDIService {
     private pcOrigemPrecoRepository: Repository<PcorigemprecoEntity>,
     @InjectRepository(PctributEntity, 'winthor_conn')
     private pctributRepository: Repository<PctributEntity>,
+    @InjectRepository(PcestEntity, 'winthor_conn')
+    private pcestRepository: Repository<PcestEntity>,
 
     @InjectDataSource('winthor_conn')
     private dataSource: DataSource,
@@ -119,7 +122,7 @@ export class EDIService {
     }
   }
 
-  async findProductByFactoryCod(factoryCode: string): Promise<any> {
+  async findProductByFactoryCod(factoryCode: string, branchCode: string): Promise<any> {
     try {
       this.logger.debug(`→ Buscando produto por código de fábrica: ${factoryCode}`);
 
@@ -156,15 +159,29 @@ export class EDIService {
         }
       })
 
-      this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode}`);
+      const productStock = await this.pcestRepository.findOne({
+        where: {
+          productCode: product.productCode,
+          branchCode: branchCode
+        }
+      });
 
-      this.logger.log('product========================================>', product)
+      this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode} - Custo Fin: ${productStock?.finalCost}`);
 
-      this.logger.log('productOrder========================================>', productOrder)
+      // this.logger.log('product========================================>', product)
 
-      this.logger.log('productOrderTaxRegion========================================>', productOrderTaxRegion)
+      // this.logger.log('productOrder========================================>', productOrder)
 
-      return { ...product, ...productOrder, ...productOrderTaxRegion };
+      // this.logger.log('productOrderTaxRegion========================================>', productOrderTaxRegion)
+
+      return {
+        ...product,
+        ...productOrder,
+        ...productOrderTaxRegion,
+        ...productStock,
+        // SALVA O CUSTO DA PCPRODUT ANTES DA PCEST SOBRESCREVER
+        custoRealCadastro: product.repCost
+      };
     } catch (error: unknown) {
       const stack = error instanceof Error ? error.stack : String(error);
 
@@ -196,17 +213,29 @@ export class EDIService {
     fileName: string
   ): Promise<boolean> {
     try {
-      const byPO = await this.pcorcavendacRepository
-        .createQueryBuilder('ped')
-        .where('ped.clientOrderNumber = :poNumber', { poNumber })
-        .getOne();
+      const findOudgetByPO = await this.pcorcavendacRepository.findOne({
+        where: {
+          clientOrderNumber: poNumber,
+        },
+      });
 
-      if (byPO) {
-        this.logger.warn(`  ⚠ EDI já processado (PO Number: ${poNumber}) - Numero Orçamento: ${byPO.orderNumber}`);
+      // if (findOudgetByPO) {
+      //   this.logger.warn(`  ⚠ EDI já processado (PO Number: ${poNumber}) - Numero Orçamento: ${findOudgetByPO?.orderNumber} (Arquivo: ${fileName})`);
+      //   return true;
+      // }
+
+      const findOrderByPo = await this.pcpedcRepository.findOne({
+        where: {
+          customerOrderNumber: poNumber
+        }
+      });
+
+      if (findOudgetByPO || findOrderByPo) {
+        this.logger.warn(`  ⚠ EDI já processado (PO Number: ${poNumber}) - Numero Orçamento: ${findOudgetByPO?.orderNumber || findOrderByPo?.orderId} (Arquivo: ${fileName})`);
         return true;
       }
 
-      this.logger.debug(`  ✓ EDI novo, pode processar (PO: ${poNumber}, File: ${fileName})`);
+      this.logger.debug(`  ✓ EDI novo, pode processar (PO: ${poNumber}, Arq.: ${fileName})`);
       return false;
 
     } catch (error: unknown) {
@@ -272,8 +301,16 @@ export class EDIService {
   async importEDI(ediContent: string, fileName: string, ftpPath?: string): Promise<any> {
     const parsed = this.parser.parse(ediContent);
 
-    const _products: (PctabprEntity | PcprodutEntity)[] = await Promise.all(
-      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber))
+    const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
+
+    const company = await this.findCompanyByCod(branchCode)
+
+    if (!company) {
+      return null;
+    }
+
+    const _products: any[] = await Promise.all(
+      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber, branchCode))
     );
 
     const totalGrossWeight = _products.reduce((acc, product) => {
@@ -289,14 +326,6 @@ export class EDIService {
       }
       return acc;
     }, 0);
-
-    const branchCode = this.configService.getOrThrow<string>('FINANCIAL_BRANCH');
-
-    const company = await this.findCompanyByCod(branchCode)
-
-    if (!company) {
-      return null;
-    }
 
     const costumer = await this.findCostumerCompanyByName(parsed.parties.buyerName);
 
@@ -402,6 +431,43 @@ export class EDIService {
 
     try {
       await queryRunner.startTransaction();
+
+      // ================= CÁLCULO DE RENTABILIDADE =================
+      let totalVendaPedido = 0;
+      let totalCustoPedido = 0;
+
+      parsed.items.forEach((item, index) => {
+        const product = _products[index];
+        if (product && product.productCode) {
+          const productPrice = product.tablePrice1 || 0;
+
+          // Agora usamos o custo blindado que veio da PCPRODUT.
+          // Se não existir, tenta o Custo Financeiro da PCEST.
+          let productCost = product.custoRealCadastro;
+          if (!productCost || productCost <= 0.01) {
+            productCost = product.finalCost || 0;
+          }
+
+          const stValue = (product.stValue || 0);
+          const ipiValue = (product.ipiValue || 0);
+
+          // Venda Líquida = (Preço * Qtd) - ST - IPI
+          const vendaBrutaItem = (productPrice * item.quantity);
+          const vendaLiquidaItem = vendaBrutaItem - stValue - ipiValue;
+
+          totalVendaPedido += vendaLiquidaItem;
+          totalCustoPedido += (productCost * item.quantity);
+
+          this.logger.debug(`Item ${item.vendorPartNumber} | Venda Líq: ${vendaLiquidaItem} | Custo Rep: ${productCost}`);
+        }
+      });
+
+      let percentualLucro = 0;
+      if (totalVendaPedido > 0) {
+        // Cálculo de Margem Bruta
+        percentualLucro = ((totalVendaPedido - totalCustoPedido) / totalVendaPedido) * 100;
+      }
+      // ===================================================================
 
       // const order = new PcpedcEntity();
 
@@ -521,7 +587,7 @@ export class EDIService {
 
       order.orderNumber = numped;
       order.transportNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
-      order.salesPercentage = this.configService.getOrThrow<number>('ORDER_SALE_PERCENTAGE');
+      order.salesPercentage = Number(percentualLucro.toFixed(4));
       order.clientOrderNumber = parsed.header.poNumber;
       // order.integrationOrigin = this.configService.getOrThrow<string>('INTEGRATION_SOURCE');
       // order.xmlVanOrderId = parsed.header.poNumber;
@@ -557,9 +623,9 @@ export class EDIService {
       order.chargeCode = costumer.idBilling;
       order.issuerCode = findIssuer.registration;
       order.totalWeight = totalGrossWeight;
-      order.totalValue = totalValue * parsed.totals.totalQuantity;
-      order.tableValue = totalValue * parsed.totals.totalQuantity;
-      order.attendanceValue = totalValue * parsed.totals.totalQuantity;
+      order.totalValue = totalVendaPedido;
+      order.tableValue = totalVendaPedido;
+      order.attendanceValue = totalVendaPedido;
       order.totalVolume = parsed.totals.totalQuantity;
       order.date = new Date();
       order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
@@ -607,6 +673,59 @@ export class EDIService {
           throw new Error(`Código auxiliar (EAN) ausente ou inválido para o produto: ${product.productCode}`);
         }
 
+        const producticmsRate1 = (product as unknown as PctributEntity).icmsRate1;
+        const producticmsRate2 = (product as unknown as PctributEntity).icmsRate2;
+
+        // 5. Validação das Alíquotas de ICMS
+        // if (producticmsRate1 === undefined || producticmsRate1 === null || producticmsRate2 === undefined || producticmsRate2 === null) {
+        //   throw new Error(`Cadastro fiscal incompleto (Alíquotas de ICMS não definidas) para o produto: ${product.productCode}`);
+        // }
+
+        const productIva = (product as unknown as PctributEntity).iva;
+
+        // 6. Validação do IVA
+        if (productIva === undefined || productIva === null) {
+          throw new Error(`Cadastro fiscal incompleto (IVA não definido) para o produto: ${product.productCode}`);
+        }
+
+        const procuctSuframaDiscountValue = (product as unknown as PctributEntity).perdescsuframa;
+
+        // // 7. Validação do Desconto de Suframa
+        if (procuctSuframaDiscountValue === undefined) {
+          throw new Error(`Cadastro fiscal incompleto (Desconto de Suframa não definido) para o produto: ${product.productCode}`);
+        }
+
+        const productPercentageReductionTaxableBaseSource = (product as unknown as PctributEntity).percbaseredstfonte;
+
+        // 8. Validação do Percentual de Redução de Base de Cálculo para Fonte
+        if (productPercentageReductionTaxableBaseSource === undefined) {
+          throw new Error(`Cadastro fiscal incompleto (Percentual de Redução de Base de Cálculo para Fonte não definido) para o produto: ${product.productCode}`);
+        }
+
+        const productTariffValue = (product as unknown as PcfilialEntity).tariffValue;
+
+        // if (productTariffValue === undefined) {
+        //   throw new Error(`Cadastro incompleto (Valor de Tarifa não definido) para o produto: ${product.productCode}`);
+        // }
+
+        const productIpiValue = (product as unknown as PctabprEntity).ipiValue;
+
+        if (productIpiValue === undefined) {
+          throw new Error(`Cadastro fiscal incompleto (Valor de IVA não definido) para o produto: ${product.productCode}`);
+        }
+
+        const productIpiPercent = (product as unknown as PctabprEntity).ipiSalePercentageTable;
+
+        if (productIpiPercent === undefined) {
+          throw new Error(`Cadastro fiscal incompleto (Percentual de IPI não definido) para o produto: ${product.productCode}`);
+        }
+
+        const productissPercent = (product as unknown as PcprodutEntity).issPercentage;
+
+        if (productissPercent === undefined) {
+          throw new Error(`Cadastro fiscal incompleto (Percentual de ISS não definido) para o produto: ${product.productCode}`);
+        }
+
         const orderItem = new PcorcavendaiEntity();
 
         orderItem.orderNumber = numped;
@@ -624,16 +743,16 @@ export class EDIService {
         orderItem.discountPercent = 0;
         orderItem.sequenceNumber = item.lineNumber;
         orderItem.stCode = productStCode;
-        orderItem.ipiPercent = 0;
-        orderItem.ipiValue = 0;
-        orderItem.iva = 99.02;
-        orderItem.tariff = 0;
-        orderItem.icmsRate1 = 18;
-        orderItem.icmsRate2 = 4;
-        orderItem.suframaDiscountValue = 0;
+        orderItem.ipiPercent = productIpiPercent;
+        orderItem.ipiValue = productIpiValue;
+        orderItem.iva = productIva;
+        orderItem.tariff = productTariffValue;
+        orderItem.icmsRate1 = producticmsRate1;
+        orderItem.icmsRate2 = producticmsRate2;
+        orderItem.suframaDiscountValue = procuctSuframaDiscountValue || 0;
         orderItem.cmvFreightPercent = 0;
         orderItem.sourceStBaseReductionPercent = 0;
-        orderItem.issPercent = 0;
+        orderItem.issPercent = productissPercent;
         orderItem.issValue = 0;
         orderItem.baseSalePrice = productPrice;
         orderItem.auxiliaryCode = productAuxiliaryCode;
@@ -645,8 +764,8 @@ export class EDIService {
         orderItem.icmsExemptDiscountPercent = 0;
         orderItem.icmsExemptionDiscountValue = 0;
         orderItem.customerCmvFundValue = 0;
-        orderItem.realCostValue = 0;
-        orderItem.financialCostValue = 0;
+        orderItem.realCostValue = product.realCost || 0;       // Vem de CUSTOREAL da PCEST
+        orderItem.financialCostValue = product.finalCost || 0; // Vem de CUSTOFIN da PCEST
 
         return orderItem;
 
