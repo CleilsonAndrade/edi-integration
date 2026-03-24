@@ -168,11 +168,19 @@ export class EDIService {
 
       this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode} - Custo Fin: ${productStock?.finalCost}`);
 
-      // this.logger.log('product========================================>', product)
-
-      // this.logger.log('productOrder========================================>', productOrder)
-
-      // this.logger.log('productOrderTaxRegion========================================>', productOrderTaxRegion)
+      // DEBUG TEMPORÁRIO — remover após identificar o campo correto
+      this.logger.debug(`[CUSTO DEBUG] Produto ${product.productCode}:
+        pcprodut.repCost        = ${product.repCost}
+        pcprodut.costPrice      = ${(product as any).costPrice}
+        pcprodut.averageCost    = ${(product as any).averageCost}
+        pcprodut.lastCost       = ${(product as any).lastCost}
+        pcprodut.replacCost     = ${(product as any).replacCost}
+        pctabpr.tablePrice1     = ${productOrder.tablePrice1}
+        pctabpr.costValue       = ${(productOrder as any).costValue}
+        pcest.realCost          = ${productStock?.realCost}
+        pcest.finalCost         = ${productStock?.finalCost}
+        pcest.averageCost       = ${(productStock as any)?.averageCost}
+      `);
 
       return {
         ...product,
@@ -432,155 +440,169 @@ export class EDIService {
     try {
       await queryRunner.startTransaction();
 
-      // ================= CÁLCULO DE RENTABILIDADE =================
-      let totalVendaPedido = 0;
+      // ================= CÁLCULO E CRIAÇÃO DOS ITENS =================
+      let totalVendaBrutaPedido = 0;
+      let totalVendaLiquidaPedido = 0;
       let totalCustoPedido = 0;
+      let totalCustoRealPedido = 0;
+      let totalCustoFinPedido = 0;
 
-      parsed.items.forEach((item, index) => {
+      const condicaoVenda = this.configService.getOrThrow<number>('ORDER_SALE_CONDITION');
+
+      // Criamos o array de itens vazio antes do laço
+      const orderItems: PcorcavendaiEntity[] = [];
+
+      for (const [index, item] of parsed.items.entries()) {
         const product = _products[index];
-        if (product && product.productCode) {
-          const productPrice = product.tablePrice1 || 0;
 
-          // Agora usamos o custo blindado que veio da PCPRODUT.
-          // Se não existir, tenta o Custo Financeiro da PCEST.
-          let productCost = product.custoRealCadastro;
-          if (!productCost || productCost <= 0.01) {
-            productCost = product.finalCost || 0;
-          }
-
-          const stValue = (product.stValue || 0);
-          const ipiValue = (product.ipiValue || 0);
-
-          // Venda Líquida = (Preço * Qtd) - ST - IPI
-          const vendaBrutaItem = (productPrice * item.quantity);
-          const vendaLiquidaItem = vendaBrutaItem - stValue - ipiValue;
-
-          totalVendaPedido += vendaLiquidaItem;
-          totalCustoPedido += (productCost * item.quantity);
-
-          this.logger.debug(`Item ${item.vendorPartNumber} | Venda Líq: ${vendaLiquidaItem} | Custo Rep: ${productCost}`);
+        // 1. Validação de Produto
+        if (!product || !product.productCode) {
+          throw new Error(`Produto não encontrado no banco para o código de fábrica: ${item.vendorPartNumber}`);
         }
-      });
+
+        const productPrice = (product as PctabprEntity).tablePrice1;
+        if (productPrice === undefined || productPrice === null || productPrice <= 0) {
+          throw new Error(`Preço inválido ou zerado na tabela de preços para o produto: ${product.productCode}`);
+        }
+
+        const productStCode = (product as PctabprEntity).stCode;
+        const productAuxiliaryCode = (product as PcprodutEntity).auxiliaryCode;
+        const productIva = (product as unknown as PctributEntity).iva;
+        const procuctSuframaDiscountValue = (product as unknown as PctributEntity).perdescsuframa;
+        const productIpiValue = (product as unknown as PctabprEntity).ipiValue;
+        const productIpiPercent = (product as unknown as PctabprEntity).ipiSalePercentageTable;
+        const productissPercent = (product as unknown as PcprodutEntity).issPercentage;
+        const productTariffValue = (product as unknown as PcfilialEntity).tariffValue;
+
+        // Custo Base
+        let productCost = product.realCost;
+        if (!productCost || productCost <= 0.01) {
+          productCost = product.custoRealCadastro || product.finalCost || 0;
+        }
+
+        // -------------------------------------------------------------
+        // CHAMADA AO MOTOR TRIBUTÁRIO DO WINTHOR
+        // -------------------------------------------------------------
+        let stValueUnitario = 0;
+        let ipiValueUnitario = 0;
+        let icmsValueUnitario = 0;
+        let icmsRate1Oracle = 0;
+        let icmsRate2Oracle = 0;
+
+        try {
+          const queryTributacao = `
+            SELECT * FROM TABLE(
+              PKG_TRIBUTACAO.CALCULAR_ST(
+                :1, :2, :3, :4, :5, :6, :7, :8, 'N', :9,
+                0, 'N', 0, 0, 0, NULL, 'S', 'N', 'W', 'N',
+                NULL, 'N', NULL, 'N', '316', NULL, NULL, 'N', NULL, 'N',
+                'N', 0, 'W', NULL
+              )
+            )
+          `;
+
+          const imposto = await queryRunner.query(queryTributacao, [
+            company.codeBranch, company.codeBranch, company.codeBranch,
+            costumer.customerId, findPaymentPlan.codPaymentPlan, product.productCode,
+            productAuxiliaryCode || 0, condicaoVenda, productPrice
+          ]);
+
+          if (imposto && imposto.length > 0) {
+            stValueUnitario = Number(imposto[0].ST) || 0;
+            icmsRate1Oracle = Number(imposto[0].ALIQICMS1) || 0;
+            icmsRate2Oracle = Number(imposto[0].ALIQICMS2) || 0;
+            icmsValueUnitario = productPrice * (icmsRate1Oracle / 100);
+          }
+        } catch (err) {
+          this.logger.error(`Erro ao buscar impostos no Oracle para o item ${product.productCode}: ${err.message}`);
+        }
+        // -------------------------------------------------------------
+
+        const stValueTotal = stValueUnitario * item.quantity;
+        const ipiValueTotal = ipiValueUnitario * item.quantity;
+        const icmsValueTotal = icmsValueUnitario * item.quantity;
+
+        const vendaBrutaItem = (productPrice * item.quantity);
+        const vendaLiquidaItem = vendaBrutaItem - stValueTotal - ipiValueTotal - icmsValueTotal;
+
+        totalVendaBrutaPedido += vendaBrutaItem;
+        totalVendaLiquidaPedido += vendaLiquidaItem;
+        totalCustoPedido += (productCost * item.quantity);
+        totalCustoRealPedido += ((product.realCost || 0) * item.quantity);
+        totalCustoFinPedido += ((product.finalCost || 0) * item.quantity);
+
+        // ===================================================================
+        // CRIAÇÃO DO ITEM (Injetando os impostos para barrar a Trigger)
+        // ===================================================================
+        const orderItem = new PcorcavendaiEntity();
+
+        orderItem.orderNumber = numped;
+        orderItem.productCode = product.productCode;
+        orderItem.quantity = item.quantity;
+        orderItem.missingQuantity = 0;
+        orderItem.salePrice = productPrice;
+        orderItem.date = new Date();
+        orderItem.customerCode = costumer.customerId;
+        orderItem.userCode = findRCA.userCode;
+        orderItem.listPrice = productPrice;
+        orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
+        orderItem.sequenceNumber = item.lineNumber;
+
+        // 1. DADOS FISCAIS ALINHADOS COM A SUA ENTITY
+        orderItem.stCode = productStCode; // Recebe o Código (0, 10, 60, etc)
+        orderItem.st = stValueTotal;   // Recebe o VALOR EM REAIS que veio do Oracle!
+
+        orderItem.ipiPercent = productIpiPercent;
+        orderItem.ipiValue = ipiValueTotal;
+        orderItem.iva = productIva;
+        orderItem.tariff = productTariffValue;
+
+        // Enviamos apenas as alíquotas de ICMS (O WinThor se vira com o valor)
+        orderItem.icmsRate1 = icmsRate1Oracle || (product as unknown as PctributEntity).icmsRate1;
+        orderItem.icmsRate2 = icmsRate2Oracle || (product as unknown as PctributEntity).icmsRate2;
+
+        orderItem.suframaDiscountValue = procuctSuframaDiscountValue || 0;
+        orderItem.issPercent = productissPercent;
+        orderItem.issValue = 0;
+
+        // 2. CUSTOS E PREÇOS
+        orderItem.baseSalePrice = productPrice;
+        orderItem.auxiliaryCode = productAuxiliaryCode;
+        orderItem.originalPrice = productPrice;
+        orderItem.rcaBasePrice = productPrice;
+        orderItem.pickupBranchCode = company.codeBranch;
+
+        orderItem.realCostValue = productCost;
+        orderItem.financialCostValue = product.finalCost || 0;
+
+        // 3. CÁLCULO DA MARGEM DA LINHA (Nome correto: margem)
+        let percentualLucroItem = 0;
+        if (vendaBrutaItem > 0) {
+          percentualLucroItem = ((vendaLiquidaItem - (productCost * item.quantity)) / vendaBrutaItem) * 100;
+        }
+        orderItem.margem = Number(percentualLucroItem.toFixed(4));
+
+        // Restantes campos zerados padrão
+        orderItem.commissionPercent = 0;
+        orderItem.discountPercent = 0;
+        orderItem.cmvFreightPercent = 0;
+        orderItem.sourceStBaseReductionPercent = 0;
+        orderItem.boxQuantity = 0;
+        orderItem.piecesQuantity = 0;
+        orderItem.icmsExemptDiscountPercent = 0;
+        orderItem.icmsExemptionDiscountValue = 0;
+        orderItem.customerCmvFundValue = 0;
+
+        // Empurra o item pronto pro array
+        orderItems.push(orderItem);
+
+        this.logger.debug(`Item ${item.vendorPartNumber} mapeado | ST Unit: ${stValueUnitario} | Lucro Item: ${percentualLucroItem.toFixed(2)}%`);
+      } // <-- FIM DO FOR
 
       let percentualLucro = 0;
-      if (totalVendaPedido > 0) {
-        // Cálculo de Margem Bruta
-        percentualLucro = ((totalVendaPedido - totalCustoPedido) / totalVendaPedido) * 100;
+      if (totalVendaBrutaPedido > 0) {
+        percentualLucro = ((totalVendaLiquidaPedido - totalCustoPedido) / totalVendaBrutaPedido) * 100;
       }
-      // ===================================================================
-
-      // const order = new PcpedcEntity();
-
-      // order.orderId = numped;
-      // order.loadNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
-      // order.salePercent = this.configService.getOrThrow<number>('ORDER_SALE_PERCENTAGE');
-      // order.customerOrderNumber = parsed.header.poNumber;
-      // order.integrationOrigin = this.configService.getOrThrow<string>('INTEGRATION_SOURCE');
-      // order.xmlVanOrderId = parsed.header.poNumber;
-      // order.itemCount = parsed.totals.totalLineItems;
-      // // order.importDate = dataHojeMeiaNoite;
-      // order.imported = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
-      // order.discountPercent = this.configService.getOrThrow<number>('ORDER_PERCENTUAL_DISCOUNT');
-      // order.invoiceFreightValue = this.configService.getOrThrow<number>('ORDER_VALUE_FREIGHT_INVOICE');
-      // order.freightValue = findSquare.freightValue;
-      // order.otherExpensesValue = this.configService.getOrThrow<number>('ORDER_EXPENSES_VALUE');
-      // order.saleCondition = this.configService.getOrThrow<number>('ORDER_SALE_CONDITION');
-      // order.hour = horaAtual;
-      // order.minute = minutosAtuais;
-      // order.customerOrderDate = dataHojeMeiaNoite;
-      // order.dispatchFreight = findCodSupplier.dispatchFreightType;
-      // order.freightSupplierId = findCodSupplier.supplierCode;
-      // order.loadType = this.configService.getOrThrow<string>('ORDER_LOAD_TYPE');
-      // order.term1 = findPaymentPlan.firstPaymentTerm;
-      // order.averageTerm = findPaymentPlan.firstPaymentTerm;
-      // order.packagingType = this.configService.getOrThrow<string>('ORDER_PACKAGING_TYPE');
-      // order.orderOrigin = this.configService.getOrThrow<string>('ORDER_ORIGIN');
-      // order.importReconciliation = this.configService.getOrThrow<string>('ORDER_IMPORT_RECONCILIATION');
-      // order.regionNumber = findSquare.regionNumber;
-      // order.financialDiscountPercent = costumer.percentageDiscountFin;
-      // order.useWmsIntegrator = company.useWmsIntegration;
-      // order.useTv10SaleCfop = this.configService.getOrThrow<string>('ORDER_USE_TYPE_SALE_10_CFOP');
-      // order.branchId = company.codeBranch;
-      // order.customerId = costumer.customerId;
-      // order.representativeId = findRCA.userCode;
-      // order.regionId = findSquare.codSquare;
-      // order.paymentPlanId = findPaymentPlan.codPaymentPlan;
-      // order.saleType = findPaymentPlan.saleType;
-      // order.billingId = costumer.idBilling;
-      // order.issuerId = findIssuer.registration;
-      // order.totalWeight = totalGrossWeight;
-      // order.totalValue = totalValue * parsed.totals.totalQuantity;
-      // order.listValue = totalValue * parsed.totals.totalQuantity;
-      // order.serviceValue = totalValue * parsed.totals.totalQuantity;
-      // order.totalVolume = parsed.totals.totalQuantity;
-      // order.date = new Date();
-      // order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
-      // order.invoiceBranchId = company.codeBranch;
-      // order.supervisorId = findRCA.supervisorCode;
-      // order.grouping = this.configService.getOrThrow<string>('ORDER_GROUPING');
-      // order.observation = `EDI - PO: ${parsed.header.poNumber}`;
-      // // order.accountingCostValue = ;
-      // // order.replacementCostValue = ;
-      // // order.realCostValue = ;
-      // // order.finalCostValue = ;
-      // // order.deliveryDate = ;
-
-
-      // await queryRunner.manager.save(order);
-
-      // const orderItems = parsed.items.map((item, index) => {
-      //   const product = _products[index];
-
-      //   const orderItem = new PcpediEntity();
-
-      //   orderItem.orderId = numped;
-      //   orderItem.productId = product?.productCode || 0;
-      //   orderItem.quantity = item.quantity;
-      //   orderItem.missingQuantity = 0;
-      //   orderItem.salePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.date = new Date();
-      //   orderItem.customerId = costumer.customerId;
-      //   orderItem.representativeId = findRCA.userCode;
-      //   orderItem.listPrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
-      //   orderItem.st = (product as PctabprEntity)?.stCode || 0;
-      //   orderItem.commissionPercent = 0;
-      //   orderItem.discountPercent = 0;
-      //   orderItem.sequence = 2;
-      //   orderItem.stId = (product as PctabprEntity)?.stCode || 0;
-      //   orderItem.ipiPercent = 0;
-      //   orderItem.ipiValue = 0;
-      //   orderItem.iva = 99.02;
-      //   orderItem.tariff = 0;
-      //   orderItem.icmsRate1 = 18;
-      //   orderItem.icmsRate2 = 4;
-      //   orderItem.suframaDiscountValue = 0;
-      //   orderItem.cmvFreightPercent = 0;
-      //   orderItem.sourceStBaseReductionPercent = 0;
-      //   orderItem.issPercent = 0;
-      //   orderItem.issValue = 0;
-      //   orderItem.baseSalePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.auxiliaryId = (product as PcprodutEntity)?.auxiliaryCode || 0;
-      //   orderItem.originalPrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.rcaBasePrice = (product as PctabprEntity)?.tablePrice1 || 0;
-      //   orderItem.boxQuantity = 0;
-      //   orderItem.piecesQuantity = 0;
-      //   orderItem.withdrawBranchId = company.codeBranch;
-      //   orderItem.icmsExemptDiscountPercent = 0;
-      //   orderItem.icmsExemptionDiscountValue = 0;
-      //   orderItem.customerCmvFundValue = 0;
-
-      //   return orderItem;
-
-      // });
-
-      // await queryRunner.manager.save(orderItems);
-
-      // await queryRunner.commitTransaction();
-      // this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
-
-
-      // ======================================================================================
 
 
       const order = new PcorcavendacEntity();
@@ -623,9 +645,15 @@ export class EDIService {
       order.chargeCode = costumer.idBilling;
       order.issuerCode = findIssuer.registration;
       order.totalWeight = totalGrossWeight;
-      order.totalValue = totalVendaPedido;
-      order.tableValue = totalVendaPedido;
-      order.attendanceValue = totalVendaPedido;
+
+      // 4. CORREÇÃO DOS TOTAIS: Gravando Venda Bruta e Custos no Cabeçalho
+      order.totalValue = totalVendaBrutaPedido;
+      order.tableValue = totalVendaBrutaPedido;
+      order.attendanceValue = totalVendaBrutaPedido;
+      order.realCostValue = totalCustoRealPedido;
+      order.financialCostValue = totalCustoFinPedido;
+      // -------------------------------------------------------------------
+
       order.totalVolume = parsed.totals.totalQuantity;
       order.date = new Date();
       order.position = this.configService.getOrThrow<string>('ORDER_POSITION');
@@ -633,146 +661,45 @@ export class EDIService {
       order.supervisorCode = findRCA.supervisorCode;
       order.grouping = this.configService.getOrThrow<string>('ORDER_GROUPING');
       order.observation = `EDI - PO: ${parsed.header.poNumber}`;
-      // order.realCostValue = 0;
-      // order.financialCostValue = 0;
-      // order.accountingCostValue = ;
-      // order.replacementCostValue = ;
-      // order.deliveryDate = ;
 
 
+      // 1. Salva o cabeçalho
       await queryRunner.manager.save(order);
 
-      const orderItems = parsed.items.map((item, index) => {
-        const product = _products[index];
-
-        // Validação: Se o produto não existe, lança um erro para acionar o rollback
-        if (!product || !product.productCode) {
-          throw new Error(`Produto não encontrado no banco para o código de fábrica/vendorPartNumber: ${item.vendorPartNumber}`);
-        }
-
-        // Extraímos o preço para uma variável para não repetir o cast (product as PctabprEntity) várias vezes
-        const productPrice = (product as PctabprEntity).tablePrice1;
-
-        // 2. Validação do Preço
-        if (productPrice === undefined || productPrice === null || productPrice <= 0) {
-          throw new Error(`Preço inválido ou zerado na tabela de preços para o produto: ${product.productCode}`);
-        }
-
-        const productStCode = (product as PctabprEntity).stCode;
-        // 3. Validação Fiscal (ST)
-        // Checamos por null/undefined porque, dependendo da tipagem do banco, o ST '0' pode ser válido para CST 00.
-        if (productStCode === undefined || productStCode === null) {
-          throw new Error(`Cadastro fiscal incompleto (ST não definida) para o produto: ${product.productCode}`);
-        }
-
-        // Extraindo junto com as outras variáveis no início do map:
-        const productAuxiliaryCode = (product as PcprodutEntity).auxiliaryCode;
-
-        // 4. Validação do Código Auxiliar
-        if (!productAuxiliaryCode || productAuxiliaryCode === 0) {
-          throw new Error(`Código auxiliar (EAN) ausente ou inválido para o produto: ${product.productCode}`);
-        }
-
-        const producticmsRate1 = (product as unknown as PctributEntity).icmsRate1;
-        const producticmsRate2 = (product as unknown as PctributEntity).icmsRate2;
-
-        // 5. Validação das Alíquotas de ICMS
-        // if (producticmsRate1 === undefined || producticmsRate1 === null || producticmsRate2 === undefined || producticmsRate2 === null) {
-        //   throw new Error(`Cadastro fiscal incompleto (Alíquotas de ICMS não definidas) para o produto: ${product.productCode}`);
-        // }
-
-        const productIva = (product as unknown as PctributEntity).iva;
-
-        // 6. Validação do IVA
-        if (productIva === undefined || productIva === null) {
-          throw new Error(`Cadastro fiscal incompleto (IVA não definido) para o produto: ${product.productCode}`);
-        }
-
-        const procuctSuframaDiscountValue = (product as unknown as PctributEntity).perdescsuframa;
-
-        // // 7. Validação do Desconto de Suframa
-        if (procuctSuframaDiscountValue === undefined) {
-          throw new Error(`Cadastro fiscal incompleto (Desconto de Suframa não definido) para o produto: ${product.productCode}`);
-        }
-
-        const productPercentageReductionTaxableBaseSource = (product as unknown as PctributEntity).percbaseredstfonte;
-
-        // 8. Validação do Percentual de Redução de Base de Cálculo para Fonte
-        if (productPercentageReductionTaxableBaseSource === undefined) {
-          throw new Error(`Cadastro fiscal incompleto (Percentual de Redução de Base de Cálculo para Fonte não definido) para o produto: ${product.productCode}`);
-        }
-
-        const productTariffValue = (product as unknown as PcfilialEntity).tariffValue;
-
-        // if (productTariffValue === undefined) {
-        //   throw new Error(`Cadastro incompleto (Valor de Tarifa não definido) para o produto: ${product.productCode}`);
-        // }
-
-        const productIpiValue = (product as unknown as PctabprEntity).ipiValue;
-
-        if (productIpiValue === undefined) {
-          throw new Error(`Cadastro fiscal incompleto (Valor de IVA não definido) para o produto: ${product.productCode}`);
-        }
-
-        const productIpiPercent = (product as unknown as PctabprEntity).ipiSalePercentageTable;
-
-        if (productIpiPercent === undefined) {
-          throw new Error(`Cadastro fiscal incompleto (Percentual de IPI não definido) para o produto: ${product.productCode}`);
-        }
-
-        const productissPercent = (product as unknown as PcprodutEntity).issPercentage;
-
-        if (productissPercent === undefined) {
-          throw new Error(`Cadastro fiscal incompleto (Percentual de ISS não definido) para o produto: ${product.productCode}`);
-        }
-
-        const orderItem = new PcorcavendaiEntity();
-
-        orderItem.orderNumber = numped;
-        orderItem.productCode = product?.productCode;
-        orderItem.quantity = item.quantity;
-        orderItem.missingQuantity = 0;
-        orderItem.salePrice = productPrice;
-        orderItem.date = new Date();
-        orderItem.customerCode = costumer.customerId;
-        orderItem.userCode = findRCA.userCode;
-        orderItem.listPrice = productPrice;
-        orderItem.position = this.configService.getOrThrow<string>('ORDER_POSITION');
-        orderItem.st = productStCode;
-        orderItem.commissionPercent = 0;
-        orderItem.discountPercent = 0;
-        orderItem.sequenceNumber = item.lineNumber;
-        orderItem.stCode = productStCode;
-        orderItem.ipiPercent = productIpiPercent;
-        orderItem.ipiValue = productIpiValue;
-        orderItem.iva = productIva;
-        orderItem.tariff = productTariffValue;
-        orderItem.icmsRate1 = producticmsRate1;
-        orderItem.icmsRate2 = producticmsRate2;
-        orderItem.suframaDiscountValue = procuctSuframaDiscountValue || 0;
-        orderItem.cmvFreightPercent = 0;
-        orderItem.sourceStBaseReductionPercent = 0;
-        orderItem.issPercent = productissPercent;
-        orderItem.issValue = 0;
-        orderItem.baseSalePrice = productPrice;
-        orderItem.auxiliaryCode = productAuxiliaryCode;
-        orderItem.originalPrice = productPrice;
-        orderItem.rcaBasePrice = productPrice;
-        orderItem.boxQuantity = 0;
-        orderItem.piecesQuantity = 0;
-        orderItem.pickupBranchCode = company.codeBranch;
-        orderItem.icmsExemptDiscountPercent = 0;
-        orderItem.icmsExemptionDiscountValue = 0;
-        orderItem.customerCmvFundValue = 0;
-        orderItem.realCostValue = product.realCost || 0;       // Vem de CUSTOREAL da PCEST
-        orderItem.financialCostValue = product.finalCost || 0; // Vem de CUSTOFIN da PCEST
-
-        return orderItem;
-
-      });
-
+      // 2. SALVA OS ITENS PRIMEIRO (Deixe a trigger do WinThor rodar aqui)
       await queryRunner.manager.save(orderItems);
 
+      // ===================================================================
+      // 3. GOLPE FINAL: Forçamos o lucro e os totais de impostos no cabeçalho
+      // Calculamos os totais de impostos para o cabeçalho "entender" o lucro baixo
+      // ===================================================================
+      let totalStOrcamento = 0;
+      let totalIpiOrcamento = 0;
+      orderItems.forEach(i => {
+        totalStOrcamento += (i.st || 0);
+        totalIpiOrcamento += (i.ipiValue || 0);
+      });
+
+      await queryRunner.query(
+        `UPDATE PCORCAVENDAC 
+         SET PERCVENDA = :lucro,
+             MARGEM = :lucro,
+             VLST = :vlst,
+             VLIPI = :vlipi,
+             VLCUSTOREAL = :custoReal,
+             VLCUSTOFIN = :custoFin
+         WHERE NUMORCA = :numped`,
+        [
+          Number(percentualLucro.toFixed(4)), // :lucro
+          totalStOrcamento,                   // :vlst
+          totalIpiOrcamento,                  // :vlipi
+          totalCustoRealPedido,               // :custoReal
+          totalCustoFinPedido,                // :custoFin
+          numped                              // :numped
+        ]
+      );
+
+      // 4. Agora sim, comita a transação com os valores travados por último
       await queryRunner.commitTransaction();
       this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
 
