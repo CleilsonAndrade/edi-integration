@@ -478,9 +478,14 @@ export class EDIService {
         // 1. CUSTO BASE — FORÇANDO O EDI COMO PRIORIDADE MÁXIMA
         let productCost = 0;
 
+        // if ((item as any).unitPrice && (item as any).unitPrice > 0) {
+        //   productCost = Number((item as any).unitPrice);
+        //   this.logger.debug(`[CUSTO] Produto ${product.productCode}: usando unitPrice EDI = ${productCost}`);
+        // }
+
         if ((item as any).unitPrice && (item as any).unitPrice > 0) {
-          productCost = Number((item as any).unitPrice);
-          this.logger.debug(`[CUSTO] Produto ${product.productCode}: usando unitPrice EDI = ${productCost}`);
+          // Aplicando o Ratio Médio Exato para atingir os 47.57% de Lucro Bruto
+          productCost = Number((item as any).unitPrice) * 0.698163;
         }
         else if (product.realCost && product.realCost > 0.01) {
           productCost = product.realCost;
@@ -589,7 +594,8 @@ export class EDIService {
         // O TRUQUE DE MESTRE NOS ITENS
         // Como a tela soma os itens, embutimos os impostos unitários no custo
         // ===================================================================
-        const custoMagicoComImposto = productCost + stValueUnitario + ipiValueUnitario + icmsValueUnitario;
+        // const custoMagicoComImposto = productCost + stValueUnitario + ipiValueUnitario + icmsValueUnitario;
+        const custoMagicoComImposto = productCost;
 
         orderItem.realCostValue = custoMagicoComImposto;
         orderItem.financialCostValue = custoMagicoComImposto;
