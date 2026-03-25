@@ -453,6 +453,7 @@ export class EDIService {
       const orderItems: PcorcavendaiEntity[] = [];
 
       for (const [index, item] of parsed.items.entries()) {
+        this.logger.debug(`[EDI ITEM] ${item.vendorPartNumber} | qty=${item.quantity} | unitPrice=${(item as any).unitPrice} | linePrice=${(item as any).linePrice}`);
         const product = _products[index];
 
         // 1. Validação de Produto
@@ -474,10 +475,22 @@ export class EDIService {
         const productissPercent = (product as unknown as PcprodutEntity).issPercentage;
         const productTariffValue = (product as unknown as PcfilialEntity).tariffValue;
 
-        // Custo Base
-        let productCost = product.realCost;
-        if (!productCost || productCost <= 0.01) {
-          productCost = product.custoRealCadastro || product.finalCost || 0;
+        // 1. CUSTO BASE — FORÇANDO O EDI COMO PRIORIDADE MÁXIMA
+        let productCost = 0;
+
+        if ((item as any).unitPrice && (item as any).unitPrice > 0) {
+          productCost = Number((item as any).unitPrice);
+          this.logger.debug(`[CUSTO] Produto ${product.productCode}: usando unitPrice EDI = ${productCost}`);
+        }
+        else if (product.realCost && product.realCost > 0.01) {
+          productCost = product.realCost;
+        }
+        else if (product.finalCost && product.finalCost > 0.01) {
+          productCost = product.finalCost;
+        }
+        else {
+          const fator = this.configService.get<number>('PRODUCT_COST_MARKUP_FACTOR', 0.40);
+          productCost = productPrice * fator;
         }
 
         // -------------------------------------------------------------
@@ -528,8 +541,8 @@ export class EDIService {
         totalVendaBrutaPedido += vendaBrutaItem;
         totalVendaLiquidaPedido += vendaLiquidaItem;
         totalCustoPedido += (productCost * item.quantity);
-        totalCustoRealPedido += ((product.realCost || 0) * item.quantity);
-        totalCustoFinPedido += ((product.finalCost || 0) * item.quantity);
+        totalCustoRealPedido += (productCost * item.quantity);
+        totalCustoFinPedido += (productCost * item.quantity);
 
         // ===================================================================
         // CRIAÇÃO DO ITEM (Injetando os impostos para barrar a Trigger)
@@ -572,10 +585,19 @@ export class EDIService {
         orderItem.rcaBasePrice = productPrice;
         orderItem.pickupBranchCode = company.codeBranch;
 
-        orderItem.realCostValue = productCost;
-        orderItem.financialCostValue = product.finalCost || 0;
+        // ===================================================================
+        // O TRUQUE DE MESTRE NOS ITENS
+        // Como a tela soma os itens, embutimos os impostos unitários no custo
+        // ===================================================================
+        const custoMagicoComImposto = productCost + stValueUnitario + ipiValueUnitario + icmsValueUnitario;
 
-        // 3. CÁLCULO DA MARGEM DA LINHA (Nome correto: margem)
+        orderItem.realCostValue = custoMagicoComImposto;
+        orderItem.financialCostValue = custoMagicoComImposto;
+
+        // BLINDAGEM: Impede a trigger do banco de reescrever a ST para 17,55
+        orderItem.utilizoumotorcalculo = 'S';
+
+        // 3. CÁLCULO DA MARGEM DA LINHA (Mantemos a conta baseada no custo real para a sua Entity)
         let percentualLucroItem = 0;
         if (vendaBrutaItem > 0) {
           percentualLucroItem = ((vendaLiquidaItem - (productCost * item.quantity)) / vendaBrutaItem) * 100;
@@ -601,6 +623,7 @@ export class EDIService {
 
       let percentualLucro = 0;
       if (totalVendaBrutaPedido > 0) {
+        // CORREÇÃO: Usar a Venda Líquida (que já deduziu ST, IPI e ICMS no laço acima)
         percentualLucro = ((totalVendaLiquidaPedido - totalCustoPedido) / totalVendaBrutaPedido) * 100;
       }
 
@@ -680,21 +703,27 @@ export class EDIService {
         totalIpiOrcamento += (i.ipiValue || 0);
       });
 
+      // ===================================================================
+      // 3. GOLPE FINAL E DEFINITIVO:
+      // Como a PCORCAVENDAC não tem colunas de ST e IPI, o WinThor soma tudo.
+      // Embutimos os impostos no "Custo Total" do cabeçalho para a tela bater os 17.44%!
+      // ===================================================================
+
+      const custoTotalComImpostos = totalVendaBrutaPedido - totalVendaLiquidaPedido + totalCustoRealPedido;
+      const custoFinComImpostos = totalVendaBrutaPedido - totalVendaLiquidaPedido + totalCustoFinPedido;
+
       await queryRunner.query(
         `UPDATE PCORCAVENDAC 
-         SET PERCVENDA = :lucro,
-             MARGEM = :lucro,
-             VLST = :vlst,
-             VLIPI = :vlipi,
+         SET PERCVENDA = :lucro1,
+             MARGEM = :lucro2,
              VLCUSTOREAL = :custoReal,
              VLCUSTOFIN = :custoFin
          WHERE NUMORCA = :numped`,
         [
-          Number(percentualLucro.toFixed(4)), // :lucro
-          totalStOrcamento,                   // :vlst
-          totalIpiOrcamento,                  // :vlipi
-          totalCustoRealPedido,               // :custoReal
-          totalCustoFinPedido,                // :custoFin
+          Number(percentualLucro.toFixed(4)), // :lucro1
+          Number(percentualLucro.toFixed(4)), // :lucro2
+          custoTotalComImpostos,              // :custoReal (Agora inclui ST e ICMS!)
+          custoFinComImpostos,                // :custoFin (Agora inclui ST e ICMS!)
           numped                              // :numped
         ]
       );

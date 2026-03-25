@@ -73,6 +73,9 @@ export class EnvironmentVariables {
 
   @IsString() @IsNotEmpty()
   PROVIDER_TYPE_RESALE: string;
+
+  @IsNumber() @IsNotEmpty()
+  PRODUCT_COST_MARKUP_FACTOR: number;
 }
 
 export function validate(config: Record<string, unknown>) {
