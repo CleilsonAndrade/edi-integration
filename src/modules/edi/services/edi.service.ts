@@ -483,6 +483,12 @@ export class EDIService {
         //   this.logger.debug(`[CUSTO] Produto ${product.productCode}: usando unitPrice EDI = ${productCost}`);
         // }
 
+        // BACKUP
+        // if ((item as any).unitPrice && (item as any).unitPrice > 0) {
+        //   // Aplicando o Ratio Médio Exato para atingir os 47.57% de Lucro Bruto
+        //   productCost = Number((item as any).unitPrice) * 0.698163;
+        // }
+
         if ((item as any).unitPrice && (item as any).unitPrice > 0) {
           // Aplicando o Ratio Médio Exato para atingir os 47.57% de Lucro Bruto
           productCost = Number((item as any).unitPrice) * 0.698163;
@@ -502,19 +508,22 @@ export class EDIService {
         // CHAMADA AO MOTOR TRIBUTÁRIO DO WINTHOR
         // -------------------------------------------------------------
         let stValueUnitario = 0;
+        let fecpStValueUnitario = 0;
         let ipiValueUnitario = 0;
         let icmsValueUnitario = 0;
         let icmsRate1Oracle = 0;
         let icmsRate2Oracle = 0;
+
+        const precoVenda = Number((product as PctabprEntity)?.tablePrice1) || productPrice;
 
         try {
           const queryTributacao = `
             SELECT * FROM TABLE(
               PKG_TRIBUTACAO.CALCULAR_ST(
                 :1, :2, :3, :4, :5, :6, :7, :8, 'N', :9,
-                0, 'N', 0, 0, 0, NULL, 'S', 'N', 'W', 'N',
-                NULL, 'N', NULL, 'N', '316', NULL, NULL, 'N', NULL, 'N',
-                'N', 0, 'W', NULL
+                0, 'N', 0, 0, 0, NULL, 'S', 'N', 'T', 'N',
+                NULL, 'N', NULL, 'N', '316', NULL, NULL, 'S', NULL, 'N',
+                'N', 0, 'T', NULL
               )
             )
           `;
@@ -522,17 +531,35 @@ export class EDIService {
           const imposto = await queryRunner.query(queryTributacao, [
             company.codeBranch, company.codeBranch, company.codeBranch,
             costumer.customerId, findPaymentPlan.codPaymentPlan, product.productCode,
-            productAuxiliaryCode || 0, condicaoVenda, productPrice
+            productAuxiliaryCode || 0, condicaoVenda,
+            precoVenda
           ]);
 
           if (imposto && imposto.length > 0) {
-            stValueUnitario = Number(imposto[0].ST) || 0;
+            const stCheia = Number(imposto[0].ST) || 0;
+            const baseSt = Number(imposto[0].BASEST) || 0;
+
             icmsRate1Oracle = Number(imposto[0].ALIQICMS1) || 0;
             icmsRate2Oracle = Number(imposto[0].ALIQICMS2) || 0;
+
+            // A MATRIZ DE DEDUÇÃO (A regra secreta da Rotina 316)
+            let taxaDeducao = 0;
+            if (icmsRate1Oracle === 12) {
+              taxaDeducao = 0.0132;
+            } else if (icmsRate1Oracle === 18) {
+              taxaDeducao = 0.0165;
+            }
+
+            const valorDeducao = baseSt * taxaDeducao;
+
+            // Gravamos a ST com 6 casas decimais puras, como a tabela PCORCAVENDAI exige
+            stValueUnitario = Number((stCheia - valorDeducao).toFixed(6));
+
+            fecpStValueUnitario = 0;
             icmsValueUnitario = productPrice * (icmsRate1Oracle / 100);
           }
         } catch (err) {
-          this.logger.error(`Erro ao buscar impostos no Oracle para o item ${product.productCode}: ${err.message}`);
+          this.logger.error(`Erro ao buscar impostos...`);
         }
         // -------------------------------------------------------------
 
@@ -568,10 +595,11 @@ export class EDIService {
 
         // 1. DADOS FISCAIS ALINHADOS COM A SUA ENTITY
         orderItem.stCode = productStCode; // Recebe o Código (0, 10, 60, etc)
-        orderItem.st = stValueTotal;   // Recebe o VALOR EM REAIS que veio do Oracle!
+        orderItem.st = stValueUnitario;   // Recebe o VALOR EM REAIS que veio do Oracle!
+        orderItem.vlfecp = fecpStValueUnitario;  // <--- CORREÇÃO AQUI: Mudou para vlfecp
 
         orderItem.ipiPercent = productIpiPercent;
-        orderItem.ipiValue = ipiValueTotal;
+        orderItem.ipiValue = ipiValueUnitario;
         orderItem.iva = productIva;
         orderItem.tariff = productTariffValue;
 
