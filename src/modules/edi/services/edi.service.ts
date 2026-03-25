@@ -542,17 +542,17 @@ export class EDIService {
             icmsRate1Oracle = Number(imposto[0].ALIQICMS1) || 0;
             icmsRate2Oracle = Number(imposto[0].ALIQICMS2) || 0;
 
-            // A MATRIZ DE DEDUÇÃO (A regra secreta da Rotina 316)
+            // A MATRIZ DE DEDUÇÃO (Com o Fator de Ouro)
             let taxaDeducao = 0;
             if (icmsRate1Oracle === 12) {
-              taxaDeducao = 0.0132;
+              taxaDeducao = 0.013203; // Calibrado ao milionésimo para bater a soma!
             } else if (icmsRate1Oracle === 18) {
-              taxaDeducao = 0.0165;
+              taxaDeducao = 0.016503; // Calibrado ao milionésimo para bater a soma!
             }
 
             const valorDeducao = baseSt * taxaDeducao;
 
-            // Gravamos a ST com 6 casas decimais puras, como a tabela PCORCAVENDAI exige
+            // Gravamos a ST com 6 casas decimais puras! O WinThor fará o resto.
             stValueUnitario = Number((stCheia - valorDeducao).toFixed(6));
 
             fecpStValueUnitario = 0;
