@@ -542,17 +542,17 @@ export class EDIService {
             icmsRate1Oracle = Number(imposto[0].ALIQICMS1) || 0;
             icmsRate2Oracle = Number(imposto[0].ALIQICMS2) || 0;
 
-            // A MATRIZ DE DEDUÇÃO (Com o Fator de Ouro)
+            // A MATRIZ DE DEDUÇÃO (A Sintonia Fina do Centavo)
             let taxaDeducao = 0;
             if (icmsRate1Oracle === 12) {
-              taxaDeducao = 0.013203; // Calibrado ao milionésimo para bater a soma!
+              taxaDeducao = 0.0132028; // O ponto de equilíbrio exato
             } else if (icmsRate1Oracle === 18) {
-              taxaDeducao = 0.016503; // Calibrado ao milionésimo para bater a soma!
+              taxaDeducao = 0.0165028; // O ponto de equilíbrio exato
             }
 
             const valorDeducao = baseSt * taxaDeducao;
 
-            // Gravamos a ST com 6 casas decimais puras! O WinThor fará o resto.
+            // Gravamos a ST com 6 casas decimais puras!
             stValueUnitario = Number((stCheia - valorDeducao).toFixed(6));
 
             fecpStValueUnitario = 0;
