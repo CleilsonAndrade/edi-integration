@@ -576,12 +576,26 @@ export class EDIService {
         totalCustoRealPedido += (productCost * item.quantity);
         totalCustoFinPedido += (productCost * item.quantity);
 
+        // Lógica para pegar o preço de fábrica (PRECOFAB). 
+        // No WinThor, se não tem preço de fábrica, usa-se o preço de tabela (PTABELA)
+        // const precoFabrica = (product as PctabprEntity).factoryPrice && (product as PctabprEntity).factoryPrice > 0
+        //   ? (product as PctabprEntity).factoryPrice
+        //   : productPrice; // productPrice = PCTABPR.PTABELA
+
+        // let percentualDescFabrica = 0;
+
+        // if (precoFabrica > 0) {
+        //   // Cálculo exato que sua query SQL estava tentando fazer
+        //   percentualDescFabrica = ((precoFabrica - productPrice) / precoFabrica) * 100;
+        // }
+
         // ===================================================================
         // CRIAÇÃO DO ITEM (Injetando os impostos para barrar a Trigger)
         // ===================================================================
         const orderItem = new PcorcavendaiEntity();
 
         orderItem.orderNumber = numped;
+        orderItem.depositCode = this.configService.get<number>('DEFAULT_DEPOSIT_CODE', 1);
         orderItem.productCode = product.productCode;
         orderItem.quantity = item.quantity;
         orderItem.missingQuantity = 0;
@@ -617,6 +631,11 @@ export class EDIService {
         orderItem.originalPrice = productPrice;
         orderItem.rcaBasePrice = productPrice;
         orderItem.pickupBranchCode = company.codeBranch;
+
+        // ----> ADICIONE ESTAS 3 LINHAS AQUI <----
+        orderItem.numpedcli = parsed.header.poNumber; // Amarração com o número do Pedido EDI
+        orderItem.numitemped = item.lineNumber;       // Amarração com a linha do Pedido EDI
+        // ----------------------------------------
 
         // ===================================================================
         // O TRUQUE DE MESTRE NOS ITENS
@@ -762,7 +781,6 @@ export class EDIService {
         ]
       );
 
-      // 4. Agora sim, comita a transação com os valores travados por último
       await queryRunner.commitTransaction();
       this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
 

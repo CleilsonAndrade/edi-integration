@@ -76,6 +76,9 @@ export class EnvironmentVariables {
 
   @IsNumber() @IsNotEmpty()
   PRODUCT_COST_MARKUP_FACTOR: number;
+
+  @IsNumber() @IsNotEmpty()
+  DEFAULT_DEPOSIT_CODE: number;
 }
 
 export function validate(config: Record<string, unknown>) {
