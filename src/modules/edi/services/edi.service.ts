@@ -122,7 +122,7 @@ export class EDIService {
     }
   }
 
-  async findProductByFactoryCod(factoryCode: string, branchCode: string): Promise<any> {
+  async findProductByFactoryCod(factoryCode: string, branchCode: string, regionNumber: number): Promise<any> {
     try {
       this.logger.debug(`→ Buscando produto por código de fábrica: ${factoryCode}`);
 
@@ -144,12 +144,12 @@ export class EDIService {
       const productOrder = await this.pctabprRepository.findOne({
         where: {
           productCode: product.productCode,
-          regionNumber: 368
+          regionNumber: regionNumber
         }
       })
 
       if (!productOrder) {
-        this.logger.warn(` ✗ Produto ${product.productCode} sem tabela de preço na região 368`);
+        this.logger.warn(` ✗ Produto ${product.productCode} sem tabela de preço na região ${regionNumber}`);
         return null;
       }
 
@@ -168,26 +168,11 @@ export class EDIService {
 
       this.logger.debug(`  ✓ Produto encontrado: ${productOrder.productCode} - Custo Fin: ${productStock?.finalCost}`);
 
-      // DEBUG TEMPORÁRIO — remover após identificar o campo correto
-      this.logger.debug(`[CUSTO DEBUG] Produto ${product.productCode}:
-        pcprodut.repCost        = ${product.repCost}
-        pcprodut.costPrice      = ${(product as any).costPrice}
-        pcprodut.averageCost    = ${(product as any).averageCost}
-        pcprodut.lastCost       = ${(product as any).lastCost}
-        pcprodut.replacCost     = ${(product as any).replacCost}
-        pctabpr.tablePrice1     = ${productOrder.tablePrice1}
-        pctabpr.costValue       = ${(productOrder as any).costValue}
-        pcest.realCost          = ${productStock?.realCost}
-        pcest.finalCost         = ${productStock?.finalCost}
-        pcest.averageCost       = ${(productStock as any)?.averageCost}
-      `);
-
       return {
         ...product,
         ...productOrder,
         ...productOrderTaxRegion,
         ...productStock,
-        // SALVA O CUSTO DA PCPRODUT ANTES DA PCEST SOBRESCREVER
         custoRealCadastro: product.repCost
       };
     } catch (error: unknown) {
@@ -317,8 +302,27 @@ export class EDIService {
       return null;
     }
 
+    // 1. PRIMEIRO: Busca o cliente (só para validar e caso você precise extrair a praça dele no futuro)
+    const costumer = await this.findCostumerCompanyByName(parsed.parties.buyerName);
+    if (!costumer) {
+      return null;
+    }
+
+    // 2. SEGUNDO: Busca a Praça configurada (que contém a Região correta do cliente ou da operação)
+    const allowedCodSquare = this.configService.getOrThrow<number>('SQUARE_COD');
+    const findSquare = await this.pcpracaRepository.findOne({
+      where: { codSquare: allowedCodSquare },
+      select: ['codSquare', 'square', 'regionNumber', 'freightValue']
+    });
+
+    if (!findSquare) {
+      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${allowedCodSquare}`);
+      return null;
+    }
+    this.logger.debug(`  ✓ Praça encontrada: ${findSquare.codSquare} - ${findSquare.square} - Região: ${findSquare.regionNumber}`);
+
     const _products: any[] = await Promise.all(
-      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber, branchCode))
+      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber, branchCode, findSquare.regionNumber))
     );
 
     const totalGrossWeight = _products.reduce((acc, product) => {
@@ -335,7 +339,6 @@ export class EDIService {
       return acc;
     }, 0);
 
-    const costumer = await this.findCostumerCompanyByName(parsed.parties.buyerName);
 
     if (!costumer) {
       return null;
@@ -370,16 +373,6 @@ export class EDIService {
       return null;
     }
     this.logger.debug(`  ✓ RCA encontrado: ${findRCA.userCode} - ${findRCA.name}`);
-
-
-    const allowedCodSquare = this.configService.getOrThrow<number>('SQUARE_COD');
-
-    const findSquare = await this.pcpracaRepository.findOne({
-      where: {
-        codSquare: allowedCodSquare
-      },
-      select: ['codSquare', 'square', 'regionNumber', 'freightValue']
-    })
 
     if (!findSquare) {
       this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${allowedCodSquare}`);
