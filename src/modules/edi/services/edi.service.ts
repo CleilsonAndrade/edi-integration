@@ -308,20 +308,23 @@ export class EDIService {
       return null;
     }
 
-    // 2. SEGUNDO: Busca a Praça configurada (que contém a Região correta do cliente ou da operação)
-    const allowedCodSquare = this.configService.getOrThrow<number>('SQUARE_COD');
+    // 2. SEGUNDO: Busca a Praça do próprio CLIENTE (e não do .env)
+    const clientSquareCod = costumer.idRegion; // Pegando a praça real vinculada ao cliente
+    if (!clientSquareCod) {
+      this.logger.warn(`  ✗ Cliente ${costumer.customerId} sem praça (CODPRACA) configurada no cadastro.`);
+      return null;
+    }
+
     const findSquare = await this.pcpracaRepository.findOne({
-      where: { codSquare: allowedCodSquare },
+      where: { codSquare: clientSquareCod },
       select: ['codSquare', 'square', 'regionNumber', 'freightValue']
     });
 
-    if (!findSquare) {
-      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${allowedCodSquare}`);
+    if (!findSquare || !findSquare.regionNumber) {
+      this.logger.warn(`  ✗ Praça ${clientSquareCod} ou Região não encontrada.`);
       return null;
     }
-    this.logger.debug(`  ✓ Praça encontrada: ${findSquare.codSquare} - ${findSquare.square} - Região: ${findSquare.regionNumber}`);
-
-    const _products: any[] = await Promise.all(
+    this.logger.debug(`  ✓ Praça do Cliente: ${findSquare.codSquare} - Região: ${findSquare.regionNumber}`); const _products: any[] = await Promise.all(
       parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber, branchCode, findSquare.regionNumber))
     );
 
@@ -375,7 +378,7 @@ export class EDIService {
     this.logger.debug(`  ✓ RCA encontrado: ${findRCA.userCode} - ${findRCA.name}`);
 
     if (!findSquare) {
-      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${allowedCodSquare}`);
+      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${findSquare}`);
       return null;
     }
     this.logger.debug(`  ✓ Praça encontrada: ${findSquare.codSquare} - ${findSquare.square}`);
