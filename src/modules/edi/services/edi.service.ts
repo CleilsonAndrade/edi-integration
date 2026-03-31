@@ -676,7 +676,7 @@ export class EDIService {
 
       order.orderNumber = numped;
       order.transportNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
-      // order.salesPercentage = Number(percentualLucro.toFixed(4));
+      order.salesPercentage = Number(percentualLucro.toFixed(4));
       order.clientOrderNumber = parsed.header.poNumber;
       // order.integrationOrigin = this.configService.getOrThrow<string>('INTEGRATION_SOURCE');
       // order.xmlVanOrderId = parsed.header.poNumber;
