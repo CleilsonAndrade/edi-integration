@@ -457,8 +457,8 @@ export class EDIService {
         const productAuxiliaryCode = (product as PcprodutEntity).auxiliaryCode;
         const productIva = (product as unknown as PctributEntity).iva;
         const procuctSuframaDiscountValue = (product as unknown as PctributEntity).perdescsuframa;
-        const productIpiValue = (product as unknown as PctabprEntity).ipiValue;
-        const productIpiPercent = (product as unknown as PctabprEntity).ipiSalePercentageTable;
+        // const productIpiValue = (product as unknown as PctabprEntity).ipiValue;
+        // const productIpiPercent = (product as unknown as PctabprEntity).ipiSalePercentageTable;
         const productissPercent = (product as unknown as PcprodutEntity).issPercentage;
         const productTariffValue = (product as unknown as PcfilialEntity).tariffValue;
 
