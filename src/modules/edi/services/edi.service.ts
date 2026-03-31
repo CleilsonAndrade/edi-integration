@@ -342,11 +342,6 @@ export class EDIService {
       return acc;
     }, 0);
 
-
-    if (!costumer) {
-      return null;
-    }
-
     const allowedIssuer = this.configService.getOrThrow<number>('ISSUER_REGISTRATION');
 
     const findIssuer = await this.pcemprRepository.findOne({
@@ -377,10 +372,6 @@ export class EDIService {
     }
     this.logger.debug(`  ✓ RCA encontrado: ${findRCA.userCode} - ${findRCA.name}`);
 
-    if (!findSquare) {
-      this.logger.warn(`  ✗ Praça NÃO encontrada para código: ${findSquare}`);
-      return null;
-    }
     this.logger.debug(`  ✓ Praça encontrada: ${findSquare.codSquare} - ${findSquare.square}`);
 
 
@@ -509,6 +500,7 @@ export class EDIService {
         let icmsValueUnitario = 0;
         let icmsRate1Oracle = 0;
         let icmsRate2Oracle = 0;
+        let ipiPercentOracle = 0;
 
         const precoVenda = Number((product as PctabprEntity)?.tablePrice1) || productPrice;
 
@@ -537,6 +529,9 @@ export class EDIService {
 
             icmsRate1Oracle = Number(imposto[0].ALIQICMS1) || 0;
             icmsRate2Oracle = Number(imposto[0].ALIQICMS2) || 0;
+
+            ipiPercentOracle = Number(imposto[0].PERCIPI) || 0;
+            ipiValueUnitario = Number(imposto[0].VLIPI) || 0;
 
             // A MATRIZ DE DEDUÇÃO (A Sintonia Fina do Centavo)
             let taxaDeducao = 0;
@@ -608,7 +603,7 @@ export class EDIService {
         orderItem.st = stValueUnitario;   // Recebe o VALOR EM REAIS que veio do Oracle!
         orderItem.vlfecp = fecpStValueUnitario;  // <--- CORREÇÃO AQUI: Mudou para vlfecp
 
-        orderItem.ipiPercent = productIpiPercent;
+        orderItem.ipiPercent = ipiPercentOracle;
         orderItem.ipiValue = ipiValueUnitario;
         orderItem.iva = productIva;
         orderItem.tariff = productTariffValue;
@@ -681,7 +676,7 @@ export class EDIService {
 
       order.orderNumber = numped;
       order.transportNumber = this.configService.getOrThrow<number>('ORDER_LOAD_NUMBER');
-      order.salesPercentage = Number(percentualLucro.toFixed(4));
+      // order.salesPercentage = Number(percentualLucro.toFixed(4));
       order.clientOrderNumber = parsed.header.poNumber;
       // order.integrationOrigin = this.configService.getOrThrow<string>('INTEGRATION_SOURCE');
       // order.xmlVanOrderId = parsed.header.poNumber;
