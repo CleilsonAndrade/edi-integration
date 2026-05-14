@@ -5,17 +5,17 @@ export class ForbiddenResponse {
     description: 'Status code HTTP.',
     example: 403,
   })
-  statusCode: number;
+  statusCode!: number;
 
   @ApiProperty({
     description: 'Message(s) of detailed error(s).',
     example: 'Forbidden: User does not have the required role to access this resource.'
   })
-  message: string;
+  message!: string;
 
   @ApiProperty({
     description: 'HTTP error type.',
     example: 'Forbidden',
   })
-  error: string;
+  error!: string;
 }

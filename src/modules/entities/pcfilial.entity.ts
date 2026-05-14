@@ -5,1403 +5,1403 @@ import { Column, Entity, PrimaryColumn } from 'typeorm';
 })
 export class PcfilialEntity {
   @PrimaryColumn({ name: 'CODIGO', type: 'varchar2', length: 2, })
-  codeBranch: string;
+  codeBranch?: string;
 
   @Column({ name: 'CGC', type: 'varchar2', length: 14, nullable: true, })
-  cnpj: string | null;
+  cnpj?: string | null;
 
   @Column({ name: 'RAZAOSOCIAL', type: 'varchar2', length: 40, nullable: true })
-  corporateName: string | null;
+  corporateName?: string | null;
 
   @Column({ name: 'FANTASIA', type: 'varchar2', length: 25, nullable: true })
-  tradeName: string | null;
+  tradeName?: string | null;
 
   @Column({ name: 'ENDERECO', type: 'varchar2', length: 40, nullable: true })
-  address: string | null;
+  address?: string | null;
 
   @Column({ name: 'NUMERO', type: 'number', precision: 6, scale: 0, nullable: true })
-  number: number | null;
+  number?: number | null;
 
   @Column({ name: 'COMPLEMENTOENDERECO', type: 'varchar2', length: 50, nullable: true })
-  complement: string | null;
+  complement?: string | null;
 
   @Column({ name: 'BAIRRO', type: 'varchar2', length: 20, nullable: true })
-  neighborhood: string | null;
+  neighborhood?: string | null;
 
   @Column({ name: 'CIDADE', type: 'varchar2', length: 30, nullable: true })
-  city: string | null;
+  city?: string | null;
 
   @Column({ name: 'UF', type: 'varchar2', length: 2, nullable: true })
-  state: string | null;
+  state?: string | null;
 
   @Column({ name: 'CEP', type: 'varchar2', length: 11, nullable: true })
-  zipCode: string | null;
+  zipCode?: string | null;
 
   @Column({ name: 'CODMUN', type: 'number', precision: 10, scale: 0, nullable: true })
-  municipalityCode: number | null;
+  municipalityCode?: number | null;
 
   @Column({ name: 'CODPAIS', type: 'number', precision: 4, scale: 0, nullable: true })
-  countryCode: number | null;
+  countryCode?: number | null;
 
   @Column({ name: 'NOMEPAIS', type: 'varchar2', length: 40, nullable: true })
-  countryName: string | null;
+  countryName?: string | null;
 
   @Column({ name: 'TELEFONE', type: 'varchar2', length: 18, nullable: true })
-  phone: string | null;
+  phone?: string | null;
 
   @Column({ name: 'FAX', type: 'varchar2', length: 18, nullable: true })
-  fax: string | null;
+  fax?: string | null;
 
   @Column({ name: 'EMAIL', type: 'varchar2', length: 100, nullable: true })
-  email: string | null;
+  email?: string | null;
 
   @Column({ name: 'IE', type: 'varchar2', length: 20, nullable: true })
-  stateRegistration: string | null;
+  stateRegistration?: string | null;
 
   @Column({ name: 'IM', type: 'varchar2', length: 20, nullable: true })
-  municipalRegistration: string | null;
+  municipalRegistration?: string | null;
 
   @Column({ name: 'CODCNAEFISCAL', type: 'number', precision: 7, scale: 0, nullable: true })
-  cnaeCode: number | null;
+  cnaeCode?: number | null;
 
   @Column({ name: 'CODCNAEFISCAL', type: 'number', precision: 7, scale: 0, nullable: true })
-  fiscalCnaeCode: number | null;
+  fiscalCnaeCode?: number | null;
 
   @Column({ name: 'INDUSTRIA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  isIndustry: string | null;
+  isIndustry?: string | null;
 
   @Column({ name: 'ATACADISTA', type: 'varchar2', length: 1, nullable: true })
-  isWholesaler: string | null;
+  isWholesaler?: string | null;
 
   @Column({ name: 'DTEXCLUSAO', type: 'date', nullable: true })
-  exclusionDate: Date | null;
+  exclusionDate?: Date | null;
 
   @Column({ name: 'DTREGISTRO', type: 'date', nullable: true })
-  registrationDate: Date | null;
+  registrationDate?: Date | null;
 
   @Column({ name: 'DTINIATIVIDADE', type: 'date', nullable: true })
-  startActivityDate: Date | null;
+  startActivityDate?: Date | null;
 
   @Column({ name: 'DTFIMATIVIDADE', type: 'date', nullable: true })
-  endActivityDate: Date | null;
+  endActivityDate?: Date | null;
 
   @Column({ name: 'DTCADASTRO', type: 'date', nullable: true })
-  creationDate: Date | null;
+  creationDate?: Date | null;
 
   @Column({ name: 'DTULTALTER', type: 'date', nullable: true })
-  lastUpdateDate: Date | null;
+  lastUpdateDate?: Date | null;
 
   @Column({ name: 'CODCLI', type: 'number', precision: 6, scale: 0, nullable: true })
-  clientCode: number | null;
+  clientCode?: number | null;
 
   @Column({ name: 'CODFORNEC', type: 'number', precision: 6, scale: 0, nullable: true })
-  supplierCode: number | null;
+  supplierCode?: number | null;
 
   @Column({ name: 'PROXNUMNOTA', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextInvoiceNumber: number | null;
+  nextInvoiceNumber?: number | null;
 
   @Column({ name: 'NUMPROXVEND', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextSaleNumber: number | null;
+  nextSaleNumber?: number | null;
 
   @Column({ name: 'RAZAOTRANSP', type: 'varchar2', length: 40, nullable: true })
-  transportCorporateName: string | null;
+  transportCorporateName?: string | null;
 
   @Column({ name: 'CGCTRANSP', type: 'varchar2', length: 20, nullable: true })
-  transportCnpj: string | null;
+  transportCnpj?: string | null;
 
   @Column({ name: 'IETRANSP', type: 'varchar2', length: 20, nullable: true })
-  transportIe: string | null;
+  transportIe?: string | null;
 
   @Column({ name: 'ENDTRANSP', type: 'varchar2', length: 40, nullable: true })
-  transportAddress: string | null;
+  transportAddress?: string | null;
 
   @Column({ name: 'CIDADETRANSP', type: 'varchar2', length: 20, nullable: true })
-  transportCity: string | null;
+  transportCity?: string | null;
 
   @Column({ name: 'UFTRANSP', type: 'varchar2', length: 2, nullable: true })
-  transportState: string | null;
+  transportState?: string | null;
 
   @Column({ name: 'CONTATO', type: 'varchar2', length: 30, nullable: true })
-  contact: string | null;
+  contact?: string | null;
 
   @Column({ name: 'TAXA0', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate0: number | null;
+  rate0?: number | null;
 
   @Column({ name: 'TAXA7', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate7: number | null;
+  rate7?: number | null;
 
   @Column({ name: 'TAXA14', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate14: number | null;
+  rate14?: number | null;
 
   @Column({ name: 'TAXA21', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate21: number | null;
+  rate21?: number | null;
 
   @Column({ name: 'TAXA28', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate28: number | null;
+  rate28?: number | null;
 
   @Column({ name: 'TAXA35', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate35: number | null;
+  rate35?: number | null;
 
   @Column({ name: 'TAXA42', type: 'number', precision: 8, scale: 4, nullable: true })
-  rate42: number | null;
+  rate42?: number | null;
 
   @Column({ name: 'CODDOCNF', type: 'number', precision: 8, scale: 0, nullable: true })
-  nfDocCode: number | null;
+  nfDocCode?: number | null;
 
   @Column({ name: 'CODDOCDEVOL', type: 'number', precision: 8, scale: 0, nullable: true })
-  returnDocCode: number | null;
+  returnDocCode?: number | null;
 
   @Column({ name: 'CODDOCSR', type: 'number', precision: 8, scale: 0, nullable: true })
-  srDocCode: number | null;
+  srDocCode?: number | null;
 
   @Column({ name: 'MENSNF', type: 'varchar2', length: 60, nullable: true })
-  nfMessage: string | null;
+  nfMessage?: string | null;
 
   @Column({ name: 'PROXNUMAVERBACAO', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextRegistrationNumber: number | null;
+  nextRegistrationNumber?: number | null;
 
   @Column({ name: 'PROXNUMNFDEVCLI', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextClientReturnNfNumber: number | null;
+  nextClientReturnNfNumber?: number | null;
 
   @Column({ name: 'NUMSEQENTR', type: 'number', precision: 4, scale: 0, nullable: true, default: '1' })
-  entrySequenceNumber: number | null;
+  entrySequenceNumber?: number | null;
 
   @Column({ name: 'NUMIDF', type: 'varchar2', length: 30, nullable: true })
-  idfNumber: string | null;
+  idfNumber?: string | null;
 
   @Column({ name: 'NUMIDFDEVCLI', type: 'varchar2', length: 30, nullable: true })
-  clientReturnIdfNumber: string | null;
+  clientReturnIdfNumber?: string | null;
 
   @Column({ name: 'PROXNUMNOTATRANSF', type: 'number', precision: 10, scale: 0, nullable: true, default: '1' })
-  nextTransferInvoiceNumber: number | null;
+  nextTransferInvoiceNumber?: number | null;
 
   @Column({ name: 'PROXNUMNOTAD', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextNoteDNumber: number | null;
+  nextNoteDNumber?: number | null;
 
   @Column({ name: 'CODFILIALPREFESTBALCAO', type: 'varchar2', length: 2, nullable: true })
-  counterStockPrefBranchCode: string | null;
+  counterStockPrefBranchCode?: string | null;
 
   @Column({ name: 'CODFILIALPREFESTTLMK', type: 'varchar2', length: 2, nullable: true })
-  telemarketingStockPrefBranchCode: string | null;
+  telemarketingStockPrefBranchCode?: string | null;
 
   @Column({ name: 'MONTANDO', type: 'varchar2', length: 1, nullable: true })
-  assembling: string | null;
+  assembling?: string | null;
 
   @Column({ name: 'NUMERO2', type: 'varchar2', length: 6, nullable: true })
-  number2: string | null;
+  number2?: string | null;
 
   @Column({ name: 'EANEMISSOR', type: 'number', precision: 14, scale: 0, nullable: true })
-  issuerEan: number | null;
+  issuerEan?: number | null;
 
   @Column({ name: 'CODDOCTRANSF', type: 'number', precision: 8, scale: 0, nullable: true })
-  transferDocCode: number | null;
+  transferDocCode?: number | null;
 
   @Column({ name: 'NUMREGIAO', type: 'number', precision: 4, scale: 0, nullable: true })
-  regionNumber: number | null;
+  regionNumber?: number | null;
 
   @Column({ name: 'CODFILIALPRODUCAO', type: 'varchar2', length: 2, nullable: true })
-  productionBranchCode: string | null;
+  productionBranchCode?: string | null;
 
   @Column({ name: 'USAESTOQUEDEPFECHADO', type: 'varchar2', length: 1, nullable: true })
-  useClosedDepotStock: string | null;
+  useClosedDepotStock?: string | null;
 
   @Column({ name: 'PROXNUMLOTE', type: 'number', precision: 4, scale: 0, nullable: true, default: '1' })
-  nextBatchNumber: number | null;
+  nextBatchNumber?: number | null;
 
   @Column({ name: 'CODGRUPO', type: 'varchar2', length: 2, nullable: true })
-  groupCode: string | null;
+  groupCode?: string | null;
 
   @Column({ name: 'USANUMNFDEVCLI', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useClientReturnNfNumber: string | null;
+  useClientReturnNfNumber?: string | null;
 
   @Column({ name: 'CODDOCDEVFORNEC', type: 'number', precision: 8, scale: 0, nullable: true })
-  supplierReturnDocCode: number | null;
+  supplierReturnDocCode?: number | null;
 
   @Column({ name: 'AUTOSERVICO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  selfService: string | null;
+  selfService?: string | null;
 
   @Column({ name: 'CAE', type: 'varchar2', length: 30, nullable: true })
-  cae: string | null;
+  cae?: string | null;
 
   @Column({ name: 'CODDOCENTRADAMERC', type: 'number', precision: 8, scale: 0, nullable: true })
-  merchandiseEntryDocCode: number | null;
+  merchandiseEntryDocCode?: number | null;
 
   @Column({ name: 'PERFRETECONHEC', type: 'number', precision: 8, scale: 4, nullable: true })
-  freightPercentageKnowledge: number | null;
+  freightPercentageKnowledge?: number | null;
 
   @Column({ name: 'LIMPARBASECALCENTRADA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  clearBaseCalcEntry: string | null;
+  clearBaseCalcEntry?: string | null;
 
   @Column({ name: 'USAWMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useWms: string | null;
+  useWms?: string | null;
 
   @Column({ name: 'OPISENTOSICMSALTOCUSTO', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  exemptIcmsHighCostOp: string | null;
+  exemptIcmsHighCostOp?: string | null;
 
   @Column({ name: 'ALIQICMOUTRASDESP', type: 'number', precision: 4, scale: 2, nullable: true })
-  icmsRateOtherExpenses: number | null;
+  icmsRateOtherExpenses?: number | null;
 
   @Column({ name: 'ALIQICMINTEROUTRASDESP', type: 'number', precision: 4, scale: 2, nullable: true })
-  interIcmsRateOtherExpenses: number | null;
+  interIcmsRateOtherExpenses?: number | null;
 
   @Column({ name: 'CODFISCALOUTRASDESP', type: 'number', precision: 4, scale: 0, nullable: true })
-  fiscalCodeOtherExpenses: number | null;
+  fiscalCodeOtherExpenses?: number | null;
 
   @Column({ name: 'CODFISCALINTEROUTRASDESP', type: 'number', precision: 4, scale: 0, nullable: true })
-  interFiscalCodeOtherExpenses: number | null;
+  interFiscalCodeOtherExpenses?: number | null;
 
   @Column({ name: 'ACEITAVENDASEMEST', type: 'varchar2', length: 1, nullable: true })
-  acceptSaleWithoutStock: string | null;
+  acceptSaleWithoutStock?: string | null;
 
   @Column({ name: 'CALCCREDICMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  calcIcmsCredit: string | null;
+  calcIcmsCredit?: string | null;
 
   @Column({ name: 'CALCCREDPISCOFINS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  calcPisCofinsCredit: string | null;
+  calcPisCofinsCredit?: string | null;
 
   @Column({ name: 'NUMREGIAOPADRAO', type: 'number', precision: 4, scale: 0, nullable: true })
-  defaultRegionNumber: number | null;
+  defaultRegionNumber?: number | null;
 
   @Column({ name: 'PERVENDAPF', type: 'number', precision: 8, scale: 4, nullable: true })
-  pfSalePercentage: number | null;
+  pfSalePercentage?: number | null;
 
   @Column({ name: 'AREAVENDA', type: 'number', precision: 10, scale: 4, nullable: true })
-  salesArea: number | null;
+  salesArea?: number | null;
 
   @Column({ name: 'CODFISCALDEVOUTRASDESP', type: 'number', precision: 10, scale: 0, nullable: true })
-  fiscalCodeReturnOtherExpenses: number | null;
+  fiscalCodeReturnOtherExpenses?: number | null;
 
   @Column({ name: 'CODFISCALINTERDEVOUTRASDESP', type: 'number', precision: 10, scale: 0, nullable: true })
-  interFiscalCodeReturnOtherExpenses: number | null;
+  interFiscalCodeReturnOtherExpenses?: number | null;
 
   @Column({ name: 'NUMDIASVENCFRETE', type: 'number', precision: 4, scale: 0, nullable: true })
-  freightDueDateDays: number | null;
+  freightDueDateDays?: number | null;
 
   @Column({ name: 'CALCCREDIPI', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  calcIpiCredit: string | null;
+  calcIpiCredit?: string | null;
 
   @Column({ name: 'NUMCONTRATOCORREIO', type: 'number', precision: 8, scale: 0, nullable: true })
-  postOfficeContractNumber: number | null;
+  postOfficeContractNumber?: number | null;
 
   @Column({ name: 'VLTARIFA', type: 'number', precision: 8, scale: 2, nullable: true })
-  tariffValue: number | null;
+  tariffValue?: number | null;
 
   @Column({ name: 'VLMINTARIFABANC', type: 'number', precision: 18, scale: 6, nullable: true })
-  minBankTariffValue: number | null;
+  minBankTariffValue?: number | null;
 
   @Column({ name: 'VLMAXTARIFABANC', type: 'number', precision: 18, scale: 6, nullable: true })
-  maxBankTariffValue: number | null;
+  maxBankTariffValue?: number | null;
 
   @Column({ name: 'SOMATARIFABANCDUPLIC', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  sumBankTariffDuplicate: string | null;
+  sumBankTariffDuplicate?: string | null;
 
   @Column({ name: 'CODDOCNFC', type: 'number', precision: 8, scale: 0, nullable: true })
-  nfcDocCode: number | null;
+  nfcDocCode?: number | null;
 
   @Column({ name: 'PRODPORETAPA', type: 'char', length: 1, nullable: true, default: 'N' })
-  productByStage: string | null;
+  productByStage?: string | null;
 
   @Column({ name: 'PROXNUMORC', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextBudgetNumber: number | null;
+  nextBudgetNumber?: number | null;
 
   @Column({ name: 'GERARNUMLOTEAUTOMATICPA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  generateAutoBatchNumberPa: string | null;
+  generateAutoBatchNumberPa?: string | null;
 
   @Column({ name: 'PROXNUMETAPA', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextStageNumber: number | null;
+  nextStageNumber?: number | null;
 
   @Column({ name: 'IESUBSTTRIB', type: 'varchar2', length: 15, nullable: true })
-  ieSubstTrib: string | null;
+  ieSubstTrib?: string | null;
 
   @Column({ name: 'UTILIZAPERCBASEREDOUTRASDESPPF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useBaseRedPercOtherExpensesPf: string | null;
+  useBaseRedPercOtherExpensesPf?: string | null;
 
   @Column({ name: 'TIPONUMMAPA', type: 'varchar2', length: 1, nullable: true, default: 'D' })
-  mapNumberType: string | null;
+  mapNumberType?: string | null;
 
   @Column({ name: 'CALCREDPISFRETE', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  calcPisFreightCredit: string | null;
+  calcPisFreightCredit?: string | null;
 
   @Column({ name: 'CALCREDPISFRETECONT', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  calcPisFreightCreditCont: string | null;
+  calcPisFreightCreditCont?: string | null;
 
   @Column({ name: 'BROKER', type: 'varchar2', length: 1, nullable: true })
-  broker: string | null;
+  broker?: string | null;
 
   @Column({ name: 'TIPOBROKER', type: 'varchar2', length: 3, nullable: true })
-  brokerType: string | null;
+  brokerType?: string | null;
 
   @Column({ name: 'PROXNUMEROORCAMENTO', type: 'number', precision: 8, scale: 0, nullable: true })
-  nextBudgetNumber2: number | null;
+  nextBudgetNumber2?: number | null;
 
   @Column({ name: 'PERBASEREDOUTRASDESP', type: 'number', precision: 8, scale: 4, nullable: true })
-  baseRedPercOtherExpenses: number | null;
+  baseRedPercOtherExpenses?: number | null;
 
   @Column({ name: 'TIPONUMNFENTRADA', type: 'varchar2', length: 1, nullable: true, default: '1' })
-  entryNfNumberType: string | null;
+  entryNfNumberType?: string | null;
 
   @Column({ name: 'PERMITIRVENDAINTERESTADUALPF', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  allowInterstateSalePf: string | null;
+  allowInterstateSalePf?: string | null;
 
   @Column({ name: 'PERMITIRVENDAESTADUALPFCOMIE', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  allowStateSalePfWithIe: string | null;
+  allowStateSalePfWithIe?: string | null;
 
   @Column({ name: 'PERMITIRVENDAESTADUALPFSEMIE', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  allowStateSalePfWithoutIe: string | null;
+  allowStateSalePfWithoutIe?: string | null;
 
   @Column({ name: 'INCLUIRITEMPCEMBALAGEM', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  includeItemPcEmbalagem: string | null;
+  includeItemPcEmbalagem?: string | null;
 
   @Column({ name: 'ALIQUOTAFRETEEST', type: 'number', precision: 2, scale: 0, nullable: true })
-  freightRateState: number | null;
+  freightRateState?: number | null;
 
   @Column({ name: 'USAENDERECOFILIAL', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useBranchAddress: string | null;
+  useBranchAddress?: string | null;
 
   @Column({ name: 'CODCLICONSUMIDOR', type: 'number', precision: 6, scale: 0, nullable: true })
-  consumerClientCode: number | null;
+  consumerClientCode?: number | null;
 
   @Column({ name: 'PERMITECREDICMCOMST', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  allowIcmCreditWithSt: string | null;
+  allowIcmCreditWithSt?: string | null;
 
   @Column({ name: 'CALCCREDICMCUSTOCONT', type: 'char', length: 1, nullable: true, default: 'S' })
-  calcIcmCreditCostCont: string | null;
+  calcIcmCreditCostCont?: string | null;
 
   @Column({ name: 'CALCCREDPISCUSTOCONT', type: 'char', length: 1, nullable: true, default: 'S' })
-  calcPisCreditCostCont: string | null;
+  calcPisCreditCostCont?: string | null;
 
   @Column({ name: 'PERCDESPADM', type: 'number', precision: 10, scale: 4, nullable: true })
-  adminExpensePerc: number | null;
+  adminExpensePerc?: number | null;
 
   @Column({ name: 'PERCALTERCUSTOENT', type: 'number', precision: 8, scale: 4, nullable: true })
-  entryCostAlterPerc: number | null;
+  entryCostAlterPerc?: number | null;
 
   @Column({ name: 'PROXNUMTRANSCONHEC', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextTransferKnowledgeNumber: number | null;
+  nextTransferKnowledgeNumber?: number | null;
 
   @Column({ name: 'PROXNUMCONHEC', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextKnowledgeNumber: number | null;
+  nextKnowledgeNumber?: number | null;
 
   @Column({ name: 'CALCULARCOMISSAOPVENDA1', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  calcCommissionSalePrice1: string | null;
+  calcCommissionSalePrice1?: string | null;
 
   @Column({ name: 'USADISTRIB', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  useDistrib: string | null;
+  useDistrib?: string | null;
 
   @Column({ name: 'IPISOMENTEVLCONT', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  ipiOnlyValueCont: string | null;
+  ipiOnlyValueCont?: string | null;
 
   @Column({ name: 'USACONTROLELOCALIZACAOVEICULO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useVehicleLocationControl: string | null;
+  useVehicleLocationControl?: string | null;
 
   @Column({ name: 'PROXNUMPREVENDA', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextPreSaleNumber: number | null;
+  nextPreSaleNumber?: number | null;
 
   @Column({ name: 'PROXNUMORCAFILIAL', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextBranchBudgetNumber: number | null;
+  nextBranchBudgetNumber?: number | null;
 
   @Column({ name: 'PROXNUMENTMEX', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextEntMexNumber: number | null;
+  nextEntMexNumber?: number | null;
 
   @Column({ name: 'PROXNSU', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextNsu: number | null;
+  nextNsu?: number | null;
 
   @Column({ name: 'GERARNSU', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  generateNsu: string | null;
+  generateNsu?: string | null;
 
   @Column({ name: 'EXIGIREMISSAOMAPABALCAO', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  requireCounterMapEmission: string | null;
+  requireCounterMapEmission?: string | null;
 
   @Column({ name: 'CODDOCSS', type: 'number', precision: 8, scale: 0, nullable: true })
-  ssDocCode: number | null;
+  ssDocCode?: number | null;
 
   @Column({ name: 'OPERADORLOGISTICO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  logisticOperator: string | null;
+  logisticOperator?: string | null;
 
   @Column({ name: 'CONSIDERARICMSANTECIPCUSTO', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  considerAdvanceIcmsCost: string | null;
+  considerAdvanceIcmsCost?: string | null;
 
   @Column({ name: 'CODGRUPOFILIAL', type: 'number', precision: 6, scale: 0, nullable: true })
-  branchGroupCode: number | null;
+  branchGroupCode?: number | null;
 
   @Column({ name: 'CODCONTADOR', type: 'number', precision: 5, scale: 0, nullable: true })
-  accountantCode: number | null;
+  accountantCode?: number | null;
 
   @Column({ name: 'CODSOCIO', type: 'number', precision: 5, scale: 0, nullable: true })
-  partnerCode: number | null;
+  partnerCode?: number | null;
 
   @Column({ name: 'ATIVIDADE', type: 'varchar2', length: 50, nullable: true })
-  activity: string | null;
+  activity?: string | null;
 
   @Column({ name: 'VALORCAPITAL', type: 'number', precision: 18, scale: 2, nullable: true })
-  capitalValue: number | null;
+  capitalValue?: number | null;
 
   @Column({ name: 'ORGAO', type: 'varchar2', length: 20, nullable: true })
-  organ: string | null;
+  organ?: string | null;
 
   @Column({ name: 'CODREGISTRO', type: 'varchar2', length: 20, nullable: true })
-  registrationCode: string | null;
+  registrationCode?: string | null;
 
   @Column({ name: 'CODCONTAENTIMPORTACAO', type: 'number', precision: 10, scale: 0, nullable: true })
-  importEntryAccountCode: number | null;
+  importEntryAccountCode?: number | null;
 
   @Column({ name: 'CODDOCSE', type: 'number', precision: 6, scale: 0, nullable: true })
-  seDocCode: number | null;
+  seDocCode?: number | null;
 
   @Column({ name: 'UTILIZANFE', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useNfe: string | null;
+  useNfe?: string | null;
 
   @Column({ name: 'SERIENFE', type: 'varchar2', length: 3, nullable: true })
-  nfeSeries: string | null;
+  nfeSeries?: string | null;
 
   @Column({ name: 'SERIENFESCAN', type: 'varchar2', length: 3, nullable: true })
-  nfeScanSeries: string | null;
+  nfeScanSeries?: string | null;
 
   @Column({ name: 'TIPODANFE', type: 'varchar2', length: 1, nullable: true })
-  danfeType: string | null;
+  danfeType?: string | null;
 
   @Column({ name: 'PROXNUMNFE', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextNfeNumber: number | null;
+  nextNfeNumber?: number | null;
 
   @Column({ name: 'INCLUIFRETEOUTRASDESPBASEST', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  includeFreightOtherExpensesBaseSt: string | null;
+  includeFreightOtherExpensesBaseSt?: string | null;
 
   @Column({ name: 'CODCONTAPERCACRESCENT', type: 'number', precision: 10, scale: 0, nullable: true })
-  accountPercIncreaseEntCode: number | null;
+  accountPercIncreaseEntCode?: number | null;
 
   @Column({ name: 'GERABASENORMALQUANDOST', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  generateNormalBaseWhenSt: string | null;
+  generateNormalBaseWhenSt?: string | null;
 
   @Column({ name: 'VALIDAVLMAXISENCAOSTPF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  validateMaxExemptionStPf: string | null;
+  validateMaxExemptionStPf?: string | null;
 
   @Column({ name: 'VLMAXISENCAOSTPF', type: 'number', precision: 12, scale: 2, nullable: true })
-  maxExemptionValueStPf: number | null;
+  maxExemptionValueStPf?: number | null;
 
   @Column({ name: 'UTILIZAVENDAPOREMBALAGEM', type: 'varchar2', length: 1, nullable: true })
-  useSaleByPackaging: string | null;
+  useSaleByPackaging?: string | null;
 
   @Column({ name: 'PRECOPOREMBALAGEM', type: 'varchar2', length: 1, nullable: true })
-  priceByPackaging: string | null;
+  priceByPackaging?: string | null;
 
   @Column({ name: 'VALIDAENDPICKINGPEDCOMPRA', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  validateAddressPickingOrderBuy: string | null;
+  validateAddressPickingOrderBuy?: string | null;
 
   @Column({ name: 'USAPVENDAATACCONFQTMULTIPLA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useWholesalePriceConfQtMultiple: string | null;
+  useWholesalePriceConfQtMultiple?: string | null;
 
   @Column({ name: 'DTUTILIZANFE', type: 'date', nullable: true })
-  useNfeDate: Date | null;
+  useNfeDate?: Date | null;
 
   @Column({ name: 'GERARPEDCONSIGNACAOVASILHAME', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  generateOrderConsignmentVasilhame: string | null;
+  generateOrderConsignmentVasilhame?: string | null;
 
   @Column({ name: 'PRECIFICAAUTOMATICO', type: 'varchar2', length: 1, nullable: true })
-  autoPricing: string | null;
+  autoPricing?: string | null;
 
   @Column({ name: 'TIPOPRECIFICACAO', type: 'varchar2', length: 1, nullable: true, default: 'P' })
-  pricingType: string | null;
+  pricingType?: string | null;
 
   @Column({ name: 'USASERVINTERMEDIARIO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useIntermediateService: string | null;
+  useIntermediateService?: string | null;
 
   @Column({ name: 'USANUMNOTAECF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useEcfNoteNumber: string | null;
+  useEcfNoteNumber?: string | null;
 
   @Column({ name: 'PROXNUMNOTAECF', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextEcfNoteNumber: number | null;
+  nextEcfNoteNumber?: number | null;
 
   @Column({ name: 'PROXNUMTRANSVENDAECF', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextTransferSaleEcfNumber: number | null;
+  nextTransferSaleEcfNumber?: number | null;
 
   @Column({ name: 'PROXNUMCARECF', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextCarEcfNumber: number | null;
+  nextCarEcfNumber?: number | null;
 
   @Column({ name: 'PROXNUMTRANSECF', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextTransferEcfNumber: number | null;
+  nextTransferEcfNumber?: number | null;
 
   @Column({ name: 'USAPRECOETIQPRODPESADO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  usePriceTagWeighProduct: string | null;
+  usePriceTagWeighProduct?: string | null;
 
   @Column({ name: 'DESTACARIMPOSTOSVENDATV14', type: 'varchar2', length: 1, nullable: true })
-  highlightTaxesSaleTv14: string | null;
+  highlightTaxesSaleTv14?: string | null;
 
   @Column({ name: 'PERMITEAGRUPARBOLETOS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  allowGroupSlips: string | null;
+  allowGroupSlips?: string | null;
 
   @Column({ name: 'BLOQDEVCLI', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  blockClientReturn: string | null;
+  blockClientReturn?: string | null;
 
   @Column({ name: 'DTULTATUALIZACAODRVINTER', type: 'date', nullable: true })
-  lastUpdateDateDrvInter: Date | null;
+  lastUpdateDateDrvInter?: Date | null;
 
   @Column({ name: 'TIPOAVALIACAOCOMISSAO', type: 'number', precision: 2, scale: 0, nullable: true })
-  commissionEvaluationType: number | null;
+  commissionEvaluationType?: number | null;
 
   @Column({ name: 'CONSIDERARCOMISSAOZERO', type: 'varchar2', length: 1, nullable: true })
-  considerZeroCommission: string | null;
+  considerZeroCommission?: string | null;
 
   @Column({ name: 'LANCARFRETEPESOAUTFAT', type: 'varchar2', length: 1, nullable: true })
-  launchFreightWeightAutoInvoice: string | null;
+  launchFreightWeightAutoInvoice?: string | null;
 
   @Column({ name: 'BLOQDESDEMITENTEDIF', type: 'varchar2', length: 1, nullable: true })
-  blockDifferentIssuer: string | null;
+  blockDifferentIssuer?: string | null;
 
   @Column({ name: 'CALCESTDISPCOMQTMINAUTOSERV', type: 'varchar2', length: 1, nullable: true })
-  calcAvailableStockWithQtMinAutoService: string | null;
+  calcAvailableStockWithQtMinAutoService?: string | null;
 
   @Column({ name: 'USAPOLITICADESCVALOR', type: 'varchar2', length: 1, nullable: true })
-  useValueDiscountPolicy: string | null;
+  useValueDiscountPolicy?: string | null;
 
   @Column({ name: 'UTILIZAVENDAASSISTIDA', type: 'varchar2', length: 1, nullable: true })
-  useAssistedSale: string | null;
+  useAssistedSale?: string | null;
 
   @Column({ name: 'CODCONTAVENDAENTREGAFUT', type: 'number', precision: 10, scale: 0, nullable: true })
-  futureDeliverySaleAccountCode: number | null;
+  futureDeliverySaleAccountCode?: number | null;
 
   @Column({ name: 'USAINTEGRACAOWMS', type: 'varchar2', length: 1, nullable: true })
-  useWmsIntegration: string | null;
+  useWmsIntegration?: string | null;
 
   @Column({ name: 'TIPOFRETEAUTO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  autoFreightType: string | null;
+  autoFreightType?: string | null;
 
   @Column({ name: 'BLOQUEARPEDIDOSABAIXOVLMINIMO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  blockOrdersBelowMinVal: string | null;
+  blockOrdersBelowMinVal?: string | null;
 
   @Column({ name: 'ORDEMAGRUPDESD', type: 'varchar2', length: 900, nullable: true })
-  groupOrderDesd: string | null;
+  groupOrderDesd?: string | null;
 
   @Column({ name: 'USACONSULTACHEQUE', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useCheckConsult: string | null;
+  useCheckConsult?: string | null;
 
   @Column({ name: 'TIPOIDENTIFICACAOECF', type: 'varchar2', length: 2, nullable: true, default: 'US' })
-  ecfIdentificationType: string | null;
+  ecfIdentificationType?: string | null;
 
   @Column({ name: 'CONSIDERAMONTAGEMGIROMERC', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  considerAssemblyGiroMerc: string | null;
+  considerAssemblyGiroMerc?: string | null;
 
   @Column({ name: 'MONTACARGAWINTHOR', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  winthorLoadBuild: string | null;
+  winthorLoadBuild?: string | null;
 
   @Column({ name: 'DEVFORNECESTOQUEAVARIA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  supplierReturnDamageStock: string | null;
+  supplierReturnDamageStock?: string | null;
 
   @Column({ name: 'ALTERAPEDIDORETORNADOWMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  alterOrderReturnedWms: string | null;
+  alterOrderReturnedWms?: string | null;
 
   @Column({ name: 'CANCELAPEDIDORETORNADOWMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  cancelOrderReturnedWms: string | null;
+  cancelOrderReturnedWms?: string | null;
 
   @Column({ name: 'CANCELANFENTRADACOMWMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  cancelEntryNfWithWms: string | null;
+  cancelEntryNfWithWms?: string | null;
 
   @Column({ name: 'CANCELANFDEVCLICOMWMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  cancelClientReturnNfWithWms: string | null;
+  cancelClientReturnNfWithWms?: string | null;
 
   @Column({ name: 'CANCELANFVENDACOMWMS', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  cancelSaleNfWithWms: string | null;
+  cancelSaleNfWithWms?: string | null;
 
   @Column({ name: 'INTEGRADORAWMS', type: 'number', precision: 3, scale: 0, nullable: true, default: '1' })
-  wmsIntegrator: number | null;
+  wmsIntegrator?: number | null;
 
   @Column({ name: 'USUARIOBANCODADOSWMS', type: 'varchar2', length: 40, nullable: true })
-  wmsDbUser: string | null;
+  wmsDbUser?: string | null;
 
   @Column({ name: 'SENHABANCODADOSWMS', type: 'varchar2', length: 40, nullable: true })
-  wmsDbPassword: string | null;
+  wmsDbPassword?: string | null;
 
   @Column({ name: 'NOMEBANCODADOSWMS', type: 'varchar2', length: 40, nullable: true })
-  wmsDbName: string | null;
+  wmsDbName?: string | null;
 
   @Column({ name: 'CONSOLIDADADOS504', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  consolidateData504: string | null;
+  consolidateData504?: string | null;
 
   @Column({ name: 'GERARPCHISTEST', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  generatePcHistEst: string | null;
+  generatePcHistEst?: string | null;
 
   @Column({ name: 'INDICECUSTOTRANSF', type: 'number', precision: 8, scale: 4, nullable: true, default: '1' })
-  transferCostIndex: number | null;
+  transferCostIndex?: number | null;
 
   @Column({ name: 'BLOQESTOQUETRANSF', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  blockStockTransfer: string | null;
+  blockStockTransfer?: string | null;
 
   @Column({ name: 'ATUALIZACUSTOULTENTRANSF', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  updateCostLastEntryTransfer: string | null;
+  updateCostLastEntryTransfer?: string | null;
 
   @Column({ name: 'PONDCUSNOTATRANSF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  pondCostTransferNote: string | null;
+  pondCostTransferNote?: string | null;
 
   @Column({ name: 'PROXNUMOS', type: 'number', precision: 15, scale: 0, nullable: true })
-  nextOsNumber: number | null;
+  nextOsNumber?: number | null;
 
   @Column({ name: 'EXIBIRIMPOSTOSFORANFIMPORTACAO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  showTaxesOutsideImportNf: string | null;
+  showTaxesOutsideImportNf?: string | null;
 
   @Column({ name: 'CODFISCALOPCIONALNFIMPORTACAO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  optionalFiscalCodeImportNf: string | null;
+  optionalFiscalCodeImportNf?: string | null;
 
   @Column({ name: 'SITTRIBUTOPCIONALNFIMPORTACAO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  optionalTaxSitImportNf: string | null;
+  optionalTaxSitImportNf?: string | null;
 
   @Column({ name: 'PESOLIMITEOS', type: 'number', precision: 8, scale: 2, nullable: true, default: '0' })
-  osWeightLimit: number | null;
+  osWeightLimit?: number | null;
 
   @Column({ name: 'QTDMAXITENSOS', type: 'number', precision: 6, scale: 0, nullable: true, default: '0' })
-  maxOsItemsQty: number | null;
+  maxOsItemsQty?: number | null;
 
   @Column({ name: 'QTDMINITENSMODULOOS', type: 'number', precision: 8, scale: 2, nullable: true, default: '0' })
-  minOsItemsQtyModule: number | null;
+  minOsItemsQtyModule?: number | null;
 
   @Column({ name: 'TEMPOSEPPRODOS', type: 'number', precision: 6, scale: 0, nullable: true })
-  orderServiceProdSepTime: number | null;
+  orderServiceProdSepTime?: number | null;
 
   @Column({ name: 'TEMPOSEPCAIXAOS', type: 'number', precision: 6, scale: 0, nullable: true })
-  orderServiceBoxSepTime: number | null;
+  orderServiceBoxSepTime?: number | null;
 
   @Column({ name: 'TEMPOSEPINICIALOS', type: 'number', precision: 6, scale: 0, nullable: true })
-  orderServiceInitialSepTime: number | null;
+  orderServiceInitialSepTime?: number | null;
 
   @Column({ name: 'DESTACARIMPOSTOSVENDATV13', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  highlightTaxesSaleTv13: string | null;
+  highlightTaxesSaleTv13?: string | null;
 
   @Column({ name: 'TIPOMONTAGEM', type: 'varchar2', length: 1, nullable: true, default: 'R' })
-  assemblyType: string | null;
+  assemblyType?: string | null;
 
   @Column({ name: 'CALCULARIPIVENDA', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  calcIpiSale: string | null;
+  calcIpiSale?: string | null;
 
   @Column({ name: 'USAORCAMENTOECF', type: 'varchar2', length: 1, nullable: true })
-  useEcfBudget: string | null;
+  useEcfBudget?: string | null;
 
   @Column({ name: 'VALIDARENDAPANHAAUTOSERVICO', type: 'varchar2', length: 1, nullable: true })
-  validateCollectionAddressAutoService: string | null;
+  validateCollectionAddressAutoService?: string | null;
 
   @Column({ name: 'USADIAUTILFILIAL', type: 'varchar2', length: 1, nullable: true })
-  useBusinessDayBranch: string | null;
+  useBusinessDayBranch?: string | null;
 
   @Column({ name: 'REDUZIRICMSPROPRIOTRANSF', type: 'varchar2', length: 1, nullable: true })
-  reduceOwnIcmsTransfer: string | null;
+  reduceOwnIcmsTransfer?: string | null;
 
   @Column({ name: 'NAOGERARCREDITOENTRADATRANSF', type: 'varchar2', length: 1, nullable: true })
-  noGenerateCreditEntryTransfer: string | null;
+  noGenerateCreditEntryTransfer?: string | null;
 
   @Column({ name: 'IMPEDETIPO14_LIVROFISCAL', type: 'varchar2', length: 1, nullable: true })
-  preventType14FiscalBook: string | null;
+  preventType14FiscalBook?: string | null;
 
   @Column({ name: 'CORTEAUTOMATICOPEDVENDAWMS', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  automaticCutSaleOrderWms: string | null;
+  automaticCutSaleOrderWms?: string | null;
 
   @Column({ name: 'PRAZOMAXIMPPEDPENDECF', type: 'number', precision: 4, scale: 0, nullable: true, default: '0' })
-  maxTermImpPendOrderEcf: number | null;
+  maxTermImpPendOrderEcf?: number | null;
 
   @Column({ name: 'RETIRARDESCNABAIXA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  removeDescOnWriteOff: string | null;
+  removeDescOnWriteOff?: string | null;
 
   @Column({ name: 'SOMAICMSTRANSF', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  sumIcmsTransfer: string | null;
+  sumIcmsTransfer?: string | null;
 
   @Column({ name: 'CODCONTACREDFORNEC', type: 'number', precision: 10, scale: 0, nullable: true })
-  supplierCreditAccountCode: number | null;
+  supplierCreditAccountCode?: number | null;
 
   @Column({ name: 'GERAPEDIDOCOMITENSSEMEST', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  generateOrderWithItemsWithoutStock: string | null;
+  generateOrderWithItemsWithoutStock?: string | null;
 
   @Column({ name: 'CONFERIRSOMENTEPEDACERTADOCX', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  checkOnlyOrderSettledCash: string | null;
+  checkOnlyOrderSettledCash?: string | null;
 
   @Column({ name: 'MONTARKITAUTOMATICAMENTE', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  assembleKitAutomatically: string | null;
+  assembleKitAutomatically?: string | null;
 
   @Column({ name: 'APLICAPERCVARNAOCONTRIB', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  applyVarPercNonContrib: string | null;
+  applyVarPercNonContrib?: string | null;
 
   @Column({ name: 'APLICAPERCATACNAOCONTRIB', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  applyWholesalePercNonContrib: string | null;
+  applyWholesalePercNonContrib?: string | null;
 
   @Column({ name: 'UTILIZAORIGEMVENDANF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useSaleOriginNf: string | null;
+  useSaleOriginNf?: string | null;
 
   @Column({ name: 'ORIGEMVENDANF', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  saleOriginNf: string | null;
+  saleOriginNf?: string | null;
 
   @Column({ name: 'PROXNUMNOTAORIGVENDA', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextNoteOriginSaleNumber: number | null;
+  nextNoteOriginSaleNumber?: number | null;
 
   @Column({ name: 'CODDOCORIGEMNF', type: 'number', precision: 8, scale: 0, nullable: true })
-  originNfDocCode: number | null;
+  originNfDocCode?: number | null;
 
   @Column({ name: 'CLICREPENDENTE', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  cliCrePending: string | null;
+  cliCrePending?: string | null;
 
   @Column({ name: 'PERMITECANCELARNFENTWMS', type: 'varchar2', length: 1, nullable: true })
-  allowCancelEntryNfWms: string | null;
+  allowCancelEntryNfWms?: string | null;
 
   @Column({ name: 'ARREDVLITENSNFSAIDA', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  roundValueItemsExitNf: string | null;
+  roundValueItemsExitNf?: string | null;
 
   @Column({ name: 'APROVEITAIPI_PISCOFINS', type: 'varchar2', length: 1, nullable: true })
-  useIpiPisCofins: string | null;
+  useIpiPisCofins?: string | null;
 
   @Column({ name: 'APROVEITAFRETE_PISCOFINS', type: 'varchar2', length: 1, nullable: true })
-  useFreightPisCofins: string | null;
+  useFreightPisCofins?: string | null;
 
   @Column({ name: 'APROVEITADESP_PISCOFINS', type: 'varchar2', length: 1, nullable: true })
-  useExpensePisCofins: string | null;
+  useExpensePisCofins?: string | null;
 
   @Column({ name: 'QTMULTIPLAINICIALECF', type: 'number', precision: 2, scale: 0, nullable: true })
-  initialMultipleQtyEcf: number | null;
+  initialMultipleQtyEcf?: number | null;
 
   @Column({ name: 'USAINTEGRACAOOPERLOG', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useLogOperIntegration: string | null;
+  useLogOperIntegration?: string | null;
 
   @Column({ name: 'CGC_OPERADORLOGISTICO', type: 'varchar2', length: 14, nullable: true })
-  logOperatorCnpj: string | null;
+  logOperatorCnpj?: string | null;
 
   @Column({ name: 'PERCICMSSIMPLESNAC', type: 'number', precision: 6, scale: 2, nullable: true })
-  icmsSimpleNacPerc: number | null;
+  icmsSimpleNacPerc?: number | null;
 
   @Column({ name: 'OPTANTESIMPLESNAC', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  simpleNacOptant: string | null;
+  simpleNacOptant?: string | null;
 
   @Column({ name: 'RECALCDVPRODUTO', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  recalcDvProduct: string | null;
+  recalcDvProduct?: string | null;
 
   @Column({ name: 'USACODBARRAEMBALAGEM', type: 'varchar2', length: 1, nullable: true })
-  useBarcodePackaging: string | null;
+  useBarcodePackaging?: string | null;
 
   @Column({ name: 'REGRAARREDONDAMENTOECF', type: 'varchar2', length: 1, nullable: true })
-  roundingRuleEcf: string | null;
+  roundingRuleEcf?: string | null;
 
   @Column({ name: 'CONSIDERAESTPENDSUGCOMPRA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  considerPendingStockBuySuggestion: string | null;
+  considerPendingStockBuySuggestion?: string | null;
 
   @Column({ name: 'CONCEDERDESCISENCAOSTPF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  grantDescExemptionStPf: string | null;
+  grantDescExemptionStPf?: string | null;
 
   @Column({ name: 'VALIDARPRECOVENDATV8', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  validateSalePriceTv8: string | null;
+  validateSalePriceTv8?: string | null;
 
   @Column({ name: 'VERSAOWMS', type: 'number', precision: 3, scale: 0, nullable: true, default: '12' })
-  wmsVersion: number | null;
+  wmsVersion?: number | null;
 
   @Column({ name: 'VALIDARPRECOVENDATV20', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  validateSalePriceTv20: string | null;
+  validateSalePriceTv20?: string | null;
 
   @Column({ name: 'TIPOEXPORTACAO', type: 'varchar2', length: 1, nullable: true, default: 'D' })
-  exportType: string | null;
+  exportType?: string | null;
 
   @Column({ name: 'PERCOMFILIALBROKER', type: 'number', precision: 8, scale: 4, nullable: true })
-  percComBranchBroker: number | null;
+  percComBranchBroker?: number | null;
 
   @Column({ name: 'PERFRETEBROKER', type: 'number', precision: 8, scale: 4, nullable: true })
-  percFreightBroker: number | null;
+  percFreightBroker?: number | null;
 
   @Column({ name: 'BLOQVENDAPF', type: 'varchar2', length: 1, nullable: true })
-  blockSalePf: string | null;
+  blockSalePf?: string | null;
 
   @Column({ name: 'PERMITEFATURAR', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  allowInvoice: string | null;
+  allowInvoice?: string | null;
 
   @Column({ name: 'PERCOMRCABROKER', type: 'number', precision: 6, scale: 2, nullable: true })
-  percComRcaBroker: number | null;
+  percComRcaBroker?: number | null;
 
   @Column({ name: 'PERCOMMOTBROKER', type: 'number', precision: 6, scale: 2, nullable: true, default: '0' })
-  percComDriverBroker: number | null;
+  percComDriverBroker?: number | null;
 
   @Column({ name: 'DIAVENCICMSANTECIP', type: 'number', precision: 2, scale: 0, nullable: true, default: '0' })
-  dayDueIcmsAdvance: number | null;
+  dayDueIcmsAdvance?: number | null;
 
   @Column({ name: 'ESTORNACUSTODEVFORNEC', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  reverseCostReturnSupplier: string | null;
+  reverseCostReturnSupplier?: string | null;
 
   @Column({ name: 'CONTROLAGARANTIASERVICO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  controlServiceWarranty: string | null;
+  controlServiceWarranty?: string | null;
 
   @Column({ name: 'USADADOSEMBALAGEMNFE', type: 'varchar2', length: 1, nullable: true })
-  usePackagingDataNfe: string | null;
+  usePackagingDataNfe?: string | null;
 
   @Column({ name: 'NUMDIASMAXIMOLIBERARPEDIDO', type: 'number', precision: 3, scale: 0, nullable: true })
-  maxDaysReleaseOrder: number | null;
+  maxDaysReleaseOrder?: number | null;
 
   @Column({ name: 'HRINICIOEXPEDIENTE', type: 'date', nullable: true })
-  startWorkTime: Date | null;
+  startWorkTime?: Date | null;
 
   @Column({ name: 'HRINICIOALMOCO', type: 'date', nullable: true })
-  startLunchTime: Date | null;
+  startLunchTime?: Date | null;
 
   @Column({ name: 'HRFIMALMOCO', type: 'date', nullable: true })
-  endLunchTime: Date | null;
+  endLunchTime?: Date | null;
 
   @Column({ name: 'HRFIMEXPEDIENTE', type: 'date', nullable: true })
-  endWorkTime: Date | null;
+  endWorkTime?: Date | null;
 
   @Column({ name: 'INFORMARPROFISSIONALVENDA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  informSaleProfessional: string | null;
+  informSaleProfessional?: string | null;
 
   @Column({ name: 'PERMITIRDESDDIFPROF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  allowDesdDifProf: string | null;
+  allowDesdDifProf?: string | null;
 
   @Column({ name: 'VALIDARDESCFLEXAUTOSERV', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  validateDescFlexAutoService: string | null;
+  validateDescFlexAutoService?: string | null;
 
   @Column({ name: 'CODDOCSRAUTO', type: 'number', precision: 8, scale: 0, nullable: true })
-  srDocCodeAuto: number | null;
+  srDocCodeAuto?: number | null;
 
   @Column({ name: 'USACODCLIVENDA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useClientCodeSale: string | null;
+  useClientCodeSale?: string | null;
 
   @Column({ name: 'USACONTABIL', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useAccounting: string | null;
+  useAccounting?: string | null;
 
   @Column({ name: 'USATRANSPORTADOPADRAONFE', type: 'varchar2', length: 1, nullable: true })
-  useStandardTransportNfe: string | null;
+  useStandardTransportNfe?: string | null;
 
   @Column({ name: 'OSPRODMANUTOBRIG', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  orderServiceProdMaintMandatory: string | null;
+  orderServiceProdMaintMandatory?: string | null;
 
   @Column({ name: 'NUMMAXDIASRETRODTCOMPENSACAO', type: 'number', precision: 3, scale: 0, nullable: true, default: '999' })
-  maxDaysRetroCompensationDate: number | null;
+  maxDaysRetroCompensationDate?: number | null;
 
   @Column({ name: 'NUMMAXITENSNFE', type: 'number', precision: 4, scale: 0, nullable: true })
-  maxItemsNfe: number | null;
+  maxItemsNfe?: number | null;
 
   @Column({ name: 'USABRINDEECF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useGiftEcf: string | null;
+  useGiftEcf?: string | null;
 
   @Column({ name: 'HORAINICIALDIGITACAOPED', type: 'date', nullable: true })
-  initialTimeTypeOrder: Date | null;
+  initialTimeTypeOrder?: Date | null;
 
   @Column({ name: 'HORAFINALDIGITACAOPED', type: 'date', nullable: true })
-  finalTimeTypeOrder: Date | null;
+  finalTimeTypeOrder?: Date | null;
 
   @Column({ name: 'HORAINICIALIMPORTACAOPED', type: 'date', nullable: true })
-  initialTimeImportOrder: Date | null;
+  initialTimeImportOrder?: Date | null;
 
   @Column({ name: 'HORAFINALIMPORTACAOPED', type: 'date', nullable: true })
-  finalTimeImportOrder: Date | null;
+  finalTimeImportOrder?: Date | null;
 
   @Column({ name: 'PERCMAXDIFPRODSIMIL', type: 'number', precision: 8, scale: 4, nullable: true })
-  maxPercDifProdSimil: number | null;
+  maxPercDifProdSimil?: number | null;
 
   @Column({ name: 'ALTERARCOBBKCHAUTOMATICO', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  changeCobBkChAutomatic: string | null;
+  changeCobBkChAutomatic?: string | null;
 
   @Column({ name: 'ACEITAVENDAAVISTACLIBLOQ', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  acceptCashSaleBlockedClient: string | null;
+  acceptCashSaleBlockedClient?: string | null;
 
   @Column({ name: 'CODCONTARECARGA', type: 'number', precision: 10, scale: 0, nullable: true })
-  rechargeAccountCode: number | null;
+  rechargeAccountCode?: number | null;
 
   @Column({ name: 'ORIGEMCUSTOFILIALRETIRA', type: 'varchar2', length: 1, nullable: true, default: 'V' })
-  originCostBranchRemove: string | null;
+  originCostBranchRemove?: string | null;
 
   @Column({ name: 'UTILIZACONTROLEBIOMETRICO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useBiometricControl: string | null;
+  useBiometricControl?: string | null;
 
   @Column({ name: 'NUMREGIAOBALCAOINTER', type: 'number', precision: 4, scale: 0, nullable: true })
-  interCounterRegionNumber: number | null;
+  interCounterRegionNumber?: number | null;
 
   @Column({ name: 'USAREGIAOFILIALVENDAESTADUAL', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useBranchRegionStateSale: string | null;
+  useBranchRegionStateSale?: string | null;
 
   @Column({ name: 'USAREGIAOFILIALVENDAINTEREST', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useBranchRegionInterstateSale: string | null;
+  useBranchRegionInterstateSale?: string | null;
 
   @Column({ name: 'BLOQUEIARISKSCORING', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  blockRiskScoring: string | null;
+  blockRiskScoring?: string | null;
 
   @Column({ name: 'LIMRISKSCORING', type: 'number', precision: 6, scale: 0, nullable: true })
-  limitRiskScoring: number | null;
+  limitRiskScoring?: number | null;
 
   @Column({ name: 'STSOMENTEVLCONT', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  stOnlyValueCont: string | null;
+  stOnlyValueCont?: string | null;
 
   @Column({ name: 'PROXNUMNOTACOBRANCA', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextCollectionNoteNumber: number | null;
+  nextCollectionNoteNumber?: number | null;
 
   @Column({ name: 'CODDOCNOTACOBRANCA', type: 'number', precision: 8, scale: 0, nullable: true })
-  collectionNoteDocCode: number | null;
+  collectionNoteDocCode?: number | null;
 
   @Column({ name: 'TRANSFEREVLSTBASESTNATRANSF', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  transferStValueBaseStTransfer: string | null;
+  transferStValueBaseStTransfer?: string | null;
 
   @Column({ name: 'LIBPEDCOMPRASEMDIVERG', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  releasePurchaseOrderWithoutDivergence: string | null;
+  releasePurchaseOrderWithoutDivergence?: string | null;
 
   @Column({ name: 'MENSNFIMUNIDADETRIB', type: 'varchar2', length: 300, nullable: true })
-  nfMessageTaxImmunity: string | null;
+  nfMessageTaxImmunity?: string | null;
 
   @Column({ name: 'UTILIZACREDICMSESTCUSTOCONT', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useIcmsCreditEstCostCont: string | null;
+  useIcmsCreditEstCostCont?: string | null;
 
   @Column({ name: 'QTDEMAXDIASVENCVERBAS', type: 'number', precision: 4, scale: 0, nullable: true, default: '0' })
-  maxDaysExpiresFunds: number | null;
+  maxDaysExpiresFunds?: number | null;
 
   @Column({ name: 'PERBASEREDOUTRASDESPPF', type: 'number', precision: 8, scale: 4, nullable: true })
-  baseRedPercOtherExpensesPf: number | null;
+  baseRedPercOtherExpensesPf?: number | null;
 
   @Column({ name: 'PERLIMVENDAPF', type: 'number', precision: 8, scale: 4, nullable: true })
-  limitSalePercPf: number | null;
+  limitSalePercPf?: number | null;
 
   @Column({ name: 'ENVIACONTASPAGARNFE', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  sendAccountsPayableNfe: string | null;
+  sendAccountsPayableNfe?: string | null;
 
   @Column({ name: 'ENVIACONTASRECEBERNFE', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  sendAccountsReceivableNfe: string | null;
+  sendAccountsReceivableNfe?: string | null;
 
   @Column({ name: 'AMBIENTE', type: 'varchar2', length: 1, nullable: true, default: 'H' })
-  environment: string | null;
+  environment?: string | null;
 
   @Column({ name: 'USAMULTIPLOPORDESCONTO', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  useMultipleByDiscount: string | null;
+  useMultipleByDiscount?: string | null;
 
   @Column({ name: 'USAINVENTLOCAL', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useLocalInventory: string | null;
+  useLocalInventory?: string | null;
 
   @Column({ name: 'OBRIGACONSFINALDEV', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  mandatoryFinalConsumerReturn: string | null;
+  mandatoryFinalConsumerReturn?: string | null;
 
   @Column({ name: 'UTILIZASEQNFENT', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useSeqNfEntry: string | null;
+  useSeqNfEntry?: string | null;
 
   @Column({ name: 'USAPVENDATRANSF', type: 'varchar2', length: 1, nullable: true, default: 'S' })
-  useSalePriceTransfer: string | null;
+  useSalePriceTransfer?: string | null;
 
   @Column({ name: 'PERCACRESCIMOBALCAO', type: 'number', precision: 10, scale: 6, nullable: true })
-  counterIncreasePercentage: number | null;
+  counterIncreasePercentage?: number | null;
 
   @Column({ name: 'VLPESODESCARGA', type: 'number', precision: 10, scale: 2, nullable: true })
-  unloadWeightValue: number | null;
+  unloadWeightValue?: number | null;
 
   @Column({ name: 'VLVOLDESCARGA', type: 'number', precision: 10, scale: 2, nullable: true })
-  unloadVolumeValue: number | null;
+  unloadVolumeValue?: number | null;
 
   @Column({ name: 'VLPESODESCARGAPAL', type: 'number', precision: 10, scale: 2, nullable: true })
-  unloadWeightPalletValue: number | null;
+  unloadWeightPalletValue?: number | null;
 
   @Column({ name: 'VLVOLUMEDESCARGAFD', type: 'number', precision: 10, scale: 2, nullable: true })
-  unloadVolumeFdValue: number | null;
+  unloadVolumeFdValue?: number | null;
 
   @Column({ name: 'VLREMONTEDESCARGA', type: 'number', precision: 12, scale: 6, nullable: true })
-  unloadRemountValue: number | null;
+  unloadRemountValue?: number | null;
 
   @Column({ name: 'VLPALETEDESCARG', type: 'number', precision: 10, scale: 2, nullable: true })
-  unloadPalletValue: number | null;
+  unloadPalletValue?: number | null;
 
   @Column({ name: 'GRAVARVALORDESCFIN', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  saveFinancialDiscountValue: string | null;
+  saveFinancialDiscountValue?: string | null;
 
   @Column({ name: 'TIPOCNPJ', type: 'varchar2', length: 1, nullable: true })
-  cnpjType: string | null;
+  cnpjType?: string | null;
 
   @Column({ name: 'CONTROLENFEPORSERIE', type: 'varchar2', length: 2, nullable: true, default: 'N' })
-  controlNfeBySeries: string | null;
+  controlNfeBySeries?: string | null;
 
   @Column({ name: 'PROXNUMNFEENTRADA', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextEntryNfeNumber: number | null;
+  nextEntryNfeNumber?: number | null;
 
   @Column({ name: 'PROXNUMNFESCAN', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextScanNfeNumber: number | null;
+  nextScanNfeNumber?: number | null;
 
   @Column({ name: 'SERIENFEENTRADA', type: 'varchar2', length: 3, nullable: true })
-  entryNfeSeries: string | null;
+  entryNfeSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFESCANENTRADA', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextScanEntryNfeNumber: number | null;
+  nextScanEntryNfeNumber?: number | null;
 
   @Column({ name: 'SERIENFESCANENTRADA', type: 'varchar2', length: 3, nullable: true })
-  scanEntryNfeSeries: string | null;
+  scanEntryNfeSeries?: string | null;
 
   @Column({ name: 'DTUTILIZACTE', type: 'date', nullable: true })
-  useCteDate: Date | null;
+  useCteDate?: Date | null;
 
   @Column({ name: 'UTILIZACTE', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useCte: string | null;
+  useCte?: string | null;
 
   @Column({ name: 'USUARIOSERV', type: 'varchar2', length: 40, nullable: true })
-  serverUser: string | null;
+  serverUser?: string | null;
 
   @Column({ name: 'SENHASERV', type: 'varchar2', length: 10, nullable: true })
-  serverPassword: string | null;
+  serverPassword?: string | null;
 
   @Column({ name: 'DOMINIOSERV', type: 'varchar2', length: 150, nullable: true })
-  serverDomain: string | null;
+  serverDomain?: string | null;
 
   @Column({ name: 'NOMEREMETENTE', type: 'varchar2', length: 150, nullable: true })
-  senderName: string | null;
+  senderName?: string | null;
 
   @Column({ name: 'EMAILREMETENTE', type: 'varchar2', length: 150, nullable: true })
-  senderEmail: string | null;
+  senderEmail?: string | null;
 
   @Column({ name: 'SERVIDORSMTP', type: 'varchar2', length: 150, nullable: true })
-  smtpServer: string | null;
+  smtpServer?: string | null;
 
   @Column({ name: 'EMAILRESPOSTA', type: 'varchar2', length: 150, nullable: true })
-  replyEmail: string | null;
+  replyEmail?: string | null;
 
   @Column({ name: 'EMAILCOPIARESPOSTA', type: 'varchar2', length: 150, nullable: true })
-  replyCopyEmail: string | null;
+  replyCopyEmail?: string | null;
 
   @Column({ name: 'PORTASERV', type: 'number', precision: 5, scale: 0, nullable: true })
-  serverPort: number | null;
+  serverPort?: number | null;
 
   @Column({ name: 'USUARIOPROXY', type: 'varchar2', length: 40, nullable: true })
-  proxyUser: string | null;
+  proxyUser?: string | null;
 
   @Column({ name: 'SENHAPROXY', type: 'varchar2', length: 10, nullable: true })
-  proxyPassword: string | null;
+  proxyPassword?: string | null;
 
   @Column({ name: 'ENDERECOPROXY', type: 'varchar2', length: 150, nullable: true })
-  proxyAddress: string | null;
+  proxyAddress?: string | null;
 
   @Column({ name: 'PORTAPROXY', type: 'number', precision: 5, scale: 0, nullable: true })
-  proxyPort: number | null;
+  proxyPort?: number | null;
 
   @Column({ name: 'SERIENFEREMMANISFESTOSCAN', type: 'varchar2', length: 3, nullable: true })
-  nfeRemManifestScanSeries: string | null;
+  nfeRemManifestScanSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFEREMMANISFESTOSCAN', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextNfeRemManifestScanNumber: number | null;
+  nextNfeRemManifestScanNumber?: number | null;
 
   @Column({ name: 'SERIENFEDEVMANIFESTOSCAN', type: 'varchar2', length: 3, nullable: true })
-  nfeDevManifestScanSeries: string | null;
+  nfeDevManifestScanSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFEDEVMANISFESTOSCAN', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextNfeDevManifestScanNumber: number | null;
+  nextNfeDevManifestScanNumber?: number | null;
 
   @Column({ name: 'SERIENFEREMMANISFESTO', type: 'varchar2', length: 3, nullable: true })
-  nfeRemManifestSeries: string | null;
+  nfeRemManifestSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFEREMMANISFESTO', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextNfeRemManifestNumber: number | null;
+  nextNfeRemManifestNumber?: number | null;
 
   @Column({ name: 'SERIENFEDEVMANIFESTO', type: 'varchar2', length: 3, nullable: true })
-  nfeDevManifestSeries: string | null;
+  nfeDevManifestSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFEDEVMANISFESTO', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextNfeDevManifestNumber: number | null;
+  nextNfeDevManifestNumber?: number | null;
 
   @Column({ name: 'CNPJ_PAF', type: 'varchar2', length: 14, nullable: true })
-  pafCnpj: string | null;
+  pafCnpj?: string | null;
 
   @Column({ name: 'NOME_PAF', type: 'varchar2', length: 40, nullable: true })
-  pafName: string | null;
+  pafName?: string | null;
 
   @Column({ name: 'ROTINALANC', type: 'varchar2', length: 48, nullable: true })
-  routineLaunch: string | null;
+  routineLaunch?: string | null;
 
   @Column({ name: 'CODMD5_PAF', type: 'varchar2', length: 40, nullable: true })
-  pafMd5Code: string | null;
+  pafMd5Code?: string | null;
 
   @Column({ name: 'PROXNUMNFS', type: 'number', precision: 10, scale: 0, nullable: true, default: '0' })
-  nextNfsNumber: number | null;
+  nextNfsNumber?: number | null;
 
   @Column({ name: 'SERIENFS', type: 'varchar2', length: 3, nullable: true })
-  nfsSeries: string | null;
+  nfsSeries?: string | null;
 
   @Column({ name: 'PROXNUMCTE', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextCteNumber: number | null;
+  nextCteNumber?: number | null;
 
   @Column({ name: 'SERIECTE', type: 'varchar2', length: 3, nullable: true })
-  cteSeries: string | null;
+  cteSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFEIMPORTACAO', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextImportNfeNumber: number | null;
+  nextImportNfeNumber?: number | null;
 
   @Column({ name: 'SERIENFEIMPORTACAO', type: 'varchar2', length: 3, nullable: true })
-  importNfeSeries: string | null;
+  importNfeSeries?: string | null;
 
   @Column({ name: 'PROXNUMNFESCANIMPORTACAO', type: 'number', precision: 9, scale: 0, nullable: true })
-  nextImportNfeScanNumber: number | null;
+  nextImportNfeScanNumber?: number | null;
 
   @Column({ name: 'SERIENFESCANIMPORTACAO', type: 'varchar2', length: 3, nullable: true })
-  importNfeScanSeries: string | null;
+  importNfeScanSeries?: string | null;
 
   @Column({ name: 'DATAHORA_PRIMEIRODOCUMENTO_ECF', type: 'varchar2', length: 19, nullable: true })
-  ecfFirstDocDateTime: string | null;
+  ecfFirstDocDateTime?: string | null;
 
   @Column({ name: 'TIPOFILIAL', type: 'varchar2', length: 1, nullable: true, default: '1' })
-  branchType: string | null;
+  branchType?: string | null;
 
   @Column({ name: 'DIASCURVATURA', type: 'number', precision: 6, scale: 0, nullable: true })
-  curvatureDays: number | null;
+  curvatureDays?: number | null;
 
   @Column({ name: 'PERCEVOLUCAOABC', type: 'number', precision: 6, scale: 0, nullable: true })
-  abcEvolutionPerc: number | null;
+  abcEvolutionPerc?: number | null;
 
   @Column({ name: 'PERCDECLINIOABC', type: 'number', precision: 6, scale: 0, nullable: true })
-  abcDeclinePerc: number | null;
+  abcDeclinePerc?: number | null;
 
   @Column({ name: 'MIXMINIMO', type: 'number', precision: 6, scale: 0, nullable: true })
-  minMix: number | null;
+  minMix?: number | null;
 
   @Column({ name: 'MIXMAXIMO', type: 'number', precision: 6, scale: 0, nullable: true })
-  maxMix: number | null;
+  maxMix?: number | null;
 
   @Column({ name: 'QTMAXPEDIDO', type: 'number', precision: 6, scale: 0, nullable: true })
-  maxOrderQty: number | null;
+  maxOrderQty?: number | null;
 
   @Column({ name: 'ARREDONDAQTGIRODIA', type: 'varchar2', length: 1, nullable: true })
-  roundGiroDayQty: string | null;
+  roundGiroDayQty?: string | null;
 
   @Column({ name: 'PERCPARTICIPACLASSEA', type: 'number', precision: 5, scale: 2, nullable: true })
-  classAParticipationPerc: number | null;
+  classAParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPACLASSEB', type: 'number', precision: 5, scale: 2, nullable: true })
-  classBParticipationPerc: number | null;
+  classBParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEA1', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassA1ParticipationPerc: number | null;
+  subClassA1ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEB1', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassB1ParticipationPerc: number | null;
+  subClassB1ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEA2', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassA2ParticipationPerc: number | null;
+  subClassA2ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEB2', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassB2ParticipationPerc: number | null;
+  subClassB2ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEA3', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassA3ParticipationPerc: number | null;
+  subClassA3ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEB3', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassB3ParticipationPerc: number | null;
+  subClassB3ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEC1', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassC1ParticipationPerc: number | null;
+  subClassC1ParticipationPerc?: number | null;
 
   @Column({ name: 'PERCPARTICIPASUBCLASSEC2', type: 'number', precision: 5, scale: 2, nullable: true })
-  subClassC2ParticipationPerc: number | null;
+  subClassC2ParticipationPerc?: number | null;
 
   @Column({ name: 'DIASPRAZOTRANSF', type: 'number', precision: 4, scale: 0, nullable: true })
-  transfTermDays: number | null;
+  transfTermDays?: number | null;
 
   @Column({ name: 'DEPFECHADO', type: 'varchar2', length: 1, nullable: true })
-  closedDepo: string | null;
+  closedDepo?: string | null;
 
   @Column({ name: 'CODGLN', type: 'number', precision: 13, scale: 0, nullable: true })
-  glnCode: number | null;
+  glnCode?: number | null;
 
   @Column({ name: 'CODGRUPOLOJA', type: 'number', precision: 6, scale: 0, nullable: true })
-  storeGroupCode: number | null;
+  storeGroupCode?: number | null;
 
   @Column({ name: 'MATRICULASNGPC', type: 'number', precision: 8, scale: 0, nullable: true })
-  sngpcRegistration: number | null;
+  sngpcRegistration?: number | null;
 
   @Column({ name: 'MATRICULASNGPCANT', type: 'number', precision: 8, scale: 0, nullable: true })
-  oldSngpcRegistration: number | null;
+  oldSngpcRegistration?: number | null;
 
   @Column({ name: 'DTALTMATRICSNGPC', type: 'date', nullable: true })
-  sngpcRegistrationAltDate: Date | null;
+  sngpcRegistrationAltDate?: Date | null;
 
   @Column({ name: 'DIREXPXMLSNGPC', type: 'varchar2', length: 200, nullable: true })
-  sngpcXmlExpDir: string | null;
+  sngpcXmlExpDir?: string | null;
 
   @Column({ name: 'NSU', type: 'number', precision: 15, scale: 0, nullable: true })
-  nsu: number | null;
+  nsu?: number | null;
 
   @Column({ name: 'DTULTCONSULTAMANIF', type: 'date', nullable: true })
-  lastManifConsultDate: Date | null;
+  lastManifConsultDate?: Date | null;
 
   @Column({ name: 'PROXNUMMDFE', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextMdfeNumber: number | null;
+  nextMdfeNumber?: number | null;
 
   @Column({ name: 'SERIEMDFE', type: 'varchar2', length: 3, nullable: true })
-  mdfeSeries: string | null;
+  mdfeSeries?: string | null;
 
   @Column({ name: 'CONTROLENFEPORROTA', type: 'varchar2', length: 1, nullable: true })
-  controlNfeByRoute: string | null;
+  controlNfeByRoute?: string | null;
 
   @Column({ name: 'PERCMINDIFPRODSIMIL', type: 'number', precision: 8, scale: 4, nullable: true })
-  minPercDifProdSimil: number | null;
+  minPercDifProdSimil?: number | null;
 
   @Column({ name: 'EMPRESAGRANDEPORTE', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  largeCompany: string | null;
+  largeCompany?: string | null;
 
   @Column({ name: 'ENDERECOCOMP', type: 'varchar2', length: 60, nullable: true })
-  addressComp: string | null;
+  addressComp?: string | null;
 
   @Column({ name: 'FIID', type: 'varchar2', length: 50, nullable: true })
-  fiid: string | null;
+  fiid?: string | null;
 
   @Column({ name: 'CODNATUREZAJURIDICA', type: 'number', precision: 4, scale: 0, nullable: true })
-  legalNatureCode: number | null;
+  legalNatureCode?: number | null;
 
   @Column({ name: 'UTILIZAKITABERTO', type: 'varchar2', length: 1, nullable: true })
-  useOpenKit: string | null;
+  useOpenKit?: string | null;
 
   @Column({ name: 'FILIALCONTRATANTESERASA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  serasaContractorBranch: string | null;
+  serasaContractorBranch?: string | null;
 
   @Column({ name: 'CGCAUTORIZAXML', type: 'varchar2', length: 14, nullable: true })
-  xmlAuthCnpj: string | null;
+  xmlAuthCnpj?: string | null;
 
   @Column({ name: 'CONTROLENFEPORSERIEDEPOFECHADO', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  controlNfeByClosedDepoSeries: string | null;
+  controlNfeByClosedDepoSeries?: string | null;
 
   @Column({ name: 'PROXNUMNOTAREMDEP', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextRemDepNoteNumber: number | null;
+  nextRemDepNoteNumber?: number | null;
 
   @Column({ name: 'SERIEREMDEP', type: 'varchar2', length: 3, nullable: true })
-  remDepSeries: string | null;
+  remDepSeries?: string | null;
 
   @Column({ name: 'SEQUENCIACRC', type: 'varchar2', length: 20, nullable: true })
-  crcSequence: string | null;
+  crcSequence?: string | null;
 
   @Column({ name: 'DTVALIDADEDHPC', type: 'date', nullable: true })
-  dhpcValidityDate: Date | null;
+  dhpcValidityDate?: Date | null;
 
   @Column({ name: 'USARFWINTHOR', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useWinthorRf: string | null;
+  useWinthorRf?: string | null;
 
   @Column({ name: 'DTVIRADARF', type: 'date', nullable: true })
-  rfTurnDate: Date | null;
+  rfTurnDate?: Date | null;
 
   @Column({ name: 'PROXNUMRPS', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextRpsNumber: number | null;
+  nextRpsNumber?: number | null;
 
   @Column({ name: 'SERIERPS', type: 'varchar2', length: 3, nullable: true })
-  rpsSeries: string | null;
+  rpsSeries?: string | null;
 
   @Column({ name: 'CODIGOTSS', type: 'varchar2', length: 20, nullable: true })
-  tssCode: string | null;
+  tssCode?: string | null;
 
   @Column({ name: 'UTILIZATSS', type: 'varchar2', length: 1, nullable: true })
-  useTss: string | null;
+  useTss?: string | null;
 
   @Column({ name: 'INFOAMBIENTEINTEGRADOTSS', type: 'varchar2', length: 1, nullable: true })
-  tssIntegratedEnvInfo: string | null;
+  tssIntegratedEnvInfo?: string | null;
 
   @Column({ name: 'INFOCERTIFICADOINTEGRADOTSS', type: 'varchar2', length: 1, nullable: true })
-  tssIntegratedCertInfo: string | null;
+  tssIntegratedCertInfo?: string | null;
 
   @Column({ name: 'SENHACERTIFICADO', type: 'varchar2', length: 50, nullable: true })
-  certificatePassword: string | null;
+  certificatePassword?: string | null;
 
   @Column({ name: 'CODFILIALENTCUSTO', type: 'varchar2', length: 2, nullable: true })
-  costEntryBranchCode: string | null;
+  costEntryBranchCode?: string | null;
 
   @Column({ name: 'CODFILIALENTRADA', type: 'varchar2', length: 2, nullable: true })
-  entryBranchCode: string | null;
+  entryBranchCode?: string | null;
 
   @Column({ name: 'IDTOKENCERTIFICADOA1', type: 'varchar2', length: 50, nullable: true })
-  idTokenCertificateA1: string | null;
+  idTokenCertificateA1?: string | null;
 
   @Column({ name: 'TOKENCERTIFICADOA1', type: 'varchar2', length: 50, nullable: true })
-  tokenCertificateA1: string | null;
+  tokenCertificateA1?: string | null;
 
   @Column({ name: 'VERSAOLAYOUTNFCE', type: 'varchar2', length: 4, nullable: true, default: '3.10' })
-  nfceLayoutVersion: string | null;
+  nfceLayoutVersion?: string | null;
 
   @Column({ name: 'UTILIZARECALCULOSTCHECKOUT', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  useRecalcStCheckout: string | null;
+  useRecalcStCheckout?: string | null;
 
   @Column({ name: 'CODIGONACIONALOBRAS', type: 'varchar2', length: 14, nullable: true })
-  nationalCodesWorks: string | null;
+  nationalCodesWorks?: string | null;
 
   @Column({ name: 'VERSAOQRCODE', type: 'varchar2', length: 4, nullable: true, default: '1.0' })
-  qrcodeVersion: string | null;
+  qrcodeVersion?: string | null;
 
   @Column({ name: 'CODFILIALCIASHOP', type: 'number', precision: 22, scale: 0, nullable: true })
-  ciashopBranchCode: number | null;
+  ciashopBranchCode?: number | null;
 
   @Column({ name: 'CODFILIALRETIRAREPLOJA', type: 'varchar2', length: 2, nullable: true })
-  storeReplRemoveBranchCode: string | null;
+  storeReplRemoveBranchCode?: string | null;
 
   @Column({ name: 'LOJAREALIZAREPOSICAO', type: 'varchar2', length: 1, nullable: true })
-  storePerformsRepl: string | null;
+  storePerformsRepl?: string | null;
 
   @Column({ name: 'PROXCODDEPOSITO', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextDepositCode: number | null;
+  nextDepositCode?: number | null;
 
   @Column({ name: 'CONTRATANTESERASA', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  serasaContractor: string | null;
+  serasaContractor?: string | null;
 
   @Column({ name: 'CODIGORNTRC', type: 'varchar2', length: 30, nullable: true })
-  rntrcCode: string | null;
+  rntrcCode?: string | null;
 
   @Column({ name: 'PROXNUMNOTAAJUSTE', type: 'number', precision: 10, scale: 0, nullable: true })
-  nextAdjustmentNoteNumber: number | null;
+  nextAdjustmentNoteNumber?: number | null;
 
   @Column({ name: 'SERIENFEAJUSTE', type: 'varchar2', length: 3, nullable: true })
-  adjustmentNfeSeries: string | null;
+  adjustmentNfeSeries?: string | null;
 
   @Column({ name: 'UTILIZACONCENTRADORPDV', type: 'varchar2', length: 1, nullable: true, default: 'N' })
-  usePdvConcentrator: string | null;
+  usePdvConcentrator?: string | null;
 
   @Column({ name: 'UTILIZAPAYMENTHUB', type: 'varchar2', length: 1, nullable: true })
-  usePaymentHub: string | null;
+  usePaymentHub?: string | null;
 
   @Column({ name: 'HUBUSERNAME', type: 'varchar2', length: 50, nullable: true })
-  hubUsername: string | null;
+  hubUsername?: string | null;
 
   @Column({ name: 'HUBPASSWORD', type: 'varchar2', length: 50, nullable: true })
-  hubPassword: string | null;
+  hubPassword?: string | null;
 
   @Column({ name: 'HUBCLIENTID', type: 'varchar2', length: 100, nullable: true })
-  hubClientId: string | null;
+  hubClientId?: string | null;
 
   @Column({ name: 'HUBCLIENTSECRET', type: 'varchar2', length: 100, nullable: true })
-  hubClientSecret: string | null;
+  hubClientSecret?: string | null;
 
   @Column({ name: 'HUBAPI', type: 'varchar2', length: 200, nullable: true })
-  hubApi: string | null;
+  hubApi?: string | null;
 
   @Column({ name: 'HUBTOKEN', type: 'varchar2', length: 200, nullable: true })
-  hubToken: string | null;
+  hubToken?: string | null;
 
   @Column({ name: 'MAXNSUSEFAZ', type: 'number', precision: 15, scale: 0, nullable: true })
-  maxNsuSefaz: number | null;
+  maxNsuSefaz?: number | null;
 
   @Column({ name: 'STATUSULTCONSULTANSUSEFAZ', type: 'varchar2', length: 4, nullable: true })
-  statusLastConsultNsuSefaz: string | null;
+  statusLastConsultNsuSefaz?: string | null;
 
   @Column({ name: 'ESTOQUEHASH', type: 'varchar2', length: 64, nullable: true })
-  stockHash: string | null;
+  stockHash?: string | null;
 
   @Column({ name: 'DTINICIOLICENCAPDV', type: 'date', nullable: true })
-  pdvLicenseStartDate: Date | null;
+  pdvLicenseStartDate?: Date | null;
 
   @Column({ name: 'HUBNUMCAIXAPADRAO', type: 'number', precision: 4, scale: 0, nullable: true })
-  hubDefaultBoxNumber: number | null;
+  hubDefaultBoxNumber?: number | null;
 
   @Column({ name: 'IRREGULARIDADECADSEFAZ', type: 'varchar2', length: 3, nullable: true })
-  sefazRegIrregularity: string | null;
+  sefazRegIrregularity?: string | null;
 
   @Column({ name: 'CODFILIALINTEGRACAO', type: 'number', precision: 3, scale: 0, nullable: true })
-  integrationBranchCode: number | null;
+  integrationBranchCode?: number | null;
 
   @Column({ name: 'CONTRATOSERASA', type: 'varchar2', length: 1, nullable: true, default: 'T' })
-  serasaContract: string;
+  serasaContract?: string | null;
 
   @Column({ name: 'RAZAOSOCIALRESPTEC', type: 'varchar2', length: 60, nullable: true })
-  techRespCorporateName: string | null;
+  techRespCorporateName?: string | null;
 
   @Column({ name: 'CNPJRESPTEC', type: 'varchar2', length: 14, nullable: true })
-  techRespCnpj: string | null;
+  techRespCnpj?: string | null;
 
   @Column({ name: 'TELEFONERESPTEC', type: 'varchar2', length: 14, nullable: true })
-  techRespPhone: string | null;
+  techRespPhone?: string | null;
 
   @Column({ name: 'EMAILRESPTEC', type: 'varchar2', length: 60, nullable: true })
-  techRespEmail: string | null;
+  techRespEmail?: string | null;
 
   @Column({ name: 'DTALTERC5', type: 'timestamp', precision: 6, nullable: true })
-  c5ChangeDate: Date | null;
+  c5ChangeDate?: Date | null;
 
   @Column({ name: 'DTMXSALTER', type: 'date', nullable: true })
-  mxsChangeDate: Date | null;
+  mxsChangeDate?: Date | null;
 
   @Column({ name: 'STATUSULTCONSULTANSUSEFAZCTE', type: 'varchar2', length: 4, nullable: true })
-  statusLastConsultNsuSefazCte: string | null;
+  statusLastConsultNsuSefazCte?: string | null;
 
   @Column({ name: 'NSUCTE', type: 'number', precision: 15, scale: 0, nullable: true })
-  nsuCte: number | null;
+  nsuCte?: number | null;
 
   @Column({ name: 'MAXNSUSEFAZCTE', type: 'number', precision: 15, scale: 0, nullable: true })
-  maxNsuSefazCte: number | null;
+  maxNsuSefazCte?: number | null;
 
   @Column({ name: 'DTULTCONSULTACTESDESTINADOS', type: 'date', nullable: true })
-  lastConsultCteDestDate: Date | null;
+  lastConsultCteDestDate?: Date | null;
 }

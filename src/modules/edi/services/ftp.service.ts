@@ -12,7 +12,7 @@ export interface FTPFile {
 @Injectable()
 export class FTPService {
   private readonly logger = new Logger(FTPService.name);
-  private client: Client;
+  private client!: Client;
 
   constructor(private configService: ConfigService) { }
 

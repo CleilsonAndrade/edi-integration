@@ -6,13 +6,13 @@ class ChecksDto {
     description: 'Database Check.',
     type: AppHealthCheckDetailDto,
   })
-  database: AppHealthCheckDetailDto;
+  database!: AppHealthCheckDetailDto;
 
   @ApiProperty({
     description: 'FTP Server',
     type: AppHealthCheckDetailDto,
   })
-  ftpServer: AppHealthCheckDetailDto;
+  ftpServer!: AppHealthCheckDetailDto;
 }
 
 export class AppHealthResponseDto {
@@ -21,17 +21,17 @@ export class AppHealthResponseDto {
     description: 'The general status of the service.',
     enum: ['ok', 'error', 'shutting_down'],
   })
-  status: 'ok' | 'error' | 'shutting_down';
+  status!: 'ok' | 'error' | 'shutting_down';
 
   @ApiProperty({
     example: 'edi-integration',
     description: 'Service name.'
   })
-  service: string;
+  service!: string;
 
   @ApiProperty({
     description: 'Details of checked dependencies (e.g., DB, APIs external.)',
     type: ChecksDto,
   })
-  checks: ChecksDto;
+  checks!: ChecksDto;
 }

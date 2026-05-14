@@ -3,82 +3,79 @@ import { IsNotEmpty, IsNumber, IsString, validateSync } from 'class-validator';
 
 export class EnvironmentVariables {
   @IsString() @IsNotEmpty()
-  INTEGRATION_SOURCE: string;
+  INTEGRATION_SOURCE!: string;
 
   @IsString() @IsNotEmpty()
-  INTEGRATION_ORDER: string;
+  INTEGRATION_ORDER!: string;
 
   @IsNumber() @IsNotEmpty()
-  ORDER_PERCENTUAL_DISCOUNT: number;
-
-  // @IsNumber() @IsNotEmpty()
-  // ORDER_VALUE_FREIGHT_INVOICE: number;
+  ORDER_PERCENTUAL_DISCOUNT!: number;
 
   @IsNumber() @IsNotEmpty()
-  ORDER_EXPENSES_VALUE: number;
+  ORDER_EXPENSES_VALUE!: number;
 
   @IsNumber() @IsNotEmpty()
-  ORDER_SALE_PERCENTAGE: number;
+  ORDER_SALE_PERCENTAGE!: number;
 
   @IsNumber() @IsNotEmpty()
-  ORDER_SALE_CONDITION: number;
+  ORDER_SALE_CONDITION!: number;
 
   @IsNumber() @IsNotEmpty()
-  ORDER_LOAD_NUMBER: number;
+  ORDER_LOAD_NUMBER!: number;
 
   @IsString() @IsNotEmpty()
-  ORDER_LOAD_TYPE: string;
+  ORDER_LOAD_TYPE!: string;
 
   @IsString() @IsNotEmpty()
-  ORDER_PACKAGING_TYPE: string;
+  ORDER_PACKAGING_TYPE!: string;
 
   @IsString() @IsNotEmpty()
-  ORDER_ORIGIN: string;
+  ORDER_ORIGIN!: string;
 
   @IsString() @IsNotEmpty()
-  ORDER_IMPORT_RECONCILIATION: string;
+  ORDER_IMPORT_RECONCILIATION!: string;
 
   @IsString() @IsNotEmpty()
-  ORDER_USE_TYPE_SALE_10_CFOP: string;
+  ORDER_USE_TYPE_SALE_10_CFOP!: string;
 
   @IsString() @IsNotEmpty()
-  ORDER_POSITION: string;
+  ORDER_POSITION!: string;
 
   @IsString() @IsNotEmpty()
-  ORDER_GROUPING: string;
+  ORDER_GROUPING!: string;
 
   @IsNumber() @IsNotEmpty()
-  RCA_ID: number;
+  RCA_ID!: number;
 
   @IsNumber() @IsNotEmpty()
-  SQUARE_COD: number;
+  SQUARE_COD!: number;
 
   @IsNumber() @IsNotEmpty()
-  PAYMENT_PLAN_COD: number;
+  PAYMENT_PLAN_COD!: number;
 
   @IsString() @IsNotEmpty()
-  PAYMENT_PLAN_STATUS: string;
+  PAYMENT_PLAN_STATUS!: string;
 
   @IsNumber() @IsNotEmpty()
-  ISSUER_REGISTRATION: number;
+  ISSUER_REGISTRATION!: number;
 
   @IsString() @IsNotEmpty()
-  FINANCIAL_BRANCH: string;
+  FINANCIAL_BRANCH!: string;
 
   @IsNumber() @IsNotEmpty()
-  SUPPLIER_CODE: number;
+  SUPPLIER_CODE!: number;
 
   @IsString() @IsNotEmpty()
-  SUPPLIER_COD_COB: string;
+  SUPPLIER_COD_COB!: string;
 
   @IsString() @IsNotEmpty()
-  PROVIDER_TYPE_RESALE: string;
+  PROVIDER_TYPE_RESALE!: string;
 
   @IsNumber() @IsNotEmpty()
-  PRODUCT_COST_MARKUP_FACTOR: number;
+  PRODUCT_COST_MARKUP_FACTOR!: number;
 
   @IsNumber() @IsNotEmpty()
-  DEFAULT_DEPOSIT_CODE: number;
+  DEFAULT_DEPOSIT_CODE!: number;
 }
 
 export function validate(config: Record<string, unknown>) {

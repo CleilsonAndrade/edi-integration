@@ -320,12 +320,14 @@ export class EDIService {
       select: ['codSquare', 'square', 'regionNumber', 'freightValue']
     });
 
-    if (!findSquare || !findSquare.regionNumber) {
+    if (!findSquare || findSquare.regionNumber == null) {
       this.logger.warn(`  ✗ Praça ${clientSquareCod} ou Região não encontrada.`);
       return null;
     }
-    this.logger.debug(`  ✓ Praça do Cliente: ${findSquare.codSquare} - Região: ${findSquare.regionNumber}`); const _products: any[] = await Promise.all(
-      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber, branchCode, findSquare.regionNumber))
+    const regionNumber = findSquare.regionNumber;
+
+    this.logger.debug(`  ✓ Praça do Cliente: ${findSquare.codSquare} - Região: ${regionNumber}`); const _products: any[] = await Promise.all(
+      parsed.items.map(item => this.findProductByFactoryCod(item.vendorPartNumber, branchCode, regionNumber))
     );
 
     const totalGrossWeight = _products.reduce((acc, product) => {
@@ -418,6 +420,11 @@ export class EDIService {
     dataHojeMeiaNoite.setHours(0, 0, 0, 0);
 
     const numPedRca = process.env.NUMPEDRCA || '00524502P';
+
+    if (findRCA.userCode === undefined) {
+      this.logger.warn(`  ✗ RCA com userCode indefinido para ID: ${allowedCodRCA}`);
+      return null;
+    }
 
     const numped = await this.getNextBudgetSequentialNumber(findRCA.userCode);
 
@@ -775,9 +782,10 @@ export class EDIService {
       await queryRunner.commitTransaction();
       this.logger.debug(`  ✓ Pedido ${numped} salvo.`);
 
-    } catch (error) {
+    } catch (error: unknown) {
       await queryRunner.rollbackTransaction();
-      this.logger.error(`  ✗ Erro ao salvar pedido no banco: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`  ✗ Erro ao salvar pedido no banco: ${errorMessage}`);
       throw error;
     } finally {
       await queryRunner.release();
@@ -837,14 +845,16 @@ export class EDIService {
         } catch (error) {
           result.erros++;
           result.arquivosComErro.push(file.name);
-          this.logger.error(`✗ Erro ao processar ${file.name}:`, error.stack);
+          const errorDetails = error instanceof Error ? error.stack : String(error);
+          this.logger.error(`✗ Erro ao processar ${file.name}:`, errorDetails);
         }
       }
 
       this.logger.log(`Processamento concluído: ${result.sucessos} sucessos, ${result.erros} erros`);
 
     } catch (error) {
-      this.logger.error('Erro ao processar FTP:', error.stack);
+      const errorDetails = error instanceof Error ? error.stack : String(error);
+      this.logger.error('Erro ao processar FTP:', errorDetails);
       throw error;
     } finally {
       this.ftpService.disconnect();

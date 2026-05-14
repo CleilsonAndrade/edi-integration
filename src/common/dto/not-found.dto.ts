@@ -5,17 +5,17 @@ export class NotFoundResponse {
     description: 'Status code HTTP.',
     example: 404,
   })
-  statusCode: number;
+  statusCode!: number;
 
   @ApiProperty({
     description: 'Message(s) of detailed error(s).',
     example: 'Not Found: Resource not found or user lacks required permissions.',
   })
-  message: string;
+  message!: string;
 
   @ApiProperty({
     description: 'HTTP error type.',
     example: 'Not Found',
   })
-  error: string;
+  error!: string;
 }

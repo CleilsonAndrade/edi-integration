@@ -53,7 +53,11 @@ export class EDITask {
         this.logger.warn(`Arquivo(s) com erro: ${result.arquivosComErro.join(', ')}`);
       }
     } catch (error) {
-      this.logger.error('Erro no processamento EDI:', error.stack);
+      if (error instanceof Error) {
+        this.logger.error('Erro no processamento EDI:', error.stack);
+      } else {
+        this.logger.error('Erro no processamento EDI:', String(error));
+      }
     }
   }
 

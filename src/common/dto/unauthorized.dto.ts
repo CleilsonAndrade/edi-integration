@@ -5,17 +5,17 @@ export class UnauthorizedResponse {
     description: 'Status code HTTP.',
     example: 401,
   })
-  statusCode: number;
+  statusCode!: number;
 
   @ApiProperty({
     description: 'Detailed error message.',
     example: 'Unauthorized: Invalid credentials.',
   })
-  message: string;
+  message!: string;
 
   @ApiProperty({
     description: 'HTTP error type.',
     example: 'Unauthorized',
   })
-  error: string;
+  error!: string;
 }

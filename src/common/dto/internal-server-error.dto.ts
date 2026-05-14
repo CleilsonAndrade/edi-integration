@@ -5,17 +5,17 @@ export class InternalServerErrorResponse {
     description: 'Status code HTTP.',
     example: 500,
   })
-  statusCode: number;
+  statusCode!: number;
 
   @ApiProperty({
     description: 'Message(s) of detailed error(s).',
     example: 'An unexpected error occurred on the server, please test again later.',
   })
-  message: string;
+  message!: string;
 
   @ApiProperty({
     description: 'HTTP error type.',
     example: 'Internal Server Error',
   })
-  error: string;
+  error!: string;
 }

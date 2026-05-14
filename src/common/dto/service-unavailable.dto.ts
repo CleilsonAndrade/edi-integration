@@ -5,17 +5,17 @@ export class ServiceUnavailableResponse {
     description: 'Status code HTTP.',
     example: 503,
   })
-  statusCode: number;
+  statusCode!: number;
 
   @ApiProperty({
     description: 'Detailed error message.',
     example: 'Service Unavailable: The server is temporarily unable to handle the request.',
   })
-  message: string;
+  message!: string;
 
   @ApiProperty({
     description: 'HTTP error type.',
     example: 'Service Unavailable',
   })
-  error: string;
+  error!: string;
 }

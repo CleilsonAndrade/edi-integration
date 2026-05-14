@@ -6,5 +6,5 @@ export class AppHealthCheckDetailDto {
     description: 'The status of the component (up, down, unknown)',
     enum: ['up', 'down', 'unknown'],
   })
-  status: 'up' | 'down' | 'unknown';
+  status!: 'up' | 'down' | 'unknown';
 }
